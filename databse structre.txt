@@ -1,0 +1,36 @@
+const series = {
+    name : silo,
+    imageUrl : '',
+    dateRelease : '',
+    rating : '',
+    description : '',
+    country : '',
+    genre : [],
+    production : '',
+    cast : '',
+    maxQuality : '',
+    videoPosterUrl : '',
+    seasons : [
+        [
+            {   // needs id
+                duration : '',
+                episodeName : '',
+                qualityUrls : [''],
+                subtitles : {
+                    lang : 'en',
+                    url : ''
+                },
+                comments : [
+                    {
+                        writerInfos : {},
+                        created_at : '',
+                        text : '',
+                        likes : '',
+                        dislikes : '',
+                        replies : [{}]
+                    }
+                ]
+            }
+        ]
+    ]
+}
