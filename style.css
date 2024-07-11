@@ -289,7 +289,23 @@ h1{
     font-size: .85rem;
 }
 
+@media screen and (min-width : 768px) {
+    .section-title-and-description{
+        margin-bottom: 20px;
+    }
 
+    .section-title-and-description h4{
+        font-size: 1.1rem;
+    }
+    
+    .section-title-and-description p {
+        font-size: 1rem;
+    }
+}
+
+/* form end */
+
+/* date input start */
 .date-input input{
     width: 70px;
     border: none;
@@ -318,6 +334,10 @@ h1{
     user-select: none;
 }
 
+.error-msg.show{
+    color: var(--red);
+}
+
 .date-input input:invalid{
     border: 2px solid var(--red);
 }
@@ -344,18 +364,6 @@ input[type=number] {
 
 @media screen and (min-width : 768px) {
 
-    .section-title-and-description{
-        margin-bottom: 20px;
-    }
-
-    .section-title-and-description h4{
-        font-size: 1.1rem;
-    }
-    
-    .section-title-and-description p {
-        font-size: 1rem;
-    }
-
     .date-input input{
         width: 100px;
         padding: 7px;
@@ -366,4 +374,75 @@ input[type=number] {
     }
 }
 
-/* form end */
+/* date input end */
+
+/* image-url start */
+
+.url-input{
+    border: 2px solid transparent;
+    width: 100%;
+    background-color: var(--section-color);
+    font-family: "Poppins", sans-serif;
+    padding: 10px 5px;
+    border-radius: 5px;
+    transition: border-color .3s;
+}
+
+.url-input:focus{
+    outline: none;
+}
+
+.url-input.invalid{
+    border-color: var(--red);
+}
+
+.url-and-preview-wrapper .error-msg{
+    margin-bottom: 25px;
+}
+
+.images-wrapper{
+    display: flex;
+    gap: 20px;
+}
+
+.images-wrapper span{
+    font-size: .7rem;
+    font-weight: 600;
+}
+
+.landscape-preview img,
+.portrait-preview img{
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px var(--dark-gray);
+    width: 100%;
+    margin-top: 15px;
+}
+
+.landscape-preview{
+    width: 100%;
+}
+
+.portrait-preview{
+    width: 70%;
+}
+
+@media screen and (min-width : 480px) {
+    .images-wrapper span {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (min-width : 768px) {
+    .url-input{
+        font-size: 1rem;
+    }
+
+    .images-wrapper{
+        width: 55%;
+        margin: 0 auto;
+        text-align: center;
+    }
+}
+
+        
+/* image-url end */
