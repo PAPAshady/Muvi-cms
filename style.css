@@ -116,7 +116,6 @@ h1{
 .input-infos{
     justify-content: space-between;
     border-bottom: 1px solid var(--light-gray);
-    margin-bottom: 5px;
 }
 
 .input-infos h3{
@@ -144,6 +143,34 @@ h1{
     color: var(--dark-gray);
     cursor: pointer;
     padding: 5px 0;
+}
+
+.input{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.input span{
+    background-color: #fff;
+    border: 1px solid var(--light-gray);
+    color: var(--green);
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: capitalize;
+    font-size: .8rem;
+    margin: 5px 5px 5px 0;
+    font-weight: 600;
+}
+
+.input svg{
+    color: rgb(245, 73, 73);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 .input input {
@@ -184,6 +211,10 @@ h1{
         height: 20px;
     }
 
+    .input span{
+        margin-top: 10px;
+    }
+
     .input input{
         font-size: 1rem;
     }
@@ -201,6 +232,10 @@ h1{
 
     .input-infos{
         padding: 5px 0;
+    }
+
+    .input span{
+        font-size: 1rem;
     }
 }
 /* inputs container end */
