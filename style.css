@@ -92,7 +92,13 @@ h1{
 }
 /* header end */
 
-/* input wrapper start */
+/* inputs container start */
+
+.inputs-container{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
 
 .input-wrapper{
     background: var(--section-color);
@@ -118,7 +124,7 @@ h1{
 }
 
 .input-tags{
-    font-size: .7rem;
+    font-size: .6rem;
     color: var(--green);
     font-weight: 600;
 }
@@ -127,6 +133,11 @@ h1{
     padding: 0 5px;
     border-left: 1px solid var(--light-gray);
     text-transform: uppercase;
+    display: none;
+}
+
+.input-tags span:first-child{
+    display: inline;
 }
 
 .input-settings-icon{
@@ -145,6 +156,12 @@ h1{
 
 .input input:focus{
     outline: none;
+}
+
+@media screen and (min-width : 420px){
+    .input-tags span{
+        display: inline;
+    }
 }
 
 @media screen and (min-width : 768px){
@@ -186,4 +203,4 @@ h1{
         padding: 5px 0;
     }
 }
-/* input wrapper end */
+/* inputs container end */
