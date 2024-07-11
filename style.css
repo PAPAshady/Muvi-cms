@@ -1,0 +1,189 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+body{
+    font-family: "Poppins", sans-serif;
+    --section-color : #F2F2F7;
+    --green : #46D2D0;
+    --black : #1c1d3a;
+    --light-gray : #B3B4C8;
+    --dark-gray : #6B6C87;
+}
+
+
+/* header start */
+
+header{
+    box-shadow: 1px 1px 20px rgba(28, 29, 58, .5);
+    color: var(--black);
+    margin-bottom: 50px;
+}
+
+h1{
+    font-size: 1.3rem;
+}
+
+.header-content{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.header-content > *{
+    padding: 10px 0;
+}
+
+.content-types{
+    color: var(--dark-gray);
+    font-size: .7rem;
+}
+
+.header-dropdown > span{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+@media screen and (min-width : 768px) {
+    h1{
+        font-size: 1.8rem;
+    }
+
+    .content-types,
+    .header-dropdown > span{
+        font-size: 1rem;
+    }
+
+    .header-dropdown{
+        cursor: pointer;
+    }
+
+    .header-content{
+        gap: 20px;
+    }
+
+    .header-content > *{
+        padding: 10px;
+    }
+}
+
+@media screen and (min-width : 1200px) {
+    h1{
+        font-size: 2rem;
+    }
+
+    .content-types,
+    .header-dropdown > span{
+        font-size: 1.1rem;
+    }
+    
+    .header-content{
+        gap: 30px;
+    }
+}
+/* header end */
+
+/* input wrapper start */
+
+.input-wrapper{
+    background: var(--section-color);
+    padding: 10px 10px 0;
+    border-radius: 5px;
+}
+
+.input-infos .left,
+.input-infos{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}   
+
+.input-infos{
+    justify-content: space-between;
+    border-bottom: 1px solid var(--light-gray);
+    margin-bottom: 5px;
+}
+
+.input-infos h3{
+    font-size: .9rem;
+}
+
+.input-tags{
+    font-size: .7rem;
+    color: var(--green);
+    font-weight: 600;
+}
+
+.input-tags span {
+    padding: 0 5px;
+    border-left: 1px solid var(--light-gray);
+    text-transform: uppercase;
+}
+
+.input-settings-icon{
+    color: var(--dark-gray);
+    cursor: pointer;
+    padding: 5px 0;
+}
+
+.input input {
+    height: 40px;
+    width: 100%;
+    border: none;
+    background: none;
+    font-family: "Poppins", sans-serif;
+}
+
+.input input:focus{
+    outline: none;
+}
+
+@media screen and (min-width : 768px){
+
+    .input-wrapper{
+        padding: 10px 15px 0;
+    }
+
+    .input-wrapper h3{
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+
+    .input-tags{
+        font-size: .8rem;
+    }
+
+    .input-settings-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .input input{
+        font-size: 1rem;
+    }
+}
+
+@media screen and (min-width : 992px) {
+
+    .input-wrapper{
+        padding: 10px 25px 5px;
+    }
+
+    .input-infos h3{
+        font-size: 1.35rem;
+    }
+
+    .input-infos{
+        padding: 5px 0;
+    }
+}
+/* input wrapper end */
