@@ -151,16 +151,15 @@
                 <section class="date-release">
                     <div class="section-title-and-description">
                         <h4>Date release</h4>
-                        <p>Please enter the date release of the series below</p>
                     </div>
 
                     
                     <div class="date-input">
-                        <input type="number" id="yearInput" placeholder="YYYY" min="1900" max="2050">
+                        <input class="form-input" type="number" id="yearInput" placeholder="YYYY" min="1900" max="2050">
                         <span>/</span>
-                        <input type="number" id="monthInput" min="1" max="12" placeholder="MM">
+                        <input class="form-input" type="number" id="monthInput" min="1" max="12" placeholder="MM">
                         <span>/</span>
-                        <input type="number" id="dayInput" min="1" max="32" placeholder="DD">
+                        <input class="form-input" type="number" id="dayInput" min="1" max="32" placeholder="DD">
 
                         <p class="error-msg">Invalid value</p>
                     </div>
@@ -176,7 +175,7 @@
                     </div>
 
                     <div class="url-and-preview-wrapper">
-                        <input class="url-input" type="text" id="imageUrlInput" placeholder="Enter your URL">
+                        <input class="form-input" type="text" id="imageUrlInput" placeholder="Enter your URL">
                         <p class="error-msg">Invalid URL</p>
 
                         <div class="images-wrapper">
@@ -193,6 +192,35 @@
                     </div>
                 </section>
                 <!---------- IMAGE-URL END ---------->
+
+                <!---------- RATING-COUNTRY-PRODUCTION START ---------->
+
+                <section class="rating-country-production">
+                    <div class="section-title-and-description">
+                        <h4>Rating, Country, Production</h4>
+                    </div>
+                
+                    <div>
+                        <div class="input-container">
+                            <span>Country</span>
+                            <input class="form-input" type="text" id="countryInput" placeholder="Country name">
+                        </div>
+    
+                        <div class="input-container">
+                            <span>Producer</span>
+                            <input class="form-input" type="text" id="producerName" placeholder="Producer name">
+                        </div>
+    
+                        <div class="input-container">
+                            <span>Rating</span>
+                            <input class="form-input" type="number" id="ratingInput" placeholder="From 1 to 10" min="1" max="10" step=".1">
+                            <p class="error-msg">Rating should be a number from 1 to 10</p>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!---------- RATING-COUNTRY-PRODUCTION END ---------->
 
 
                 </div>

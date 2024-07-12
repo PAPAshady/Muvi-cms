@@ -289,7 +289,60 @@ h1{
     font-size: .85rem;
 }
 
+.form-input{
+    border: 2px solid transparent;
+    width: 100%;
+    background-color: var(--section-color);
+    font-family: "Poppins", sans-serif;
+    padding: 10px 5px;
+    border-radius: 5px;
+    transition: border-color .3s;
+}
+
+.form-input:focus{
+    outline: none;
+}
+
+.form-input.invalid,
+.form-input:invalid{
+    border-color: var(--red);
+}
+
+.form-input[type=number]::-webkit-inner-spin-button, 
+.form-input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance:;
+    -moz-appearance: none ;
+    appearance: none;
+    margin: 0; 
+}
+
+.form-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.error-msg{
+    margin-top: 5px;
+    font-size: .8rem;
+    color: transparent;
+    transition: color .3s;
+    user-select: none;
+}
+
+.form-input:invalid ~ .error-msg,
+.error-msg.show{
+    color: var(--red);
+}
+
 @media screen and (min-width : 768px) {
+
+    .form-input{
+        font-size: 1rem;
+    }
+
+    .error-msg{
+        font-size: 1rem;
+    }
+
     .section-title-and-description{
         margin-bottom: 20px;
     }
@@ -325,76 +378,18 @@ h1{
     outline: none;
 }
 
-.error-msg{
-    color: var(--red);
-    margin-top: 5px;
-    font-size: .8rem;
-    color: transparent;
-    transition: color .3s;
-    user-select: none;
-}
-
-.error-msg.show{
-    color: var(--red);
-}
-
-.date-input input:invalid{
-    border: 2px solid var(--red);
-}
-
-.date-input input:invalid ~ .error-msg{
-    color: var(--red);
-}
-
-.date-input input.invalid {
-    border: 2px solid var(--red) !important;
-}
-
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    -moz-appearance: none ;
-    appearance: none;
-    margin: 0; 
-}
-
-input[type=number] {
-    -moz-appearance:textfield;
-}
-
 @media screen and (min-width : 768px) {
 
-    .date-input input{
+    .date-input .form-input{
         width: 100px;
         padding: 7px;
     }
 
-    .error-msg{
-        font-size: 1rem;
-    }
 }
 
 /* date input end */
 
 /* image-url start */
-
-.url-input{
-    border: 2px solid transparent;
-    width: 100%;
-    background-color: var(--section-color);
-    font-family: "Poppins", sans-serif;
-    padding: 10px 5px;
-    border-radius: 5px;
-    transition: border-color .3s;
-}
-
-.url-input:focus{
-    outline: none;
-}
-
-.url-input.invalid{
-    border-color: var(--red);
-}
 
 .url-and-preview-wrapper .error-msg{
     margin-bottom: 25px;
@@ -433,9 +428,6 @@ input[type=number] {
 }
 
 @media screen and (min-width : 768px) {
-    .url-input{
-        font-size: 1rem;
-    }
 
     .images-wrapper{
         width: 55%;
@@ -446,3 +438,46 @@ input[type=number] {
 
         
 /* image-url end */
+
+/* rating-country-production start */
+
+.rating-country-production div:last-child{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rating-country-production .input-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    font-size: .8rem;
+    gap: 5px;
+    width: 45%;
+    text-align: left;
+}
+
+.rating-country-production ,.input-container span{
+    width: 100%;
+}
+
+.rating-country-production .form-input{
+    width: 100%;
+    font-size: .75rem;
+}
+
+@media screen and (min-width : 480px){
+    .rating-country-production span{
+        font-size: .9rem;
+    }
+}
+
+@media screen and (min-width : 768px){
+    .rating-country-production .form-input,
+    .rating-country-production span{
+        font-size: 1rem;
+    }
+}
+
+/* rating-country-production end */
