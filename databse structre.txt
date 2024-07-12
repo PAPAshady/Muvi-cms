@@ -7,9 +7,9 @@ const series = {
     //country : '',
     //genre : [],
     //production : '',
-    cast : '',
+    //cast : '',
+    //videoPosterUrl : '',
     maxQuality : '',
-    videoPosterUrl : '',
     seasons : [
         [
             {   // needs id
