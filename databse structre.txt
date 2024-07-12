@@ -11,26 +11,30 @@ const series = {
     //videoPosterUrl : '',
     maxQuality : '',
     seasons : [
-        [
-            {   // needs id
-                duration : '',
-                episodeName : '',
-                qualityUrls : [''],
-                subtitles : {
-                    lang : 'en',
-                    url : ''
-                },
-                comments : [
-                    {
-                        writerInfos : {},
-                        created_at : '',
-                        text : '',
-                        likes : '',
-                        dislikes : '',
-                        replies : [{}]
-                    }
-                ]
-            }
-        ]
+        {
+            //seasonNumber : '',
+            //numberOfEpisodes : '',
+            epsidoes :[
+                {   // needs id
+                    duration : '',
+                    episodeName : '',
+                    qualityUrls : [''],
+                    subtitles : {
+                        lang : 'en',
+                        url : ''
+                    },
+                    comments : [
+                        {
+                            writerInfos : {},
+                            created_at : '',
+                            text : '',
+                            likes : '',
+                            dislikes : '',
+                            replies : [{}]
+                        }
+                    ]
+                }
+            ]
+        }
     ]
 }

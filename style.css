@@ -267,7 +267,7 @@ h1{
 /* form start */
 
 .form-content {
-    padding: 10px;
+    padding: 20px 10px 30px;
 }
 
 .form-content{
@@ -491,3 +491,30 @@ h1{
 }
 
 /* casts end */
+
+/* seasons number and number of episodes start */
+
+.season-number-and-episode-counts{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: .9rem;
+}
+
+.season-number,
+.number-of-episodes{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+@media screen and (min-width : 768px) {
+    .season-number-and-episode-counts{
+        flex-direction: row;
+        gap: 20px;
+        font-size: 1rem;
+        align-items: center;
+    }
+}
+
+/* seasons number and number of episodes end */
