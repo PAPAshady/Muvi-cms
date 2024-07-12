@@ -481,3 +481,13 @@ h1{
 }
 
 /* rating-country-production end */
+
+/* casts start */
+
+.casts .input{
+    background: var(--section-color);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* casts end */
