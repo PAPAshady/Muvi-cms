@@ -19,12 +19,12 @@ const series = {
                     //duration : '',
                     //episodeName : '',
                     //qualityUrls : [''],
-                    subtitles : [
-                        {
-                            lang : 'en',
-                            url : ''
-                        },
-                    ],
+                    //subtitles : [
+                       // {
+                        //    lang : 'en',
+                          //  url : ''
+                        //},
+                    //],
                     comments : [
                         {
                             writerInfos : {},

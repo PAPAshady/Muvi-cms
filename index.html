@@ -296,9 +296,17 @@
                         </div>
                     </div>
 
+                    <section class="episode-name">
+                        <div class="section-title-and-description">
+                            <h4>Episode name</h4>
+                        </div>
+                        
+                        <input type="text" id="episodeNameInput" class="form-input" placeholder="Enter episode name">
+                    </section>
+
                     <section class="episodes">
                         <div class="section-title-and-description">
-                            <h4>Episodes</h4>
+                            <h4>Episode URL</h4>
                             <p>Enter the video URL of the desired episode in the input below. You can add different qualities for each episode in this section. Simply enter the URL of the desired quality of an episode, specify its quality, and then click 'Add'. All qualities are displayed in the bottom section.</p>
                         </div>
 
@@ -336,12 +344,41 @@
                         </div>
                     </section>
 
-                    <section class="episode-name">
+                    <section class="subtitles">
                         <div class="section-title-and-description">
-                            <h4>Episode name</h4>
+                            <h4>Subtitles</h4>
+                            <p>Enter the subtitle URL for this episode in the input below. You can add different subtitle languages for each episode in this section. Simply enter the URL of the subtitle, specify its langauge, and then click 'Add'. All subtitles are displayed in the bottom section.</p>
                         </div>
-                        
-                        <input type="text" class="form-input" placeholder="Enter episode name">
+
+                        <div class="input-holder">
+                            <div class="url-input-and-select-box">
+                                <input type="text" class="form-input" placeholder="Enter subtitle URL" id="subtitleUrlInput">
+                                <select id="ChoseSubtitleInput">
+                                    <option selected>Language</option>
+                                    <option value="en">English</option>
+                                    <option value="fa">Farsi</option>
+                                    <option value="esp">Spanish</option>
+                                    <option value="it">Italian</option>
+                                    <option value="cn">Chinese</option>
+                                </select>
+                            </div>
+                            <button class="btn">Add</button>
+                            <p class="error-msg">Please enter a valid subtitle url and chose a langauge for it and then click ADD</p>
+                        </div>
+                        <div class="urls-wrapper">
+                            <div class="url">
+                                https://sabzlearn.ir/course/linux-for-hackers/
+                                <span>Farsi</span>
+                            </div>
+                            <div class="url">
+                                https://sabzlearn.ir/course/linux-for-hackers/
+                                <span>English</span>
+                            </div>
+                            <div class="url">
+                                https://sabzlearn.ir/course/linux-for-hackers/
+                                <span>Spanish</span>
+                            </div>
+                        </div>
                     </section>
                 </div>
             </form>
