@@ -295,6 +295,46 @@
                             <p class="error-msg">Invalid number of episodes</p>
                         </div>
                     </div>
+
+                    <section class="episodes">
+                        <div class="section-title-and-description">
+                            <h4>Episodes</h4>
+                            <p>Enter the video URL of the desired episode in the input below. You can add different qualities for each episode in this section. Simply enter the URL of the desired quality of an episode, specify its quality, and then click 'Add'. All qualities are displayed in the bottom section.</p>
+                        </div>
+
+                        <div class="input-holder">
+                            <div class="url-input-and-select-box">
+                                <input type="text" class="form-input" placeholder="Enter episode URL" id="videoUrlInput">
+                                <select id="ChoseVideoQualityInput">
+                                    <option selected>Select a quality</option>
+                                    <option value="144">144p</option>
+                                    <option value="240">240p</option>
+                                    <option value="360">360p</option>
+                                    <option value="480">480p</option>
+                                    <option value="720">720p HD</option>
+                                    <option value="1080">1080p FULL HD</option>
+                                    <option value="1440">1440p 2K</option>
+                                    <option value="2160">2160p 4K</option>
+                                </select>
+                            </div>
+                            <button class="btn">Add</button>
+                            <p class="error-msg">Please enter a valid video url and chose a quality for it and then click ADD</p>
+                        </div>
+                        <div class="urls-wrapper">
+                            <div class="url">
+                                https://sabzlearn.ir/course/linux-for-hackers/
+                                <span>480p</span>
+                            </div>
+                            <div class="url">
+                                https://sabzlearn.ir/course/linux-for-hackers/
+                                <span>720p</span>
+                            </div>
+                            <div class="url">
+                                https://sabzlearn.ir/course/linux-for-hackers/
+                                <span>1080p</span>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </form>
             <!---------- SEASONS AND EPISODES FORM END ---------->
