@@ -9,20 +9,22 @@ const series = {
     //production : '',
     //cast : '',
     //videoPosterUrl : '',
-    maxQuality : '',
+    //maxQuality : '',
     seasons : [
         {
             //seasonNumber : '',
             //numberOfEpisodes : '',
             epsidoes :[
                 {   // needs id
-                    duration : '',
-                    episodeName : '',
-                    qualityUrls : [''],
-                    subtitles : {
-                        lang : 'en',
-                        url : ''
-                    },
+                    //duration : '',
+                    //episodeName : '',
+                    //qualityUrls : [''],
+                    subtitles : [
+                        {
+                            lang : 'en',
+                            url : ''
+                        },
+                    ],
                     comments : [
                         {
                             writerInfos : {},
