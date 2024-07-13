@@ -595,6 +595,13 @@ h1{
     word-break:keep-all;
 }
 
+.url svg{
+    color: var(--red);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
 @media screen and (min-width : 768px) {
     .url-input-and-select-box{
         flex-direction: row;
