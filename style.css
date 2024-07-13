@@ -135,6 +135,7 @@ h1{
 .form-wrapper{
     background: #fff;
     border: 1px solid var(--green);
+    margin-bottom: 20px;
 }
 
 .input-infos .left,
