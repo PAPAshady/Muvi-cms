@@ -626,3 +626,9 @@ h1{
     }
 }
 /* episode section end */
+
+/* all series start */
+.all-series .search-box p{
+    margin-bottom: 10px;
+}
+/* all series end */
