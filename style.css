@@ -17,12 +17,22 @@ a{
 
 body{
     font-family: "Poppins", sans-serif;
+    position: relative;
     --section-color : #F2F2F7;
     --green : #46D2D0;
     --black : #1c1d3a;
     --light-gray : #B3B4C8;
     --dark-gray : #6B6C87;
     --red : #f54949;
+}
+
+body.show-modal{
+    overflow: hidden !important;
+}
+
+body.show-modal header,
+body.show-modal main{
+  filter: blur(2px);
 }
 
 .btn{
@@ -820,3 +830,133 @@ h1{
 }
 
   /* all series end */
+
+  /* modal start */
+
+.modal-wrapper{
+  position: fixed;
+  width: 100%;
+  height: 100dvh;
+  background-color: rgba(0, 0, 0, .6);
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all .2s;
+  visibility: hidden;
+  z-index: 10;
+}
+
+body.show-modal .modal-wrapper{
+  visibility: visible;
+}
+
+.modal{
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  width: 85%;
+  font-size: .8rem;
+  transform: translateY(50%);
+  opacity: 0;
+  transition: all .3s;
+}
+
+body.show-modal .modal{
+  transform: translate(0);
+  opacity: 1;
+}
+
+.modal-header,
+.modal .close-icon{
+  display: flex;
+  align-items: center;
+}
+
+.modal-header{
+  justify-content: space-between;
+  border-bottom: 1px solid var(--light-gray);
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.close-icon{
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.ask-modal{
+  display: none;
+  justify-content: end;
+  gap: 10px;
+}
+
+.ask-modal.show{
+    display: flex;
+}
+
+.ask-modal .btn{
+    font-size: .8rem;
+    margin: 10px 0 0 ;
+}
+
+.episodes-modal{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding-top: 15px;
+}
+
+.modal .season,
+.modal .season .btn-wrapper{
+    display: flex;
+    align-items: center;
+}
+
+.modal .season{
+    font-size: .8rem;
+    background-color: var(--section-color);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    font-weight: 600
+}
+
+.modal .season .btn-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.modal .season button{
+    font-size: .7rem;
+    margin: 0;
+    width: 100%;
+}
+
+.modal .season .btn-wrapper .btn:last-child{
+    background-color: var(--red);
+}
+
+@media screen and (min-width : 768px){
+    .modal-wrapper .btn{
+        font-size: 1rem;
+    }
+
+    .modal .modal-header{
+        font-size: 1.2rem;
+    }
+    
+    .modal-wrapper > *{
+        width: 700px;
+        padding-bottom: 20px;
+    }
+
+    .modal .season,
+    .modal .season .btn{
+        font-size: .9rem;
+    }
+}
+/* modal end */

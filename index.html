@@ -14,7 +14,7 @@
     <!-- main styles -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="show-modal">
     
     <!---------- HEADER START ---------->
     <header>
@@ -454,6 +454,52 @@
         <!---------- INPUTS-CONTAINER END ---------->
         </div>
     </main>
+
+    <div class="modal-wrapper">
+        <div class="modal">
+            <div class="modal-header">
+                <p id="modalTitle">What do you want to edit?</p>
+                <div id="closeModalBtn" class="close-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="ask-modal">
+                    <button class="btn">Series infos</button>
+                    <button class="btn">Series episodes</button>
+                </div>
+
+                <div class="episodes-modal">
+                    <div class="season">
+                        <span>Season 1</span>
+                        <div class="btn-wrapper">
+                            <button class="btn">Edit</button>
+                            <button class="btn">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="season">
+                        <span>Season 2</span>
+                        <div class="btn-wrapper">
+                            <button class="btn">Edit</button>
+                            <button class="btn">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="season">
+                        <span>Season 3</span>
+                        <div class="btn-wrapper">
+                            <button class="btn">Edit</button>
+                            <button class="btn">Remove</button>
+                        </div>
+                    </div>
+                    <!-- seasons must have a seprate container -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
