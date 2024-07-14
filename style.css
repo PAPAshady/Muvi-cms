@@ -602,9 +602,17 @@ h1{
 
 .url svg{
     color: var(--red);
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+@media screen and (min-width : 480px){
+.url svg{
     width: 20px;
     height: 20px;
-    cursor: pointer;
+}
+
 }
 
 @media screen and (min-width : 768px) {
@@ -622,6 +630,13 @@ h1{
     .url{
         font-size: .9rem;
     }
+
+    .url svg{
+        width: 25px;
+        height: 25px;
+        margin-left: 5px;
+    }
+    
 
     .url span{
         font-size: .8rem;
