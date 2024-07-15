@@ -788,10 +788,17 @@ h1{
 
 .media-card button{
     font-size: .9rem;
+    cursor: pointer !important;
 }
 
-.media-card .btn{
-    cursor: auto !important;
+.media-card svg{
+    width: 20px;
+    height: 20px;
+}
+
+.media-card  .btn-wrapper button:not(:first-child){
+    background-color: var(--green);
+    border-color: var(--green);
 }
 
 @media screen and (min-width: 420px) {
