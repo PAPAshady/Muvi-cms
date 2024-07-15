@@ -845,6 +845,7 @@ h1{
   transition: all .2s;
   visibility: hidden;
   z-index: 10;
+  overflow: auto;
 }
 
 body.show-modal .modal-wrapper{
@@ -900,7 +901,58 @@ body.show-modal .modal{
     margin: 10px 0 0 ;
 }
 
-.episodes-modal{
+.modal-content{
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.all-episodes{
+    margin-top: 15px;
+}
+
+.all-episodes p{
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.episodes-wrapper{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 5px;
+}
+
+.all-episodes .episode{
+    background-color: var(--section-color);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.all-episodes .episode .icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.all-episodes .episode svg {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.all-episodes .icons svg:first-child{
+    color: var(--green);
+}
+.all-episodes .icons svg:last-child{
+    color: var(--red);
+}
+
+.seasons-container{
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
@@ -940,6 +992,13 @@ body.show-modal .modal{
     background-color: var(--red);
 }
 
+@media screen and (min-width : 450px) {
+    .episodes-wrapper{
+        grid-template-columns: repeat(2,1fr);
+    }
+
+}
+
 @media screen and (min-width : 768px){
     .modal-wrapper .btn{
         font-size: 1rem;
@@ -959,4 +1018,5 @@ body.show-modal .modal{
         font-size: .9rem;
     }
 }
+
 /* modal end */
