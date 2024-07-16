@@ -130,7 +130,7 @@
             
             
             <!---------- ADDITIONAL INFOS FORM START ---------->
-            <form class="form-wrapper">
+            <form class="form-wrapper series-infos-form">
                 <div class="form-infos">
                     <div class="left">
                         <h3>Additional infos</h3>
@@ -148,263 +148,240 @@
 
                 <div class="form-content">
 
-                <!---------- DATE-RELEASE START ---------->
+                    <!---------- ADD NEW SERIES FORM START ---------->
 
-                <section class="date-release">
-                    <div class="section-title-and-description">
-                        <h4>Date release</h4>
-                    </div>
+                    <div class="add-new-series-form">
+                    <!---------- DATE-RELEASE START ---------->
 
-                    
-                    <div class="date-input">
-                        <input class="form-input" type="number" id="yearInput" placeholder="YYYY" min="1900" max="2050">
-                        <span>/</span>
-                        <input class="form-input" type="number" id="monthInput" min="1" max="12" placeholder="MM">
-                        <span>/</span>
-                        <input class="form-input" type="number" id="dayInput" min="1" max="32" placeholder="DD">
-
-                        <p class="error-msg">Invalid value</p>
-                    </div>
-                </section>
-
-                <!---------- DATE-RELEASE END ---------->
-
-                <!---------- VIDEO-POSTER URL START ---------->
-
-                <section class="video-poster">
-                    <div class="section-title-and-description">
-                        <h4>Video player poster URL</h4>
-                    </div>
-                    <input class="form-input" type="text" id="videoPosterInput" placeholder="Enter your URL">
-                    <p class="error-msg">Invalid URL</p>
-                </section>
-
-                <!---------- VIDEO-POSTER URL END ---------->
-                
-                <!---------- IMAGE-URL START ---------->
-                <section class="image-url">
-                    <div class="section-title-and-description">
-                        <h4>Image URL</h4>
-                        <p>Please enter an image URL for this series. This could be a official poster of this series</p>
-                    </div>
-
-                    <div class="url-and-preview-wrapper">
-                        <input class="form-input" type="text" id="imageUrlInput" placeholder="Enter your URL">
-                        <p class="error-msg">Invalid URL</p>
-
-                        <div class="images-wrapper">
-                            <div class="portrait-preview">
-                                <span>Portrait preview</span>
-                                <img src="images/no-image-portrait.jpg" alt="image portrait preview">
-                            </div>
-
-                            <div class="landscape-preview">
-                                <span>Landscape preview</span>
-                                <img src="images/no-image-landscape.jpg" alt="image landscape preview">
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <!---------- IMAGE-URL END ---------->
-
-                <!---------- RATING-COUNTRY-PRODUCTION START ---------->
-
-                <section class="rating-country-production">
-                    <div class="section-title-and-description">
-                        <h4>Rating, Country, Production</h4>
-                    </div>
-                
-                    <div>
-                        <div class="input-container">
-                            <span>Country</span>
-                            <input class="form-input" type="text" id="countryInput" placeholder="Country name">
-                        </div>
-    
-                        <div class="input-container">
-                            <span>Producer</span>
-                            <input class="form-input" type="text" id="producerName" placeholder="Producer name">
-                        </div>
-    
-                        <div class="input-container">
-                            <span>Rating</span>
-                            <input class="form-input" type="number" id="ratingInput" placeholder="From 1 to 10" min="1" max="10" step=".1">
-                            <p class="error-msg">Rating should be a number from 1 to 10</p>
-                        </div>
-                    </div>
-
-                </section>
-
-                <!---------- RATING-COUNTRY-PRODUCTION END ---------->
-
-                <!---------- CASTS START ---------->
-
-                <section class="casts">
-
-                    <div class="section-title-and-description">
-                        <h4>Casts</h4>
-                    </div>
-
-                    <div class="input">
-                        <span>
-                            William Robinson
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                            </svg>
-                        </span>
-                        <input type="text" id="tagsInput" placeholder="Write tags/genres and press 'Enter'">
-                    </div>
-
-                </section>
-
-                <!---------- CASTS END ---------->
-
-                <button class="btn">Add series to the list</button>
-
-                </div>
-            </form>
-            <!---------- ADDITIONAL INFOS FORM START ---------->
-            
-            <!---------- SEASONS AND EPISODES FORM START ---------->
-            <form class="form-wrapper">
-                <div class="form-infos">
-                    <div class="left">
-                        <h3>Seasons and Episodes</h3>
-                        <div class="input-tags">
-                            <span>Optional</span>
-                        </div>
-                    </div>
-
-                    <span class="input-settings-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
-                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
-                    </svg>
-                    </span>
-                </div>
-
-                <div class="form-content">
-                    <div class="season-number-and-episode-counts">
-
-                        <div class="season-number">
-                            <span>Enter the number of this season</span>
-                            <input class="form-input" type="number" min="1" id="seasonNumberInput" placeholder="Season number">
-                            <p class="error-msg">Invalid season number</p>
-                        </div>
-
-                        <div class="number-of-episodes">
-                            <span>How many episodes this season have ?</span>
-                            <input class="form-input" type="number" min="1" id="episodeCountsInput" placeholder="Number of episodes">
-                            <p class="error-msg">Invalid number of episodes</p>
-                        </div>
-                    </div>
-
-                    <section class="episode-name">
+                    <section class="date-release">
                         <div class="section-title-and-description">
-                            <h4>Episode name</h4>
+                            <h4>Date release</h4>
                         </div>
+    
                         
-                        <input type="text" id="episodeNameInput" class="form-input" placeholder="Enter episode name">
-                    </section>
-
-                    <section class="episodes">
+                        <div class="date-input">
+                            <input class="form-input" type="number" id="yearInput" placeholder="YYYY" min="1900" max="2050">
+                            <span>/</span>
+                            <input class="form-input" type="number" id="monthInput" min="1" max="12" placeholder="MM">
+                            <span>/</span>
+                            <input class="form-input" type="number" id="dayInput" min="1" max="32" placeholder="DD">
+    
+                            <p class="error-msg">Invalid value</p>
+                        </div>
+                        </section>
+    
+                        <!---------- DATE-RELEASE END ---------->
+    
+                        <!---------- VIDEO-POSTER URL START ---------->
+    
+                        <section class="video-poster">
                         <div class="section-title-and-description">
-                            <h4>Episode URL</h4>
-                            <p>Enter the video URL of the desired episode in the input below. You can add different qualities for each episode in this section. Simply enter the URL of the desired quality of an episode, specify its quality, and then click 'Add'. All qualities are displayed in the bottom section.</p>
+                            <h4>Video player poster URL</h4>
                         </div>
-
-                        <div class="input-holder">
-                            <div class="url-input-and-select-box">
-                                <input type="text" class="form-input" placeholder="Enter episode URL" id="videoUrlInput">
-                                <select id="ChoseVideoQualityInput">
-                                    <option selected>Select a quality</option>
-                                    <option value="144">144p</option>
-                                    <option value="240">240p</option>
-                                    <option value="360">360p</option>
-                                    <option value="480">480p</option>
-                                    <option value="720">720p HD</option>
-                                    <option value="1080">1080p FULL HD</option>
-                                    <option value="1440">1440p 2K</option>
-                                    <option value="2160">2160p 4K</option>
-                                </select>
-                            </div>
-                            <button class="btn">Add</button>
-                            <p class="error-msg">Please enter a valid video url and chose a quality for it and then click ADD</p>
-                        </div>
-                        <div class="urls-wrapper">
-                            <div class="url">
-                                https://sabzlearn.ir/course/linux-for-hackers/
-                                <span>480p</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                  </svg>
-                            </div>
-                            <div class="url">
-                                https://sabzlearn.ir/course/linux-for-hackers/
-                                <span>720p</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                  </svg>
-                            </div>
-                            <div class="url">
-                                https://sabzlearn.ir/course/linux-for-hackers/
-                                <span>1080p</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                  </svg>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class="subtitles">
+                        <input class="form-input" type="text" id="videoPosterInput" placeholder="Enter your URL">
+                        <p class="error-msg">Invalid URL</p>
+                        </section>
+    
+                        <!---------- VIDEO-POSTER URL END ---------->
+                    
+                        <!---------- IMAGE-URL START ---------->
+                        <section class="image-url">
                         <div class="section-title-and-description">
-                            <h4>Subtitles</h4>
-                            <p>Enter the subtitle URL for this episode in the input below. You can add different subtitle languages for each episode in this section. Simply enter the URL of the subtitle, specify its langauge, and then click 'Add'. All subtitles are displayed in the bottom section.</p>
+                            <h4>Image URL</h4>
+                            <p>Please enter an image URL for this series. This could be a official poster of this series</p>
                         </div>
+    
+                        <div class="url-and-preview-wrapper">
+                            <input class="form-input" type="text" id="imageUrlInput" placeholder="Enter your URL">
+                            <p class="error-msg">Invalid URL</p>
+    
+                            <div class="images-wrapper">
+                                <div class="portrait-preview">
+                                    <span>Portrait preview</span>
+                                    <img src="images/no-image-portrait.jpg" alt="image portrait preview">
+                                </div>
+    
+                                <div class="landscape-preview">
+                                    <span>Landscape preview</span>
+                                    <img src="images/no-image-landscape.jpg" alt="image landscape preview">
+                                </div>
+                            </div>
+                        </div>
+                        </section>
+                        <!---------- IMAGE-URL END ---------->
+    
+                        <!---------- RATING-COUNTRY-PRODUCTION START ---------->
+    
+                        <section class="rating-country-production">
+                        <div class="section-title-and-description">
+                            <h4>Rating, Country, Production</h4>
+                        </div>
+                    
+                        <div>
+                            <div class="input-container">
+                                <span>Country</span>
+                                <input class="form-input" type="text" id="countryInput" placeholder="Country name">
+                            </div>
+        
+                            <div class="input-container">
+                                <span>Producer</span>
+                                <input class="form-input" type="text" id="producerName" placeholder="Producer name">
+                            </div>
+        
+                            <div class="input-container">
+                                <span>Rating</span>
+                                <input class="form-input" type="number" id="ratingInput" placeholder="From 1 to 10" min="1" max="10" step=".1">
+                                <p class="error-msg">Rating should be a number from 1 to 10</p>
+                            </div>
+                        </div>
+    
+                        </section>
+    
+                        <!---------- RATING-COUNTRY-PRODUCTION END ---------->
+    
+                        <!---------- CASTS START ---------->
+    
+                        <section class="casts">
+    
+                        <div class="section-title-and-description">
+                            <h4>Casts</h4>
+                        </div>
+    
+                        <div class="input">
+                            <span>
+                                William Robinson
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                </svg>
+                            </span>
+                            <input type="text" id="tagsInput" placeholder="Write tags/genres and press 'Enter'">
+                        </div>
+    
+                        </section>
+    
+                        <!---------- CASTS END ---------->
+    
+                        <button class="btn">Add series to the list</button>
+                    </div>
 
-                        <div class="input-holder">
-                            <div class="url-input-and-select-box">
-                                <input type="text" class="form-input" placeholder="Enter subtitle URL" id="subtitleUrlInput">
-                                <select id="ChoseSubtitleInput">
-                                    <option selected>Language</option>
-                                    <option value="en">English</option>
-                                    <option value="fa">Farsi</option>
-                                    <option value="esp">Spanish</option>
-                                    <option value="it">Italian</option>
-                                    <option value="cn">Chinese</option>
-                                </select>
+                    <!---------- ADD NEW SERIES FORM  ---------->
+
+                    <!---------- SEASONS AND EPISODES FORM START ---------->
+
+                    <div class="add-new-episode-form">
+    
+                        <section class="episode-name">
+                            <div class="section-title-and-description">
+                                <h4>Episode name</h4>
                             </div>
-                            <button class="btn">Add</button>
-                            <p class="error-msg">Please enter a valid subtitle url and chose a langauge for it and then click ADD</p>
-                        </div>
-                        <div class="urls-wrapper">
-                            <div class="url">
-                                https://sabzlearn.ir/course/linux-for-hackers/
-                                <span>Farsi</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                  </svg>
+                            
+                            <input type="text" id="episodeNameInput" class="form-input" placeholder="Enter episode name">
+                        </section>
+    
+                        <section class="episodes">
+                            <div class="section-title-and-description">
+                                <h4>Episode URL</h4>
+                                <p>Enter the video URL of the desired episode in the input below. You can add different qualities for each episode in this section. Simply enter the URL of the desired quality of an episode, specify its quality, and then click 'Add'. All qualities are displayed in the bottom section.</p>
                             </div>
-                            <div class="url">
-                                https://sabzlearn.ir/course/linux-for-hackers/
-                                <span>English</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                  </svg>
+    
+                            <div class="input-holder">
+                                <div class="url-input-and-select-box">
+                                    <input type="text" class="form-input" placeholder="Enter episode URL" id="videoUrlInput">
+                                    <select id="ChoseVideoQualityInput">
+                                        <option selected>Select a quality</option>
+                                        <option value="144">144p</option>
+                                        <option value="240">240p</option>
+                                        <option value="360">360p</option>
+                                        <option value="480">480p</option>
+                                        <option value="720">720p HD</option>
+                                        <option value="1080">1080p FULL HD</option>
+                                        <option value="1440">1440p 2K</option>
+                                        <option value="2160">2160p 4K</option>
+                                    </select>
+                                </div>
+                                <button class="btn">Add</button>
+                                <p class="error-msg">Please enter a valid video url and chose a quality for it and then click ADD</p>
                             </div>
-                            <div class="url">
-                                https://sabzlearn.ir/course/linux-for-hackers/
-                                <span>Spanish</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                  </svg>
+                            <div class="urls-wrapper">
+                                <div class="url">
+                                    https://sabzlearn.ir/course/linux-for-hackers/
+                                    <span>480p</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                      </svg>
+                                </div>
+                                <div class="url">
+                                    https://sabzlearn.ir/course/linux-for-hackers/
+                                    <span>720p</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                      </svg>
+                                </div>
+                                <div class="url">
+                                    https://sabzlearn.ir/course/linux-for-hackers/
+                                    <span>1080p</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                      </svg>
+                                </div>
                             </div>
-                        </div>
-                    </section>
-                    <button class="btn">Add Episode</button>
+                        </section>
+    
+                        <section class="subtitles">
+                            <div class="section-title-and-description">
+                                <h4>Subtitles</h4>
+                                <p>Enter the subtitle URL for this episode in the input below. You can add different subtitle languages for each episode in this section. Simply enter the URL of the subtitle, specify its langauge, and then click 'Add'. All subtitles are displayed in the bottom section.</p>
+                            </div>
+    
+                            <div class="input-holder">
+                                <div class="url-input-and-select-box">
+                                    <input type="text" class="form-input" placeholder="Enter subtitle URL" id="subtitleUrlInput">
+                                    <select id="ChoseSubtitleInput">
+                                        <option selected>Language</option>
+                                        <option value="en">English</option>
+                                        <option value="fa">Farsi</option>
+                                        <option value="esp">Spanish</option>
+                                        <option value="it">Italian</option>
+                                        <option value="cn">Chinese</option>
+                                    </select>
+                                </div>
+                                <button class="btn">Add</button>
+                                <p class="error-msg">Please enter a valid subtitle url and chose a langauge for it and then click ADD</p>
+                            </div>
+                            <div class="urls-wrapper">
+                                <div class="url">
+                                    https://sabzlearn.ir/course/linux-for-hackers/
+                                    <span>Farsi</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                      </svg>
+                                </div>
+                                <div class="url">
+                                    https://sabzlearn.ir/course/linux-for-hackers/
+                                    <span>English</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                      </svg>
+                                </div>
+                                <div class="url">
+                                    https://sabzlearn.ir/course/linux-for-hackers/
+                                    <span>Spanish</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                      </svg>
+                                </div>
+                            </div>
+                        </section>
+                        <button class="btn">Add Episode</button>
+                    </div>
+
+                    <!---------- SEASONS AND EPISODES FORM END ---------->
+
                 </div>
             </form>
-            <!---------- SEASONS AND EPISODES FORM END ---------->
-            
+            <!---------- ADDITIONAL INFOS FORM END ---------->
+                    
             
             <!---------- ALL SERIES START ---------->
             <form class="form-wrapper all-series">
