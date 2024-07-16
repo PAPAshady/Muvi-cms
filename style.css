@@ -263,6 +263,12 @@ h1{
 
 .input-wrapper{
     display: none;
+    border: 2px solid transparent;
+    transition: border-color .2s;
+}
+
+.input-wrapper.invalid{
+    border-color: var(--red);
 }
 
 body.add-series .input-wrapper{
@@ -322,6 +328,12 @@ body.add-series .input-wrapper{
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    transition: border-color .2s;
+    border: 2px solid transparent;
+}
+
+.input.invalid{
+    border-color: var(--red);
 }
 
 .input span{
@@ -509,6 +521,7 @@ body.add-episode .add-new-episode-form{
 }
 
 .form-input:invalid ~ .error-msg,
+.form-input.invalid ~ .error-msg,
 .error-msg.show{
     color: var(--red);
 }
