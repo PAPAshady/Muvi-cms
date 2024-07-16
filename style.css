@@ -147,6 +147,14 @@ h1{
     border-radius: 5px;
 }
 
+.input-wrapper{
+    display: none;
+}
+
+body.add-series .input-wrapper{
+    display: block;
+}
+
 .form-wrapper{
     background: #fff;
     border: 1px solid var(--green);
@@ -306,14 +314,32 @@ h1{
 
 /* form start */
 
-.form-content {
-    padding: 20px 10px 30px;
+.series-infos-form{
+    display: none;
 }
 
-.form-content{
-    display: flex;
+.form-content {
+    padding: 20px 10px;
+}
+
+.add-new-series-form,
+.add-new-episode-form{
+    display: none;
     flex-direction: column;
     gap: 20px;
+}
+
+body.add-series .series-infos-form,
+body.add-episode .series-infos-form{
+    display: block;
+}
+
+body.add-series .add-new-series-form{
+    display: flex;
+}
+
+body.add-episode .add-new-episode-form{
+    display: flex;
 }
 
 .section-title-and-description{
@@ -912,13 +938,13 @@ body.show-modal .modal{
 }
 
 .ask-modal{
-  display: none;
+  display: flex;
   justify-content: end;
   gap: 10px;
 }
 
-.ask-modal.show{
-    display: flex;
+.ask-modal.hide{
+    display: none;
 }
 
 .ask-modal .btn{
