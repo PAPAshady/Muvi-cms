@@ -133,6 +133,7 @@ tagsInput.addEventListener('keydown', e => {
 
 castsInput.addEventListener('keydown', e => {
     if(e.key === 'Enter'){
+        e.preventDefault()
         addInputTag(castsInput, casts, 'casts')
     }
 })
