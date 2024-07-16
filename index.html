@@ -162,7 +162,7 @@
                     <div class="add-new-series-form">
                     <!---------- DATE-RELEASE START ---------->
 
-                    <section class="date-release">
+                        <section class="date-release">
                         <div class="section-title-and-description">
                             <h4>Date release</h4>
                         </div>
@@ -271,7 +271,10 @@
     
                         <!---------- CASTS END ---------->
     
-                        <button class="btn">Add series to the list</button>
+                        <button class="btn">
+                            <span class="btn-text">Add series to the list</span>
+                            <div class="btn-loader"></div>
+                        </button>
                     </div>
 
                     <!---------- ADD NEW SERIES FORM  ---------->
@@ -382,7 +385,10 @@
                                 </div>
                             </div>
                         </section>
-                        <button class="btn">Add Episode</button>
+                        <button class="btn">
+                            <span class="btn-text">Add episode</span>
+                            <div class="btn-loader"></div>
+                        </button>
                     </div>
 
                     <!---------- SEASONS AND EPISODES FORM END ---------->
@@ -476,8 +482,15 @@
             </div>
             <div class="modal-content">
                 <div class="ask-modal">
-                    <button class="btn">Series infos</button>
-                    <button class="btn">Series episodes</button>
+                    <button class="btn">
+                        <span class="btn-text">Series infos</span>
+                        <div class="btn-loader"></div>
+                    </button>
+                    
+                    <button class="btn">
+                        <span class="btn-text">Series episodes</span>
+                        <div class="btn-loader"></div>
+                    </button>
                 </div>
 
                 <div class="episodes-modal">
@@ -485,8 +498,16 @@
                         <div class="season">
                             <span>Season 1</span>
                             <div class="btn-wrapper">
-                                <button class="btn">Edit</button>
-                                <button class="btn">Remove</button>
+
+                                <button class="btn">
+                                    <span class="btn-text">Edit</span>
+                                    <div class="btn-loader"></div>
+                                </button>
+
+                                <button class="btn">
+                                    <span class="btn-text">Remove</span>
+                                    <div class="btn-loader"></div>
+                                </button>
                             </div>
                         </div>
                     </div>
