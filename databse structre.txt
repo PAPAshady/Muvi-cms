@@ -9,6 +9,7 @@ const series = {
     //producer : '',
     //cast : '',
     //videoPosterUrl : '',
+    isVisible : true,
     seasons : [
         {
             //seasonNumber : '',

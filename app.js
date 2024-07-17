@@ -16,6 +16,7 @@ const countryInput = $.getElementById('countryInput')
 const producerNameInput = $.getElementById('producerName')
 const ratingInput = $.getElementById('ratingInput')
 const castsInput = $.getElementById('castsInput')
+const checkBox = $.getElementById('checkBox')
 let genres = []
 let casts = []
 
@@ -169,6 +170,7 @@ function addNewSeries (e){
             country : countryInput.value.trim(),
             producer : producerNameInput.value.trim(),
             videoPoster : videoPosterInput.value.trim(),
+            isVisible : checkBox.checked,
             genres,
             casts,
             seasons : []
