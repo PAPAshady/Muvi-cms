@@ -122,24 +122,15 @@ function addNewSeries (e){
     e.preventDefault()
 
     if(validateInputs()){
-        const title = titleInput.value.trim()
-        const description = descriptionInput.value.trim()
-        const imageURL = imageUrlInput.value.trim()
-        const dateRelease = `${yearInput.value}/${monthInput.value}/${dayInput.value}`
-        const rating = ratingInput.value
-        const country = countryInput.value.trim()
-        const producer = producerNameInput.value.trim()
-        const videoPoster = videoPosterInput.value.trim()
-
         const newSeries = {
-            title,
-            description,
-            imageURL,
-            dateRelease,
-            rating,
-            country,
-            producer,
-            videoPoster,
+            title : titleInput.value.trim(),
+            description : descriptionInput.value.trim(),
+            imageUR : imageUrlInput.value.trim(),
+            dateRelease : `${yearInput.value}/${monthInput.value}/${dayInput.value}`,
+            rating : ratingInput.value,
+            country : countryInput.value.trim(),
+            producer : producerNameInput.value.trim(),
+            videoPoster : videoPosterInput.value.trim(),
             genres,
             casts,
             seasons : []
