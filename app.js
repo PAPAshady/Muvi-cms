@@ -157,7 +157,8 @@ function addNewSeries (e){
 
     if(validateInputs()){
 
-        addSeriesBtn.classList.add('loading')
+        submitSeriesBtn.classList.add('loading')
+        submitSeriesBtn.setAttribute('disabled', true)
 
         const newSeries = {
             title : titleInput.value.trim(),
@@ -183,14 +184,29 @@ function addNewSeries (e){
             .then(res => res.json())
             .then(message => {
                 alert('Series added successfully :)')
+                clearInputs()
+                window.scrollTo({behavior : "smooth"})
                 console.log(message);
             })
             .catch(err => {
                 alert('Error, something went wrong. Please turn on your VPN and try again :)')
                 console.log(err)
             })
-            .finally(()=> addSeriesBtn.classList.remove('loading'))
+            .finally(()=> {
+                submitSeriesBtn.classList.remove('loading')
+                submitSeriesBtn.removeAttribute('disabled')
+            })
     }
+}
+
+function clearInputs () {
+    $.querySelectorAll('input').forEach(input => input.value = '')
+    $.querySelectorAll('.input span').forEach(span => span.remove())
+    $.querySelectorAll('.form-input').forEach(elem => elem.classList.remove('invalid'))
+    portraitImg.parentElement.classList.remove('loading')
+    landscapeImg.parentElement.classList.remove('loading')
+    genres = []
+    casts = []
 }
 
 submitSeriesBtn.addEventListener('click', addNewSeries)
