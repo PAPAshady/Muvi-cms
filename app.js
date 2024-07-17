@@ -20,6 +20,7 @@ const checkBox = $.getElementById('checkBox')
 const allSeriesContainer = $.querySelector('.media-content-wrapper')
 let genres = []
 let casts = []
+let allSeries = null
 
 //makes the add-series form visible to the user
 addSeriesBtn.addEventListener('click', ()=>{
@@ -159,6 +160,13 @@ function addNewSeries (e){
 
     if(validateInputs()){
 
+        const isAlreadyAdded = allSeries.some(series => series[1].title.toUpperCase() === titleInput.value.trim().toUpperCase())
+
+        if(isAlreadyAdded){
+            alert("You've added this series before !!!")
+            return
+        }
+
         submitSeriesBtn.classList.add('loading')
         submitSeriesBtn.setAttribute('disabled', true)
 
@@ -207,7 +215,7 @@ async function getAllSeries () {
     try {
         const res = await fetch('https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series.json')
         const data = await res.json()
-        return Object.entries(data)
+        allSeries = Object.entries(data)
     } catch (error) {
         alert('An error occured while geting the data from server')
         console.log(error);
@@ -216,11 +224,11 @@ async function getAllSeries () {
 
 async function showAllSeries () {
 
-    const data = await getAllSeries()
-
-    if(data){
+    await getAllSeries()
+    
+    if(allSeries){
         allSeriesContainer.querySelectorAll('.media-card').forEach(elem => elem.remove())
-        const seriesElems = data.map(series => {
+        const seriesElems = allSeries.map(series => {
             return `
                 <div class="media-card">
                     <a href="#">
@@ -257,7 +265,7 @@ async function showAllSeries () {
 
 function deleteSeries(e,seriesTitle, seriesID){
     e.preventDefault()
-    
+
     const isSure = confirm(`Are you sure you want to delete ${seriesTitle} completly ? this action is permanent and it will delete all this series seasons and episodes`)
 
     if(isSure){
