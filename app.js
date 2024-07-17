@@ -117,6 +117,40 @@ function validateInputs () {
     return true
 }
 
+function showImagePreviewHandler (e) {
+    const value = e.target.value.trim()
+    const errorMsg = e.target.nextElementSibling
+
+    if(!value){
+        portraitImg.src = '/images/no-image.jpg'
+        landscapeImg.src = '/images/no-image.jpg'
+        portraitImg.parentElement.classList.remove('loading')
+        landscapeImg.parentElement.classList.remove('loading')
+        imageUrlInput.classList.remove('invalid')
+        errorMsg.textContent = 'Invalid URL'
+        return
+    }
+
+    imageUrlInput.classList.remove('invalid')
+    const image = new Image()
+    image.src = value
+    portraitImg.parentElement.classList.add('loading')
+    landscapeImg.parentElement.classList.add('loading')
+    
+    image.addEventListener('load', ()=>{
+        portraitImg.src = value
+        landscapeImg.src = value
+        portraitImg.parentElement.classList.remove('loading')
+        landscapeImg.parentElement.classList.remove('loading')
+        errorMsg.textContent = 'Invalid URL'
+    })
+
+    image.addEventListener('error', ()=> {
+        imageUrlInput.classList.add('invalid')
+        errorMsg.textContent = 'Failed to load the image'
+    })
+}
+
 
 function addNewSeries (e){
     e.preventDefault()
@@ -141,6 +175,7 @@ function addNewSeries (e){
 }
 
 submitSeriesBtn.addEventListener('click', addNewSeries)
+imageUrlInput.addEventListener('input', showImagePreviewHandler)
 
 tagsInput.addEventListener('keydown', e => {
     if(e.key === 'Enter'){
