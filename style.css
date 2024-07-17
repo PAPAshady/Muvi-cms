@@ -741,6 +741,7 @@ body.add-episode .add-new-episode-form{
     align-items: center;
     gap: 10px;
     margin-top: 20px;
+    font-size: .8rem;
 }
 
 .check-box-wrapper label{
@@ -751,6 +752,12 @@ body.add-episode .add-new-episode-form{
     width: 20px;
     cursor: pointer;
     height: 20px;
+}
+
+@media screen and (min-width : 480px) {
+    .check-box-wrapper{
+        font-size: 1rem;
+    }
 }
 
 /* check-box end */
