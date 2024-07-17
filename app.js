@@ -162,9 +162,10 @@ function addNewSeries (e){
         submitSeriesBtn.setAttribute('disabled', true)
 
         const newSeries = {
+            seriesID : titleInput.value.trim() + '-series',
             title : titleInput.value.trim(),
             description : descriptionInput.value.trim(),
-            imageUR : imageUrlInput.value.trim(),
+            imageURL : imageUrlInput.value.trim(),
             dateRelease : `${yearInput.value}/${monthInput.value}/${dayInput.value}`,
             rating : ratingInput.value,
             country : countryInput.value.trim(),
