@@ -79,7 +79,7 @@ function validateInputs () {
     const dateRelease = v.isDate(`${yearInput.value}/${monthInput.value}/${dayInput.value}`)
     const videoPosterURL = v.isURL(videoPosterInput.value.trim())
     const imageURL = v.isURL(imageUrlInput.value.trim())
-    const country = v.isAlpha(countryInput.value.trim())
+    const country = v.isAlpha(countryInput.value.trim(), ['en-US'], {ignore : '\s'})
     const producer = producerNameInput.value.trim()
     const rating = v.isDecimal(ratingInput.value.trim())
 
@@ -120,7 +120,33 @@ function validateInputs () {
 
 function addNewSeries (e){
     e.preventDefault()
-    validateInputs()
+
+    if(validateInputs()){
+        const title = titleInput.value.trim()
+        const description = descriptionInput.value.trim()
+        const imageURL = imageUrlInput.value.trim()
+        const dateRelease = `${yearInput.value}/${monthInput.value}/${dayInput.value}`
+        const rating = ratingInput.value
+        const country = countryInput.value.trim()
+        const producer = producerNameInput.value.trim()
+        const videoPoster = videoPosterInput.value.trim()
+
+        const newSeries = {
+            title,
+            description,
+            imageURL,
+            dateRelease,
+            rating,
+            country,
+            producer,
+            videoPoster,
+            genres,
+            casts,
+            seasons : []
+        }
+
+        console.log(newSeries);
+    }
 }
 
 submitSeriesBtn.addEventListener('click', addNewSeries)

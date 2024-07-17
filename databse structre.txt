@@ -1,15 +1,14 @@
 const series = {
-    //name : silo,
+    //title : silo,
     //imageUrl : '',
     //dateRelease : '',
     //rating : '',
     //description : '',
     //country : '',
     //genre : [],
-    //production : '',
+    //producer : '',
     //cast : '',
     //videoPosterUrl : '',
-    //maxQuality : '',
     seasons : [
         {
             //seasonNumber : '',
