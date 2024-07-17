@@ -20,7 +20,6 @@ const checkBox = $.getElementById('checkBox')
 const allSeriesContainer = $.querySelector('.media-content-wrapper')
 let genres = []
 let casts = []
-let allSeries = null
 
 //makes the add-series form visible to the user
 addSeriesBtn.addEventListener('click', ()=>{
@@ -190,7 +189,7 @@ function addNewSeries (e){
             .then(message => {
                 alert('Series added successfully :)')
                 clearInputs()
-                window.scrollTo({behavior : "smooth"})
+                showAllSeries()
                 console.log(message);
             })
             .catch(err => {
@@ -204,19 +203,25 @@ function addNewSeries (e){
     }
 }
 
-function getAllSeries () {
-    fetch('https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series.json')
-        .then(res => res.json())
-        .then(data => {
-            allSeries = Object.entries(data)
-            showAllSeries()
-        })
-        .catch(err => console.log(err))
+async function getAllSeries () {
+    try {
+        const res = await fetch('https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series.json')
+        const data = await res.json()
+        return Object.entries(data)
+    } catch (error) {
+        alert('An error occured while geting the data from server')
+        console.log(error);
+    }
 }
 
-function showAllSeries () {
-    const seriesElems = allSeries.map(series => {
-        return `
+async function showAllSeries () {
+
+    const data = await getAllSeries()
+
+    if(data){
+        allSeriesContainer.querySelectorAll('.media-card').forEach(elem => elem.remove())
+        const seriesElems = data.map(series => {
+            return `
                 <div class="media-card">
                     <a href="#">
                         <img loading="lazy" src="${series[1].imageURL}" alt="${series[1].title}">
@@ -243,14 +248,16 @@ function showAllSeries () {
                     </div>
                 </div>
         
-        `
-    }).join('')
+            `
+        }).join('')
 
-    allSeriesContainer.insertAdjacentHTML('beforeend', seriesElems)
+        allSeriesContainer.insertAdjacentHTML('beforeend', seriesElems)
+    }
 }
 
 function deleteSeries(e,seriesTitle, seriesID){
     e.preventDefault()
+    
     const isSure = confirm(`Are you sure you want to delete ${seriesTitle} completly ? this action is permanent and it will delete all this series seasons and episodes`)
 
     if(isSure){
@@ -263,13 +270,14 @@ function deleteSeries(e,seriesTitle, seriesID){
                 .then(res => res.json())
                 .then(message => {
                     alert(`${seriesTitle} deleted successfully !`)
+                    showAllSeries()
                     console.log(message);
                 }).catch(err => {
                     alert(`An error occured while deleting ${seriesTitle} series`)
                     console.log(err);
                 })
         }else{
-            alert("You've entered the wrong name. Series will not be deleted haha !")
+            alert("You've entered the wrong name. Series will not be deleted haha !!!")
         }
     }
 }
@@ -300,5 +308,5 @@ castsInput.addEventListener('keydown', e => {
     }
 })
 
-window.addEventListener('load', getAllSeries)
+window.addEventListener('load', showAllSeries)
 
