@@ -156,6 +156,9 @@ function addNewSeries (e){
     e.preventDefault()
 
     if(validateInputs()){
+
+        addSeriesBtn.classList.add('loading')
+
         const newSeries = {
             title : titleInput.value.trim(),
             description : descriptionInput.value.trim(),
@@ -170,7 +173,23 @@ function addNewSeries (e){
             seasons : []
         }
 
-        console.log(newSeries);
+        fetch(`https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series.json`, {
+            method : 'POST',
+            headers : {
+                "Content-type" : 'Application/json'
+            },
+            body : JSON.stringify(newSeries)
+        })
+            .then(res => res.json())
+            .then(message => {
+                alert('Series added successfully :)')
+                console.log(message);
+            })
+            .catch(err => {
+                alert('Error, something went wrong. Please turn on your VPN and try again :)')
+                console.log(err)
+            })
+            .finally(()=> addSeriesBtn.classList.remove('loading'))
     }
 }
 
