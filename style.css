@@ -590,7 +590,10 @@ body.add-episode .add-new-episode-form{
 
 .images-wrapper{
     display: flex;
-    gap: 20px;
+    gap: 10px;
+    margin-bottom: 40px;
+    width: 240px;
+    margin: 0 auto;
 }
 
 .images-wrapper span{
@@ -603,29 +606,49 @@ body.add-episode .add-new-episode-form{
     border-radius: 5px;
     box-shadow: 1px 1px 5px var(--dark-gray);
     width: 100%;
-    margin-top: 15px;
+    height: 100%;
 }
 
 .landscape-preview{
     width: 100%;
+    height: 80px;
 }
 
 .portrait-preview{
-    width: 70%;
+    width: 60%;
+    height: 130px;
 }
 
 @media screen and (min-width : 480px) {
     .images-wrapper span {
         font-size: 1rem;
     }
+    
+    .images-wrapper{
+        width: 320px;
+    }
+
+    .landscape-preview{
+        height: 100px;
+    }
+
+    .portrait-preview{
+        height: 180px;
+    }
 }
 
 @media screen and (min-width : 768px) {
-
     .images-wrapper{
-        width: 55%;
-        margin: 0 auto;
-        text-align: center;
+        width: 580px;
+        gap: 20px;
+    }
+
+    .landscape-preview{
+        height: 180px;
+    }
+
+    .portrait-preview{
+        height: 310px;
     }
 }
 
