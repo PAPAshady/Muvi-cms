@@ -734,6 +734,27 @@ body.add-episode .add-new-episode-form{
 
 /* casts end */
 
+/* check-box start */
+
+.check-box-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.check-box-wrapper label{
+    cursor: pointer;
+}
+
+#checkBox{
+    width: 20px;
+    cursor: pointer;
+    height: 20px;
+}
+
+/* check-box end */
+
 /* seasons number and number of episodes start */
 
 .season-number-and-episode-counts{
