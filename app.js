@@ -248,7 +248,7 @@ function addNewSeries (e){
         submitSeriesBtn.setAttribute('disabled', true)
 
         const newSeries = {
-            seriesID : titleInput.value.trim() + '-series',
+            seriesID : titleInput.value.trim().split(' ').join('-') + '-series', // add a dash between words
             title : titleInput.value.trim(),
             description : descriptionInput.value.trim(),
             imageURL : imageUrlInput.value.trim(),
