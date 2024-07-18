@@ -142,6 +142,9 @@ function renderInputTags(inputElem, tagsArray, arrayNameToPush){
 
 // removes tags from inputs (casts and genres input)
 function removeinputTag (e, value, arrayName){
+    if(e.target.tagName === 'path'){
+        e.target.parentElement.parentElement.remove()
+    }
     e.target.parentElement.remove()
     if(arrayName === 'genres'){
         genres = genres.filter(genre => genre !== value)
