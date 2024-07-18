@@ -17,6 +17,7 @@ const producerNameInput = $.getElementById('producerName')
 const ratingInput = $.getElementById('ratingInput')
 const castsInput = $.getElementById('castsInput')
 const checkBox = $.getElementById('checkBox')
+const searchInput = $.getElementById('searchInput')
 const allSeriesContainer = $.querySelector('.media-content-wrapper')
 let genres = []
 let casts = []
@@ -35,13 +36,11 @@ async function getAllSeries () {
     }
 }
 
-async function showAllSeries () {
-
-    await getAllSeries()
+async function showAllSeries (seriesArray) {
     
-    if(allSeries){
+    if(seriesArray){
         allSeriesContainer.querySelectorAll('.media-card').forEach(elem => elem.remove())
-        const seriesElems = allSeries.map(series => {
+        const seriesElems = seriesArray.map(series => {
             return `
                 <div class="media-card">
                     <a href="#">
@@ -73,6 +72,16 @@ async function showAllSeries () {
         }).join('')
 
         allSeriesContainer.insertAdjacentHTML('beforeend', seriesElems)
+    }
+}
+
+function searchHandler (e) {
+    const value = e.target.value.trim()
+    if(value){
+        const filteredSeries = allSeries.filter(series => series[1].title.toUpperCase().includes(value.toUpperCase()))
+        showAllSeries(filteredSeries)
+    }else{
+        showAllSeries(allSeries)
     }
 }
 
@@ -305,6 +314,7 @@ function clearInputs () {
 
 submitSeriesBtn.addEventListener('click', addNewSeries)
 imageUrlInput.addEventListener('input', showImagePreviewHandler)
+searchInput.addEventListener('input', searchHandler)
 
 tagsInput.addEventListener('keydown', e => {
     if(e.key === 'Enter'){
@@ -319,5 +329,8 @@ castsInput.addEventListener('keydown', e => {
     }
 })
 
-window.addEventListener('load', showAllSeries)
+window.addEventListener('load', async ()=>{
+    await getAllSeries()
+    showAllSeries(allSeries)
+})
 
