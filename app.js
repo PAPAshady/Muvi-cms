@@ -92,10 +92,10 @@ function searchHandler (e) {
 }
 
 //makes the add-series form visible to the user
-addSeriesBtn.addEventListener('click', ()=>{
+function showAddSeriesForm (){
     $.body.classList.add('add-series')
     $.querySelector('.input-wrapper').scrollIntoView({behavior: 'smooth'})
-})
+}
 
 // adds tags for inputs (casts and genres input)
 // since it's not possible to pass an varable name in onclick attribute of an element, i used arrayNameToPush to specify whitch array should be modified in removeinputTag
@@ -110,28 +110,34 @@ function addInputTag(inputElem, tagsArray, arrayNameToPush){
     const value = inputElem.value.trim()
 
     if(value){
-
         if(tagsArray.includes(value.toLowerCase())){
             alert("You've already added this item !!!")
             inputElem.value = ''
             return
         }
 
+        tagsArray.push(value.toLowerCase())
+        renderInputTags(inputElem,tagsArray,arrayNameToPush)
+    }else{
+        alert('Please enter a value')
+    } 
+}
+
+function renderInputTags(inputElem, tagsArray, arrayNameToPush){
+    inputElem.parentElement.querySelectorAll('span').forEach(span => span.remove())
+    tagsArray.forEach(tag => {
         inputElem.parentElement.insertAdjacentHTML('afterbegin' ,
             `<span>
-                ${value}
-                <svg onclick="removeinputTag(event,'${value}', '${arrayNameToPush}')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                ${tag}
+                <svg onclick="removeinputTag(event,'${tag}', '${arrayNameToPush}')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                 </svg>
             </span>`
         )
 
-        tagsArray.push(value.toLowerCase())
-        inputElem.value = ''
-    }else{
-        alert('Please enter a value')
-    } 
+    })
+    inputElem.value = ''
 }
 
 // removes tags from inputs (casts and genres input)
@@ -311,13 +317,37 @@ function deleteSeries(e,seriesTitle, seriesID){
 
 function openModal (e, id) {
     e.preventDefault()
+    seriesID = id
     $.body.classList.add('show-modal')
 }
 
-function closeModal(e){
-    if(e.target.className === 'modal-wrapper' || closeModalBtn.contains(e.target)){
-        $.body.classList.remove('show-modal')
-    }
+function closeModal(){
+    $.body.classList.remove('show-modal')
+    modalWrapper.querySelector('.ask-modal').classList.remove('hide')
+    modalWrapper.querySelector('.episodes-modal').classList.remove('show')
+}
+
+function editSeriesInfos () {
+    closeModal()
+    showAddSeriesForm()
+    const seriesInfos = allSeries.find(series => series[0] === seriesID)[1]
+
+    titleInput.value = seriesInfos.title
+    descriptionInput.value = seriesInfos.description
+    genres = seriesInfos.genres
+    const date = seriesInfos.dateRelease.split('/')
+    yearInput.value = date[0]
+    monthInput.value = date[1]
+    dayInput.value = date[2]
+    videoPosterInput.value = seriesInfos.videoPoster
+    imageUrlInput.value = seriesInfos.imageURL
+    countryInput.value = seriesInfos.country
+    producerNameInput.value = seriesInfos.producer
+    ratingInput.value = seriesInfos.rating
+    casts = seriesInfos.casts
+    checkBox.checked = seriesInfos.isVisible
+    renderInputTags(tagsInput, genres,'genres')
+    renderInputTags(castsInput, casts,'casts')
 }
 
 function clearInputs () {
@@ -330,10 +360,12 @@ function clearInputs () {
     casts = []
 }
 
+
+addSeriesBtn.addEventListener('click', showAddSeriesForm)
 submitSeriesBtn.addEventListener('click', addNewSeries)
 imageUrlInput.addEventListener('input', showImagePreviewHandler)
 searchInput.addEventListener('input', searchHandler)
-modalWrapper.addEventListener('click', e => closeModal(e))
+editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 
 tagsInput.addEventListener('keydown', e => {
     if(e.key === 'Enter'){
@@ -345,6 +377,12 @@ castsInput.addEventListener('keydown', e => {
     if(e.key === 'Enter'){
         e.preventDefault()
         addInputTag(castsInput, casts, 'casts')
+    }
+})
+
+modalWrapper.addEventListener('click', e => {
+    if(e.target.className === 'modal-wrapper' || closeModalBtn.contains(e.target)){
+        closeModal()
     }
 })
 
