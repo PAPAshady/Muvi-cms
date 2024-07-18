@@ -58,6 +58,8 @@ let allSeries = null
 
 
 
+// ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
+
 async function getAllSeries () {
     try {
         const res = await fetch('https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series.json')
@@ -127,36 +129,6 @@ function showAddSeriesForm (seriesTitle){
     // change the text of submit btn and form title dynamically
     submitSeriesBtn.querySelector('.btn-text').textContent = seriesInfosEditMode ? 'Edit series' : 'Add new series'
     formTitle.textContent = seriesInfosEditMode ? `Edit ${seriesTitle} series` : 'Add new series'
-}
-
-//makes the episodes form visible to the user
-function showEpisodesForm (seriesTitle, id){
-    $.body.className = ''
-    $.body.classList.add('add-episode')
-    formTitle.textContent = `Add ${seriesTitle} episode`
-    seriesID = id
-    $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
-
-    const selectedSeries = allSeries.find(series => series[0] === id)[1]
-
-    episodeSeasonNumberInput.innerHTML = ''
-
-    if(selectedSeries.seasons){
-        const seasons = selectedSeries.seasons.map(season => {
-            return `<option value="${season.seasonNumber}">Season ${season.seasonNumber}</option>`
-        }).join('')
-
-        episodeSeasonNumberInput.insertAdjacentHTML('afterbegin' ,seasons)
-
-        // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
-        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
-        `<option value="${selectedSeries.seasons.length + 1}">Season ${selectedSeries.seasons.length + 1} (New Season)</option>`
-        )
-    }else {
-        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
-    }
-
-
 }
 
 // adds tags for inputs (casts and genres input)
@@ -245,51 +217,6 @@ function showImagePreviewHandler (e, imageElem) {
     })
 }
 
-// validate inputs before fetching the data
-function validateInputs () {
-    const title = titleInput.value.trim()
-    const description = v.isLength(descriptionInput.value.trim(), {min: 50, max: 250})
-    const dateRelease = v.isDate(`${yearInput.value}/${monthInput.value}/${dayInput.value}`)
-    const videoPosterURL = v.isURL(videoPosterInput.value.trim())
-    const imageURL = v.isURL(imageUrlInput.value.trim())
-    const country = v.isAlpha(countryInput.value.trim(), ['en-US'], {ignore : '\s'})
-    const producer = producerNameInput.value.trim()
-    const rating = v.isDecimal(ratingInput.value.trim())
-
-    const showInvalidInput = (elemsArray) => {
-        elemsArray.forEach(elem => elem.classList.add('invalid'))
-        elemsArray[0].scrollIntoView({behavior: 'smooth', block: 'center'})
-
-        setTimeout(() => {
-            elemsArray.forEach(elem => elem.classList.remove('invalid'))
-        },2000)
-
-        return false
-    }
-
-    if(!title) return showInvalidInput([titleInput.parentElement.parentElement])
-
-    if(!description) return showInvalidInput([descriptionInput.parentElement.parentElement]) 
-
-    if(!genres.length) return showInvalidInput([tagsInput.parentElement.parentElement])
-
-    if(!dateRelease) return showInvalidInput([yearInput, monthInput, dayInput])
-
-    if(!videoPosterURL) return showInvalidInput([videoPosterInput]) 
-
-    if(!imageURL) return showInvalidInput([imageUrlInput]) 
-
-    if(!country) return showInvalidInput([countryInput]) 
-
-    if(!producer) return showInvalidInput([producerNameInput]) 
-
-    if(!rating) return showInvalidInput([ratingInput]) 
-
-    if(!casts.length) return showInvalidInput([castsInput.parentElement])
-
-    return true
-}
-
 function addOrEditSeries (){                
     if(validateInputs()){
 
@@ -374,17 +301,6 @@ function deleteSeries(seriesTitle, seriesID){
     }
 }
 
-function openModal (id) {
-    seriesID = id
-    $.body.classList.add('show-modal')
-}
-
-function closeModal(){
-    $.body.classList.remove('show-modal')
-    modalWrapper.querySelector('.ask-modal').classList.remove('hide')
-    modalWrapper.querySelector('.episodes-modal').classList.remove('show')
-}
-
 // fills the input with the infos of the series that user wants to edit
 function editSeriesInfos () {
     closeModal()
@@ -413,6 +329,92 @@ function editSeriesInfos () {
     showAddSeriesForm(seriesInfos.title)
 }
 
+
+
+// ---------- CODES FOR ADDING OR EDITING AN EPISODE ---------- //
+
+//makes the episodes form visible to the user
+function showEpisodesForm (seriesTitle, id){
+    $.body.className = ''
+    $.body.classList.add('add-episode')
+    formTitle.textContent = `Add ${seriesTitle} episode`
+    seriesID = id
+    $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
+
+    const selectedSeries = allSeries.find(series => series[0] === id)[1]
+
+    episodeSeasonNumberInput.innerHTML = ''
+
+    if(selectedSeries.seasons){
+        const seasons = selectedSeries.seasons.map(season => {
+            return `<option value="${season.seasonNumber}">Season ${season.seasonNumber}</option>`
+        }).join('')
+
+        episodeSeasonNumberInput.insertAdjacentHTML('afterbegin' ,seasons)
+
+        // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
+        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
+        `<option value="${selectedSeries.seasons.length + 1}">Season ${selectedSeries.seasons.length + 1} (New Season)</option>`
+        )
+    }else {
+        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
+    }
+
+
+}
+
+
+
+// ---------- CODES FOR INPUT VALIDATION ---------- //
+
+// validate inputs before fetching the data
+function validateInputs () {
+    const title = titleInput.value.trim()
+    const description = v.isLength(descriptionInput.value.trim(), {min: 50, max: 250})
+    const dateRelease = v.isDate(`${yearInput.value}/${monthInput.value}/${dayInput.value}`)
+    const videoPosterURL = v.isURL(videoPosterInput.value.trim())
+    const imageURL = v.isURL(imageUrlInput.value.trim())
+    const country = v.isAlpha(countryInput.value.trim(), ['en-US'], {ignore : '\s'})
+    const producer = producerNameInput.value.trim()
+    const rating = v.isDecimal(ratingInput.value.trim())
+
+    const showInvalidInput = (elemsArray) => {
+        elemsArray.forEach(elem => elem.classList.add('invalid'))
+        elemsArray[0].scrollIntoView({behavior: 'smooth', block: 'center'})
+
+        setTimeout(() => {
+            elemsArray.forEach(elem => elem.classList.remove('invalid'))
+        },2000)
+
+        return false
+    }
+
+    if(!title) return showInvalidInput([titleInput.parentElement.parentElement])
+
+    if(!description) return showInvalidInput([descriptionInput.parentElement.parentElement]) 
+
+    if(!genres.length) return showInvalidInput([tagsInput.parentElement.parentElement])
+
+    if(!dateRelease) return showInvalidInput([yearInput, monthInput, dayInput])
+
+    if(!videoPosterURL) return showInvalidInput([videoPosterInput]) 
+
+    if(!imageURL) return showInvalidInput([imageUrlInput]) 
+
+    if(!country) return showInvalidInput([countryInput]) 
+
+    if(!producer) return showInvalidInput([producerNameInput]) 
+
+    if(!rating) return showInvalidInput([ratingInput]) 
+
+    if(!casts.length) return showInvalidInput([castsInput.parentElement])
+
+    return true
+}
+
+
+// ---------- CLEAR INPUTS ---------- //
+
 function clearInputs () {
     $.querySelectorAll('input').forEach(input => input.value = '')
     $.querySelectorAll('.input span').forEach(span => span.remove())
@@ -423,6 +425,23 @@ function clearInputs () {
     casts = []
 }
 
+
+// ---------- CODES FOR MODALS ---------- //
+
+function openModal (id) {
+    seriesID = id
+    $.body.classList.add('show-modal')
+}
+
+function closeModal(){
+    $.body.classList.remove('show-modal')
+    modalWrapper.querySelector('.ask-modal').classList.remove('hide')
+    modalWrapper.querySelector('.episodes-modal').classList.remove('show')
+}
+
+
+
+// ---------- EVENT LISTENERS ---------- //
 
 addSeriesBtn.addEventListener('click', showAddSeriesForm)
 submitSeriesBtn.addEventListener('click', addOrEditSeries)
