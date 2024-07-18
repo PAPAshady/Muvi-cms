@@ -136,6 +136,27 @@ function showEpisodesForm (seriesTitle, id){
     formTitle.textContent = `Add ${seriesTitle} episode`
     seriesID = id
     $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
+
+    const selectedSeries = allSeries.find(series => series[0] === id)[1]
+
+    episodeSeasonNumberInput.innerHTML = ''
+
+    if(selectedSeries.seasons){
+        const seasons = selectedSeries.seasons.map(season => {
+            return `<option value="${season.seasonNumber}">Season ${season.seasonNumber}</option>`
+        }).join('')
+
+        episodeSeasonNumberInput.insertAdjacentHTML('afterbegin' ,seasons)
+
+        // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
+        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
+        `<option value="${selectedSeries.seasons.length + 1}">Season ${selectedSeries.seasons.length + 1} (New Season)</option>`
+        )
+    }else {
+        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
+    }
+
+
 }
 
 // adds tags for inputs (casts and genres input)

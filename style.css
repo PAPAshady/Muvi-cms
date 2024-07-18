@@ -836,7 +836,7 @@ select{
     padding: 10px;
     border-radius: 5px;
     font-family: "Poppins", sans-serif;
-    width: 135px;
+    width: 200px;
     border: 2px solid transparent;
     transition: border-color .3s;
 }
@@ -895,7 +895,7 @@ select.invalid{
 
     select {
         height: 49px;
-        width: 170px;
+        width: 230px;
         font-size: 1rem;
     }
 
