@@ -190,6 +190,7 @@ function showImagePreviewHandler (e, imageElem) {
     image.addEventListener('load', ()=>{
         imageElem.src = value
         imageElem.parentElement.classList.remove('loading')
+        e.target.classList.remove('invalid')
         errorMsg.textContent = 'Invalid URL'
     })
 
@@ -357,7 +358,9 @@ function editSeriesInfos () {
     monthInput.value = date[1]
     dayInput.value = date[2]
     videoPosterInput.value = seriesInfos.videoPoster
+    landscapeImg.src = seriesInfos.videoPoster
     imageUrlInput.value = seriesInfos.imageURL
+    portraitImg.src = seriesInfos.imageURL
     countryInput.value = seriesInfos.country
     producerNameInput.value = seriesInfos.producer
     ratingInput.value = seriesInfos.rating
