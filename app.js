@@ -36,7 +36,7 @@ async function getAllSeries () {
     }
 }
 
-async function showAllSeries (seriesArray) {
+async function showSeries (seriesArray) {
     
     if(seriesArray){
         allSeriesContainer.querySelectorAll('.media-card').forEach(elem => elem.remove())
@@ -79,9 +79,9 @@ function searchHandler (e) {
     const value = e.target.value.trim()
     if(value){
         const filteredSeries = allSeries.filter(series => series[1].title.toUpperCase().includes(value.toUpperCase()))
-        showAllSeries(filteredSeries)
+        showSeries(filteredSeries)
     }else{
-        showAllSeries(allSeries)
+        showSeries(allSeries)
     }
 }
 
@@ -259,7 +259,7 @@ function addNewSeries (e){
             .then(message => {
                 alert('Series added successfully :)')
                 clearInputs()
-                showAllSeries()
+                showSeries()
                 window.scrollTo({top : 0, behavior : 'smooth'})
                 $.body.classList.remove('add-series')
                 console.log(message);
@@ -290,7 +290,7 @@ function deleteSeries(e,seriesTitle, seriesID){
                 .then(res => res.json())
                 .then(message => {
                     alert(`${seriesTitle} deleted successfully !`)
-                    showAllSeries()
+                    showSeries()
                     console.log(message);
                 }).catch(err => {
                     alert(`An error occured while deleting ${seriesTitle} series`)
@@ -331,6 +331,6 @@ castsInput.addEventListener('keydown', e => {
 
 window.addEventListener('load', async ()=>{
     await getAllSeries()
-    showAllSeries(allSeries)
+    showSeries(allSeries)
 })
 
