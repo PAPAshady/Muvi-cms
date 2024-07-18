@@ -295,8 +295,8 @@
 
                         <!---------- CHECK-BOX START ---------->
                         <div class="check-box-wrapper">
-                            <input type="checkbox" id="checkBox" checked>
-                            <label for="checkBox">Make this series visible for users</label>
+                            <input type="checkbox" id="seriesCheckbox" checked>
+                            <label for="seriesCheckbox">Make this series visible for users</label>
                         </div>
                         <!---------- CHECK-BOX END ---------->
     
@@ -312,7 +312,7 @@
 
                     <div class="add-new-episode-form">
 
-                        <section class="episode-name">
+                        <section class="episode-season-number">
                             <div class="section-title-and-description">
                                 <h4>Which season you want to add this episode ?</h4>
                             </div>
@@ -426,6 +426,14 @@
                                 </div>
                             </div>
                         </section>
+
+                        <!---------- CHECK-BOX START ---------->
+                        <div class="check-box-wrapper">
+                            <input type="checkbox" id="episodeCheckbox" checked>
+                            <label for="episodeCheckbox">Make this episode visible for users</label>
+                        </div>
+                        <!---------- CHECK-BOX END ---------->
+
                         <button class="btn" id="addEpisodeBtn" >
                             <span class="btn-text">Add episode</span>
                             <div class="btn-loader"></div>

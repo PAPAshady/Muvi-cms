@@ -26,7 +26,7 @@ const countryInput = $.getElementById('countryInput')
 const producerNameInput = $.getElementById('producerName')
 const ratingInput = $.getElementById('ratingInput')
 const castsInput = $.getElementById('castsInput')
-const checkBox = $.getElementById('checkBox')
+const seriesCheckbox = $.getElementById('seriesCheckbox')
 
 // add-episode form elements
 const episodeSeasonNumberInput = $.getElementById('episodeSeasonNumberInput')
@@ -39,6 +39,7 @@ const subtitleUrlInput = $.getElementById('subtitleUrlInput')
 const subtitleLangInput = $.getElementById('subtitleLangInput')
 const addSubtitleUrlBtn = $.getElementById('addSubtitleUrlBtn')
 const subtitleUrlsContainer = $.getElementById('subtitleUrlsContainer')
+const episodeCheckbox = $.getElementById('episodeCheckbox')
 const addEpisodeBtn = $.getElementById('addEpisodeBtn')
 
 // modal elements
@@ -291,7 +292,7 @@ function addOrEditSeries (){
             country : countryInput.value.trim(),
             producer : producerNameInput.value.trim(),
             videoPoster : videoPosterInput.value.trim(),
-            isVisible : checkBox.checked,
+            isVisible : seriesCheckbox.checked,
             genres,
             casts,
             seasons : []
@@ -383,7 +384,7 @@ function editSeriesInfos () {
     producerNameInput.value = seriesInfos.producer
     ratingInput.value = seriesInfos.rating
     casts = seriesInfos.casts
-    checkBox.checked = seriesInfos.isVisible
+    seriesCheckbox.checked = seriesInfos.isVisible
 
     seriesInfosEditMode = true
     renderInputTags(tagsInput, genres,'genres')

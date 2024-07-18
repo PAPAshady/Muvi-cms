@@ -780,7 +780,7 @@ body.add-episode .add-new-episode-form{
     cursor: pointer;
 }
 
-#checkBox{
+input[type="checkbox"] {
     width: 20px;
     cursor: pointer;
     height: 20px;
