@@ -1,8 +1,16 @@
 const $ = document
 const v = validator
-const addSeriesBtn = $.getElementById('addSeriesBtn')
+
+// form elements
 const allForms = $.querySelectorAll('form')
 const formTitle = $.getElementById('formTitle')
+
+// series container elements
+const searchInput = $.getElementById('searchInput')
+const allSeriesContainer = $.querySelector('.media-content-wrapper')
+
+// add-series form elements
+const addSeriesBtn = $.getElementById('addSeriesBtn')
 const titleInput = $.getElementById('titleInput')
 const descriptionInput = $.getElementById('descriptionInput')
 const tagsInput = $.getElementById('tagsInput')
@@ -19,13 +27,28 @@ const producerNameInput = $.getElementById('producerName')
 const ratingInput = $.getElementById('ratingInput')
 const castsInput = $.getElementById('castsInput')
 const checkBox = $.getElementById('checkBox')
-const searchInput = $.getElementById('searchInput')
+
+// add-episode form elements
+const episodeSeasonNumberInput = $.getElementById('episodeSeasonNumberInput')
+const episodeNameInput = $.getElementById('episodeNameInput')
+const videoUrlInput = $.getElementById('videoUrlInput')
+const videoQualityInput = $.getElementById('videoQualityInput')
+const addVideoUrlBtn = $.getElementById('addVideoUrlBtn')
+const videoUrlsContainer = $.getElementById('videoUrlsContainer')
+const subtitleUrlInput = $.getElementById('subtitleUrlInput')
+const subtitleLangInput = $.getElementById('subtitleLangInput')
+const addSubtitleUrlBtn = $.getElementById('addSubtitleUrlBtn')
+const subtitleUrlsContainer = $.getElementById('subtitleUrlsContainer')
+const addEpisodeBtn = $.getElementById('addEpisodeBtn')
+
+// modal elements
 const modalWrapper = $.querySelector('.modal-wrapper')
 const modalTitle = $.getElementById('modalTitle')
 const closeModalBtn = $.getElementById('closeModalBtn')
-const allSeriesContainer = $.querySelector('.media-content-wrapper')
 const editSeriesInfosBtn = $.getElementById('editSeriesInfosBtn')
 const editSeriesEpisodesBtn = $.getElementById('editSeriesEpisodesBtn')
+
+// global variables
 let genres = []
 let casts = []
 let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series

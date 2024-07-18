@@ -341,7 +341,7 @@
                             <div class="input-holder">
                                 <div class="url-input-and-select-box">
                                     <input type="text" class="form-input" placeholder="Enter episode URL" id="videoUrlInput">
-                                    <select id="ChoseVideoQualityInput">
+                                    <select id="videoQualityInput">
                                         <option selected>Select a quality</option>
                                         <option value="144">144p</option>
                                         <option value="240">240p</option>
@@ -353,10 +353,10 @@
                                         <option value="2160">2160p 4K</option>
                                     </select>
                                 </div>
-                                <button class="btn">Add</button>
+                                <button class="btn" id="addVideoUrlBtn">Add</button>
                                 <p class="error-msg">Please enter a valid video url and chose a quality for it and then click ADD</p>
                             </div>
-                            <div class="urls-wrapper">
+                            <div class="urls-wrapper" id="videoUrlsContainer">
                                 <div class="url">
                                     https://sabzlearn.ir/course/linux-for-hackers/
                                     <span>480p</span>
@@ -390,7 +390,7 @@
                             <div class="input-holder">
                                 <div class="url-input-and-select-box">
                                     <input type="text" class="form-input" placeholder="Enter subtitle URL" id="subtitleUrlInput">
-                                    <select id="ChoseSubtitleInput">
+                                    <select id="subtitleLangInput">
                                         <option selected>Language</option>
                                         <option value="en">English</option>
                                         <option value="fa">Farsi</option>
@@ -399,10 +399,10 @@
                                         <option value="cn">Chinese</option>
                                     </select>
                                 </div>
-                                <button class="btn">Add</button>
+                                <button class="btn" id="addSubtitleUrlBtn">Add</button>
                                 <p class="error-msg">Please enter a valid subtitle url and chose a langauge for it and then click ADD</p>
                             </div>
-                            <div class="urls-wrapper">
+                            <div class="urls-wrapper" id="subtitleUrlsContainer">
                                 <div class="url">
                                     https://sabzlearn.ir/course/linux-for-hackers/
                                     <span>Farsi</span>
@@ -426,7 +426,7 @@
                                 </div>
                             </div>
                         </section>
-                        <button class="btn">
+                        <button class="btn" id="addEpisodeBtn" >
                             <span class="btn-text">Add episode</span>
                             <div class="btn-loader"></div>
                         </button>
