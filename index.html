@@ -14,7 +14,7 @@
     <!-- main styles -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="">
+<body class="add-series">
 
     <!---------- PAGE-LOADER START ---------->
     <div class="loader">
@@ -212,6 +212,15 @@
                         </div>
                         <input class="form-input" type="text" id="videoPosterInput" placeholder="Enter your URL">
                         <p class="error-msg">Invalid URL</p>
+
+                        <div class="image-wrapper">
+                            <div class="landscape-preview">
+                                <div class="loader-wrapper">
+                                    <div class="img-loader"></div>
+                                </div>
+                                <img src="images/no-image.jpg" id="landscapeImg" alt="image landscape preview">
+                            </div>
+                        </div>
                         </section>
     
                         <!---------- VIDEO-POSTER URL END ---------->
@@ -227,19 +236,12 @@
                             <input class="form-input" type="text" id="imageUrlInput" placeholder="Enter your URL">
                             <p class="error-msg">Invalid URL</p>
     
-                            <div class="images-wrapper">
+                            <div class="image-wrapper">
                                 <div class="portrait-preview">
                                     <div class="loader-wrapper">
                                         <div class="img-loader"></div>
                                     </div>
                                     <img src="images/no-image.jpg" id="portraitImg" alt="image portrait preview">
-                                </div>
-    
-                                <div class="landscape-preview">
-                                    <div class="loader-wrapper">
-                                        <div class="img-loader"></div>
-                                    </div>
-                                    <img src="images/no-image.jpg" id="landscapeImg" alt="image landscape preview">
                                 </div>
                             </div>
                         </div>

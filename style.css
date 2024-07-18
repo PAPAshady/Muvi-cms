@@ -589,15 +589,14 @@ body.add-episode .add-new-episode-form{
     margin-bottom: 25px;
 }
 
-.images-wrapper{
+.image-wrapper{
     display: flex;
     gap: 10px;
     margin-bottom: 40px;
     width: 240px;
-    margin: 0 auto;
 }
 
-.images-wrapper span{
+.image-wrapper span{
     font-size: .7rem;
     font-weight: 600;
 }
@@ -607,7 +606,7 @@ body.add-episode .add-new-episode-form{
     position: relative;
 }
 
-.images-wrapper .loader-wrapper{
+.image-wrapper .loader-wrapper{
     width: 100%;
     height: 100%;
     position: absolute;
@@ -637,35 +636,35 @@ body.add-episode .add-new-episode-form{
 
 .landscape-preview{
     width: 100%;
-    height: 80px;
+    height: 110px;
 }
 
 .portrait-preview{
-    width: 60%;
-    height: 130px;
+    width: 50%;
+    height: 180px;
 }
 
 @media screen and (min-width : 480px) {
-    .images-wrapper span {
+    .image-wrapper span {
         font-size: 1rem;
     }
     
-    .images-wrapper{
-        width: 320px;
+    .image-wrapper{
+        width: 270px;
     }
 
     .landscape-preview{
-        height: 100px;
+        height: 125px;
     }
 
     .portrait-preview{
-        height: 180px;
+        height: 220px;
     }
 }
 
 @media screen and (min-width : 768px) {
-    .images-wrapper{
-        width: 580px;
+    .image-wrapper{
+        width: 360px;
         gap: 20px;
     }
 
