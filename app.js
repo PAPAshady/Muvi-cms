@@ -198,6 +198,7 @@ function addNewSeries (e){
                 alert('Series added successfully :)')
                 clearInputs()
                 showAllSeries()
+                window.scrollTo({top : 0, behavior : 'smooth'})
                 console.log(message);
             })
             .catch(err => {
@@ -266,7 +267,7 @@ async function showAllSeries () {
 function deleteSeries(e,seriesTitle, seriesID){
     e.preventDefault()
 
-    const isSure = confirm(`Are you sure you want to delete ${seriesTitle} completly ? this action is permanent and it will delete all this series seasons and episodes`)
+    const isSure = confirm(`Are you sure you want to delete ${seriesTitle} completely ? this action is permanent and it will delete all this series seasons and episodes`)
 
     if(isSure){
         const shouldDelete = prompt(`If you are sure about deleting ${seriesTitle} permanently, please write  ${seriesTitle}  in the input below`)
