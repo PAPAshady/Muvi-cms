@@ -38,7 +38,7 @@ async function getAllSeries () {
         const data = await res.json()
         allSeries = Object.entries(data)
     } catch (error) {
-        alert('An error occured while geting the data from server')
+        alert('An error occurred while getting the data from server')
         console.log(error);
     }
 }
@@ -66,7 +66,7 @@ async function showSeries (seriesArray) {
                                     <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg>
                             </button>
-                            <button class="btn-fill">
+                            <button onclick="showEpisodesForm(event, '${series[0]}', 'add-episode')" class="btn-fill">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                                 </svg>
@@ -94,11 +94,21 @@ function searchHandler (e) {
 
 //makes the add-series form visible to the user
 function showAddSeriesForm (){
+    $.body.className = ''
     $.body.classList.add('add-series')
     $.querySelector('.input-wrapper').scrollIntoView({behavior: 'smooth'})
 
     // change the text of submit btn dynamically
     submitSeriesBtn.querySelector('.btn-text').textContent = seriesInfosEditMode ? 'Edit series' : 'Add new series'
+}
+
+//makes the episodes form visible to the user
+function showEpisodesForm (e, id){
+    e.preventDefault()
+    $.body.className = ''
+    $.body.classList.add('add-episode')
+    seriesID = id
+    $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
 }
 
 // adds tags for inputs (casts and genres input)
@@ -126,14 +136,14 @@ function addInputTag(inputElem, tagsArray, arrayNameToPush){
     } 
 }
 
-// since it's not possible to pass an varable name in onclick attribute of an element, i used arrayNameToPush to specify whitch array should be modified in removeinputTag function
+// since it's not possible to pass an variable name in onclick attribute of an element, i used arrayNameToPush to specify which array should be modified in removeInputTag function
 function renderInputTags(inputElem, tagsArray, arrayNameToPush){
     inputElem.parentElement.querySelectorAll('span').forEach(span => span.remove())
     tagsArray.forEach(tag => {
         inputElem.parentElement.insertAdjacentHTML('afterbegin' ,
             `<span>
                 ${tag}
-                <svg onclick="removeinputTag(event,'${tag}', '${arrayNameToPush}')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                <svg onclick="removeInputTag(event,'${tag}', '${arrayNameToPush}')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                 </svg>
@@ -145,7 +155,7 @@ function renderInputTags(inputElem, tagsArray, arrayNameToPush){
 }
 
 // removes tags from inputs (casts and genres input)
-function removeinputTag (e, value, arrayName){
+function removeInputTag (e, value, arrayName){
     if(e.target.tagName === 'path'){
         e.target.parentElement.parentElement.remove()
     }
