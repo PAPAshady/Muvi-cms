@@ -677,6 +677,22 @@ body.add-episode .add-new-episode-form{
     }
 }
 
+@media screen and (min-width : 992px) {
+    .image-wrapper{
+        width: 450px;
+    }
+
+    .landscape-preview{
+        height: 240px;
+    }
+
+    .portrait-preview{
+        height: 400px;
+        width: 60%;
+    }
+    
+}
+
         
 /* image-url end */
 
