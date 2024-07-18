@@ -26,6 +26,7 @@ const editSeriesInfosBtn = $.getElementById('editSeriesInfosBtn')
 const editSeriesEpisodesBtn = $.getElementById('editSeriesEpisodesBtn')
 let genres = []
 let casts = []
+let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
 let seriesID = null
 let allSeries = null
 
@@ -95,10 +96,12 @@ function searchHandler (e) {
 function showAddSeriesForm (){
     $.body.classList.add('add-series')
     $.querySelector('.input-wrapper').scrollIntoView({behavior: 'smooth'})
+
+    // change the text of submit btn dynamically
+    submitSeriesBtn.querySelector('.btn-text').textContent = seriesInfosEditMode ? 'Edit series' : 'Add new series'
 }
 
 // adds tags for inputs (casts and genres input)
-// since it's not possible to pass an varable name in onclick attribute of an element, i used arrayNameToPush to specify whitch array should be modified in removeinputTag
 function addInputTag(inputElem, tagsArray, arrayNameToPush){
 
     if(tagsArray.length === 5) {
@@ -123,6 +126,7 @@ function addInputTag(inputElem, tagsArray, arrayNameToPush){
     } 
 }
 
+// since it's not possible to pass an varable name in onclick attribute of an element, i used arrayNameToPush to specify whitch array should be modified in removeinputTag function
 function renderInputTags(inputElem, tagsArray, arrayNameToPush){
     inputElem.parentElement.querySelectorAll('span').forEach(span => span.remove())
     tagsArray.forEach(tag => {
@@ -232,14 +236,14 @@ function validateInputs () {
     return true
 }
 
-function addNewSeries (e){
+function addOrEditSeries (e){
     e.preventDefault()
-
+                
     if(validateInputs()){
 
         const isAlreadyAdded = allSeries.some(series => series[1].title.toUpperCase() === titleInput.value.trim().toUpperCase())
 
-        if(isAlreadyAdded){
+        if(isAlreadyAdded && !seriesInfosEditMode){
             alert("You've added this series before !!!")
             return
         }
@@ -247,7 +251,7 @@ function addNewSeries (e){
         submitSeriesBtn.classList.add('loading')
         submitSeriesBtn.setAttribute('disabled', true)
 
-        const newSeries = {
+        const series = {
             seriesID : titleInput.value.trim().split(' ').join('-') + '-series', // add a dash between words
             title : titleInput.value.trim(),
             description : descriptionInput.value.trim(),
@@ -263,20 +267,22 @@ function addNewSeries (e){
             seasons : []
         }
 
-        fetch(`https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series.json`, {
-            method : 'POST',
+        // change the url dynamically. it specifies if user wants to add a new series or edit a series
+        fetch(`https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/${seriesInfosEditMode ? `series/${seriesID}` : 'series'}.json`, {
+            method : `${seriesInfosEditMode ? 'PUT' : 'POST'}`,
             headers : {
                 "Content-type" : 'Application/json'
             },
-            body : JSON.stringify(newSeries)
+            body : JSON.stringify(series)
         })
             .then(res => res.json())
             .then(getAllSeries)
             .then(()=>{
-                alert('Series added successfully :)')
+                alert(`Series ${seriesInfosEditMode ? 'edited' : 'added'} successfully :)`)
                 clearInputs()
                 showSeries(allSeries)
                 window.scrollTo({top : 0, behavior : 'smooth'})
+                seriesInfosEditMode = false
                 $.body.classList.remove('add-series')
             })
             .catch(err => {
@@ -330,9 +336,9 @@ function closeModal(){
     modalWrapper.querySelector('.episodes-modal').classList.remove('show')
 }
 
+// fills the input with the infos of the series that user wants to edit
 function editSeriesInfos () {
     closeModal()
-    showAddSeriesForm()
     const seriesInfos = allSeries.find(series => series[0] === seriesID)[1]
 
     titleInput.value = seriesInfos.title
@@ -349,8 +355,11 @@ function editSeriesInfos () {
     ratingInput.value = seriesInfos.rating
     casts = seriesInfos.casts
     checkBox.checked = seriesInfos.isVisible
+
+    seriesInfosEditMode = true
     renderInputTags(tagsInput, genres,'genres')
     renderInputTags(castsInput, casts,'casts')
+    showAddSeriesForm()
 }
 
 function clearInputs () {
@@ -365,7 +374,7 @@ function clearInputs () {
 
 
 addSeriesBtn.addEventListener('click', showAddSeriesForm)
-submitSeriesBtn.addEventListener('click', addNewSeries)
+submitSeriesBtn.addEventListener('click', addOrEditSeries)
 imageUrlInput.addEventListener('input', showImagePreviewHandler)
 searchInput.addEventListener('input', searchHandler)
 editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
