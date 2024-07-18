@@ -157,36 +157,31 @@ function removeinputTag (e, value, arrayName){
     }
 }
 
-function showImagePreviewHandler (e) {
+function showImagePreviewHandler (e, imageElem) {
     const value = e.target.value.trim()
     const errorMsg = e.target.nextElementSibling
 
     if(!value){
-        portraitImg.src = '/images/no-image.jpg'
-        landscapeImg.src = '/images/no-image.jpg'
-        portraitImg.parentElement.classList.remove('loading')
-        landscapeImg.parentElement.classList.remove('loading')
-        imageUrlInput.classList.remove('invalid')
+        imageElem.src = '/images/no-image.jpg'
+        imageElem.parentElement.classList.remove('loading')
+        e.target.classList.remove('invalid')
         errorMsg.textContent = 'Invalid URL'
         return
     }
 
-    imageUrlInput.classList.remove('invalid')
+    imageElem.classList.remove('invalid')
     const image = new Image()
     image.src = value
-    portraitImg.parentElement.classList.add('loading')
-    landscapeImg.parentElement.classList.add('loading')
+    imageElem.parentElement.classList.add('loading')
     
     image.addEventListener('load', ()=>{
-        portraitImg.src = value
-        landscapeImg.src = value
-        portraitImg.parentElement.classList.remove('loading')
-        landscapeImg.parentElement.classList.remove('loading')
+        imageElem.src = value
+        imageElem.parentElement.classList.remove('loading')
         errorMsg.textContent = 'Invalid URL'
     })
 
     image.addEventListener('error', ()=> {
-        imageUrlInput.classList.add('invalid')
+        e.target.classList.add('invalid')
         errorMsg.textContent = 'Failed to load the image'
     })
 }
@@ -375,7 +370,8 @@ function clearInputs () {
 
 addSeriesBtn.addEventListener('click', showAddSeriesForm)
 submitSeriesBtn.addEventListener('click', addOrEditSeries)
-imageUrlInput.addEventListener('input', showImagePreviewHandler)
+imageUrlInput.addEventListener('input', e => showImagePreviewHandler(e, portraitImg))
+videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, landscapeImg))
 searchInput.addEventListener('input', searchHandler)
 editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 
