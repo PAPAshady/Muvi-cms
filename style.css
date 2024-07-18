@@ -830,7 +830,7 @@ body.add-episode .add-new-episode-form{
     align-items: start;
 }
 
-.url-input-and-select-box select{
+select{
     border: none;
     background-color: var(--section-color);
     padding: 10px;
@@ -841,7 +841,7 @@ body.add-episode .add-new-episode-form{
     transition: border-color .3s;
 }
 
-.url-input-and-select-box select.invalid{
+select.invalid{
     border-color: var(--red);
 }
 
@@ -893,9 +893,9 @@ body.add-episode .add-new-episode-form{
         align-items: center;
     }
 
-    .url-input-and-select-box select {
+    select {
         height: 49px;
-        width: 160px;
+        width: 170px;
         font-size: 1rem;
     }
 
