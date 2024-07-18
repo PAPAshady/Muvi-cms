@@ -1,6 +1,7 @@
 const $ = document
 const v = validator
 const addSeriesBtn = $.getElementById('addSeriesBtn')
+const allForms = $.querySelectorAll('form')
 const formTitle = $.getElementById('formTitle')
 const titleInput = $.getElementById('titleInput')
 const descriptionInput = $.getElementById('descriptionInput')
@@ -57,17 +58,17 @@ async function showSeries (seriesArray) {
                     <div class="media-info">
                         <a href="#">${series[1].title}</a>
                         <div class="btn-wrapper">
-                            <button onclick="deleteSeries(event, '${series[1].title}', '${series[0]}')" class="btn-fill">
+                            <button onclick="deleteSeries('${series[1].title}', '${series[0]}')" class="btn-fill">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                                     <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                                 </svg>
                             </button>
-                            <button onclick="openModal(event, '${series[0]}')" class="btn-fill">
+                            <button onclick="openModal('${series[0]}')" class="btn-fill">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg>
                             </button>
-                            <button onclick="showEpisodesForm(event, '${series[1].title}', '${series[0]}', 'add-episode')" class="btn-fill">
+                            <button onclick="showEpisodesForm('${series[1].title}', '${series[0]}', 'add-episode')" class="btn-fill">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                                 </svg>
@@ -105,8 +106,7 @@ function showAddSeriesForm (seriesTitle){
 }
 
 //makes the episodes form visible to the user
-function showEpisodesForm (e, seriesTitle, id){
-    e.preventDefault()
+function showEpisodesForm (seriesTitle, id){
     $.body.className = ''
     $.body.classList.add('add-episode')
     formTitle.textContent = `Add ${seriesTitle} episode`
@@ -245,9 +245,7 @@ function validateInputs () {
     return true
 }
 
-function addOrEditSeries (e){
-    e.preventDefault()
-                
+function addOrEditSeries (){                
     if(validateInputs()){
 
         const isAlreadyAdded = allSeries.some(series => series[1].title.toUpperCase() === titleInput.value.trim().toUpperCase())
@@ -305,9 +303,7 @@ function addOrEditSeries (e){
     }
 }
 
-function deleteSeries(e,seriesTitle, seriesID){
-    e.preventDefault()
-
+function deleteSeries(seriesTitle, seriesID){
     const isSure = confirm(`Are you sure you want to delete ${seriesTitle} completely ? this action is permanent and it will delete all this series seasons and episodes`)
 
     if(isSure){
@@ -333,8 +329,7 @@ function deleteSeries(e,seriesTitle, seriesID){
     }
 }
 
-function openModal (e, id) {
-    e.preventDefault()
+function openModal (id) {
     seriesID = id
     $.body.classList.add('show-modal')
 }
@@ -391,6 +386,9 @@ videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, lands
 searchInput.addEventListener('input', searchHandler)
 editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 
+// preventDefault all forms
+allForms.forEach(form => form.addEventListener('submit', e => e.preventDefault()))
+
 tagsInput.addEventListener('keydown', e => {
     if(e.key === 'Enter'){
         addInputTag(tagsInput, genres, 'genres')
@@ -399,7 +397,6 @@ tagsInput.addEventListener('keydown', e => {
 
 castsInput.addEventListener('keydown', e => {
     if(e.key === 'Enter'){
-        e.preventDefault()
         addInputTag(castsInput, casts, 'casts')
     }
 })
