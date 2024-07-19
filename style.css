@@ -830,6 +830,10 @@ input[type="checkbox"] {
     align-items: start;
 }
 
+.url-input-and-select-box.invalid ~ .error-msg{
+    color: var(--red);
+}
+
 select{
     border: none;
     background-color: var(--section-color);

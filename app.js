@@ -40,7 +40,7 @@ const subtitleLangInput = $.getElementById('subtitleLangInput')
 const addSubtitleUrlBtn = $.getElementById('addSubtitleUrlBtn')
 const subtitleUrlsContainer = $.getElementById('subtitleUrlsContainer')
 const episodeCheckbox = $.getElementById('episodeCheckbox')
-const addEpisodeBtn = $.getElementById('addEpisodeBtn')
+const submitEpisodeForm = $.getElementById('addEpisodeBtn')
 
 // modal elements
 const modalWrapper = $.querySelector('.modal-wrapper')
@@ -49,13 +49,10 @@ const closeModalBtn = $.getElementById('closeModalBtn')
 const editSeriesInfosBtn = $.getElementById('editSeriesInfosBtn')
 const editSeriesEpisodesBtn = $.getElementById('editSeriesEpisodesBtn')
 
-// global variables
-let genres = []
-let casts = []
-let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
-let seriesID = null
-let allSeries = null
 
+let [genres,casts,videoQualities,subtitles] = new Array(4).fill([])
+let [seriesID, allSeries] = new Array(2).fill(null)
+let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
 
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
@@ -218,7 +215,7 @@ function showImagePreviewHandler (e, imageElem) {
 }
 
 function addOrEditSeries (){                
-    if(validateInputs()){
+    if(validateInputs('series')){
 
         const isAlreadyAdded = allSeries.some(series => series[1].title.toUpperCase() === titleInput.value.trim().toUpperCase())
 
@@ -363,54 +360,66 @@ function showEpisodesForm (seriesTitle, id){
 
 }
 
-
+function addOrEditEpisode () {
+    if(validateInputs('episode')){
+        alert('done')
+    }
+}
 
 // ---------- CODES FOR INPUT VALIDATION ---------- //
 
 // validate inputs before fetching the data
-function validateInputs () {
-    const title = titleInput.value.trim()
-    const description = v.isLength(descriptionInput.value.trim(), {min: 50, max: 250})
-    const dateRelease = v.isDate(`${yearInput.value}/${monthInput.value}/${dayInput.value}`)
-    const videoPosterURL = v.isURL(videoPosterInput.value.trim())
-    const imageURL = v.isURL(imageUrlInput.value.trim())
-    const country = v.isAlpha(countryInput.value.trim(), ['en-US'], {ignore : '\s'})
-    const producer = producerNameInput.value.trim()
-    const rating = v.isDecimal(ratingInput.value.trim())
+function validateInputs (formNameToValidate) {
 
+    // show the user which input has invalid value
     const showInvalidInput = (elemsArray) => {
         elemsArray.forEach(elem => elem.classList.add('invalid'))
         elemsArray[0].scrollIntoView({behavior: 'smooth', block: 'center'})
 
         setTimeout(() => {
             elemsArray.forEach(elem => elem.classList.remove('invalid'))
-        },2000)
+        },3000)
 
         return false
     }
 
-    if(!title) return showInvalidInput([titleInput.parentElement.parentElement])
+    if(formNameToValidate === 'series'){
+        const title = titleInput.value.trim()
+        const description = v.isLength(descriptionInput.value.trim(), {min: 50, max: 250})
+        const dateRelease = v.isDate(`${yearInput.value}/${monthInput.value}/${dayInput.value}`)
+        const videoPosterURL = v.isURL(videoPosterInput.value.trim())
+        const imageURL = v.isURL(imageUrlInput.value.trim())
+        const country = v.isAlpha(countryInput.value.trim(), ['en-US'], {ignore : '\s'})
+        const producer = producerNameInput.value.trim()
+        const rating = v.isDecimal(ratingInput.value.trim())
+        
+        if(!title) return showInvalidInput([titleInput.parentElement.parentElement])
+        if(!description) return showInvalidInput([descriptionInput.parentElement.parentElement]) 
+        if(!genres.length) return showInvalidInput([tagsInput.parentElement.parentElement])    
+        if(!dateRelease) return showInvalidInput([yearInput, monthInput, dayInput])    
+        if(!videoPosterURL) return showInvalidInput([videoPosterInput])  
+        if(!imageURL) return showInvalidInput([imageUrlInput])   
+        if(!country) return showInvalidInput([countryInput])  
+        if(!producer) return showInvalidInput([producerNameInput]) 
+        if(!rating) return showInvalidInput([ratingInput]) 
+        if(!casts.length) return showInvalidInput([castsInput.parentElement])
 
-    if(!description) return showInvalidInput([descriptionInput.parentElement.parentElement]) 
+        return true
+    }else{
 
-    if(!genres.length) return showInvalidInput([tagsInput.parentElement.parentElement])
+        const episodeName = episodeNameInput.value.trim()
+        const videoUrls = videoQualities.length
+        const videoSubtitles = subtitles.length
 
-    if(!dateRelease) return showInvalidInput([yearInput, monthInput, dayInput])
+        if(!episodeName) return showInvalidInput([episodeNameInput])
+        if(!videoUrls) return showInvalidInput([videoUrlInput, videoQualityInput, videoUrlInput.parentElement])
+        if(!videoSubtitles) return showInvalidInput([subtitleUrlInput, subtitleLangInput, subtitleUrlInput.parentElement])
 
-    if(!videoPosterURL) return showInvalidInput([videoPosterInput]) 
+        return true
+    }
 
-    if(!imageURL) return showInvalidInput([imageUrlInput]) 
-
-    if(!country) return showInvalidInput([countryInput]) 
-
-    if(!producer) return showInvalidInput([producerNameInput]) 
-
-    if(!rating) return showInvalidInput([ratingInput]) 
-
-    if(!casts.length) return showInvalidInput([castsInput.parentElement])
-
-    return true
 }
+
 
 
 // ---------- CLEAR INPUTS ---------- //
@@ -444,6 +453,7 @@ function closeModal(){
 // ---------- EVENT LISTENERS ---------- //
 
 addSeriesBtn.addEventListener('click', showAddSeriesForm)
+submitEpisodeForm.addEventListener('click', addOrEditEpisode)
 submitSeriesBtn.addEventListener('click', addOrEditSeries)
 imageUrlInput.addEventListener('input', e => showImagePreviewHandler(e, portraitImg))
 videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, landscapeImg))
