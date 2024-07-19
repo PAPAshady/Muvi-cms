@@ -403,21 +403,14 @@ function validateInputs (formNameToValidate) {
         if(!producer) return showInvalidInput([producerNameInput]) 
         if(!rating) return showInvalidInput([ratingInput]) 
         if(!casts.length) return showInvalidInput([castsInput.parentElement])
-
-        return true
+        
     }else{
-
-        const episodeName = episodeNameInput.value.trim()
-        const videoUrls = videoQualities.length
-        const videoSubtitles = subtitles.length
-
-        if(!episodeName) return showInvalidInput([episodeNameInput])
-        if(!videoUrls) return showInvalidInput([videoUrlInput, videoQualityInput, videoUrlInput.parentElement])
-        if(!videoSubtitles) return showInvalidInput([subtitleUrlInput, subtitleLangInput, subtitleUrlInput.parentElement])
-
-        return true
+        if(!episodeNameInput.value.trim()) return showInvalidInput([episodeNameInput])
+        if(!videoQualities.length) return showInvalidInput([videoUrlInput, videoQualityInput, videoUrlInput.parentElement])
+        if(!subtitles.length) return showInvalidInput([subtitleUrlInput, subtitleLangInput, subtitleUrlInput.parentElement])
     }
-
+    
+    return true
 }
 
 
