@@ -49,9 +49,8 @@ const closeModalBtn = $.getElementById('closeModalBtn')
 const editSeriesInfosBtn = $.getElementById('editSeriesInfosBtn')
 const editSeriesEpisodesBtn = $.getElementById('editSeriesEpisodesBtn')
 
-
-let [genres,casts,videoQualities,subtitles] = new Array(4).fill([])
-let [seriesID, allSeries] = new Array(2).fill(null)
+let [genres, casts, videoQualities, subtitles] = [[], [], [], []]
+let [seriesID, allSeries] = [null, null]
 let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
 
 
@@ -342,6 +341,7 @@ function showEpisodesForm (seriesTitle, id){
 
     episodeSeasonNumberInput.innerHTML = ''
 
+    // render seasons of this series in the select box
     if(selectedSeries.seasons){
         const seasons = selectedSeries.seasons.map(season => {
             return `<option value="${season.seasonNumber}">Season ${season.seasonNumber}</option>`
@@ -358,6 +358,102 @@ function showEpisodesForm (seriesTitle, id){
     }
 
 
+}
+
+function addURLHandler (e,inputElem){
+    const isSelectBoxValid = inputElem.nextElementSibling.value === 'false' ? false : true
+    const isUrlValid = v.isURL(inputElem.value.trim()) 
+    const errorMsg = e.target.previousElementSibling
+
+    //show error if url input is not valid
+    if(!isUrlValid){
+        inputElem.classList.add('invalid')
+        errorMsg.textContent = 'Please enter a valid URL'
+        errorMsg.classList.add('show')
+        return
+    }else{
+        inputElem.classList.remove('invalid')
+    }
+
+    //show error if user didn't select a value from select-box
+    if(!isSelectBoxValid){
+        inputElem.nextElementSibling.classList.add('invalid')
+        errorMsg.textContent = 'Please chose a value from select-box'
+        errorMsg.classList.add('show')
+        return
+    }
+
+    // if user fixed the error, remove the error message
+    inputElem.nextElementSibling.classList.remove('invalid')
+    errorMsg.classList.remove('show')
+
+    const newURL = {
+        url : inputElem.value.trim(),
+
+        // specifies if this object is a subtitle url or video url
+        [e.target.id === 'addVideoUrlBtn' ? 'quality' : 'language'] : inputElem.nextElementSibling.value
+    }
+
+    let isAlreadyAdded
+
+    if(e.target.id === 'addVideoUrlBtn'){
+        isAlreadyAdded = videoQualities.some(url => url.quality === newURL.quality)
+
+        if(isAlreadyAdded){
+            alert(`You've already added ${newURL.quality + 'p'} quality`)
+            return
+        }
+
+        videoQualities.push(newURL)
+        renderURL(videoQualities)
+
+    }else{
+        isAlreadyAdded = subtitles.some(subtitle => subtitle.language === newURL.language)
+
+        if(isAlreadyAdded){
+            alert("You've already added this subtitle language")
+            return
+        }
+
+        subtitles.push(newURL)
+        renderURL(subtitles)
+    }
+
+    // reset the inputs
+    inputElem.value = ''
+    inputElem.nextElementSibling.value = 'false'
+}
+
+function renderURL (urlArray){
+    const urls = urlArray.map(item => {
+        return `
+        <div class="url">
+            ${item.url}
+            <span>${item.quality ? item.quality + 'p' : item.language.toUpperCase()}</span>
+            <svg onclick="removeURL('${urlArray === videoQualities ? 'videoQualities' : 'subtitles'}', '${item.quality ? item.quality : item.language}')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+            </svg>
+        </div>
+        `
+    }).join('')
+
+    if(urlArray === videoQualities){
+        videoUrlsContainer.innerHTML = ''
+        videoUrlsContainer.insertAdjacentHTML("beforeend", urls)
+    }else{
+        subtitleUrlsContainer.innerHTML = ''
+        subtitleUrlsContainer.insertAdjacentHTML('beforeend', urls)
+    }
+}
+
+function removeURL (urlArrayName, urlArrayProperty){
+    if (urlArrayName === 'videoQualities'){
+        videoQualities = videoQualities.filter(item => item.quality != urlArrayProperty)
+        renderURL(videoQualities)
+    }else{
+        subtitles = subtitles.filter(subtitle => subtitle.language != urlArrayProperty)
+        renderURL(subtitles)
+    }
 }
 
 function addOrEditEpisode () {
@@ -407,7 +503,6 @@ function validateInputs (formNameToValidate) {
     }else{
         if(!episodeNameInput.value.trim()) return showInvalidInput([episodeNameInput])
         if(!videoQualities.length) return showInvalidInput([videoUrlInput, videoQualityInput, videoUrlInput.parentElement])
-        if(!subtitles.length) return showInvalidInput([subtitleUrlInput, subtitleLangInput, subtitleUrlInput.parentElement])
     }
     
     return true
@@ -446,13 +541,16 @@ function closeModal(){
 // ---------- EVENT LISTENERS ---------- //
 
 addSeriesBtn.addEventListener('click', showAddSeriesForm)
-submitEpisodeForm.addEventListener('click', addOrEditEpisode)
 submitSeriesBtn.addEventListener('click', addOrEditSeries)
 imageUrlInput.addEventListener('input', e => showImagePreviewHandler(e, portraitImg))
 videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, landscapeImg))
-searchInput.addEventListener('input', searchHandler)
 editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 
+submitEpisodeForm.addEventListener('click', addOrEditEpisode)
+addVideoUrlBtn.addEventListener('click', e => addURLHandler(e,videoUrlInput))
+addSubtitleUrlBtn.addEventListener('click', e => addURLHandler(e, subtitleUrlInput))
+
+searchInput.addEventListener('input', searchHandler)
 // preventDefault all forms
 allForms.forEach(form => form.addEventListener('submit', e => e.preventDefault()))
 
