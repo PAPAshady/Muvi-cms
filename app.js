@@ -480,27 +480,33 @@ function addOrEditEpisode () {
         let dataToFetch
 
         if(isNewSeason){
-            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons.json`
-            dataToFetch = {
-                seasonNumber,
-                episodes : [newEpisode]
+            dataToFetch = [
+                {
+                    seasonNumber,
+                    episodes : [newEpisode]
+                }
+            ]
+            
+            if(currentSeries.seasons){
+                dataToFetch.unshift(...currentSeries.seasons)
             }
+
+            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons.json`
         }else{
-            const selectedSeasonID = Object.entries(currentSeries.seasons)[seasonNumber - 1][0]
-            const uploadedEpisodes = currentSeries.seasons[selectedSeasonID].episodes.length
+            const uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
 
             newEpisode.episodeID = `${currentSeries.seriesID}-S${seasonNumber}E${uploadedEpisodes + 1}`
             
             dataToFetch = [
-                ...currentSeries.seasons[selectedSeasonID].episodes,
+                ...currentSeries.seasons[seasonNumber -1].episodes,
                 newEpisode
             ]
 
-            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons/${selectedSeasonID}/episodes.json`
+            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons/${seasonNumber -1}/episodes.json`
         }
 
         fetch(fetchUrl, {
-            method : `${isNewSeason ? 'POST' : 'PUT'}`,
+            method : 'PUT',
             'Content-type' : 'Application/json',
             body : JSON.stringify(dataToFetch)
         })
