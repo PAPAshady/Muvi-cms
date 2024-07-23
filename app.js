@@ -340,7 +340,7 @@ function showEpisodesForm (seriesTitle, id){
     const selectedSeries = allSeries.find(series => series[0] === id)[1]
 
     episodeSeasonNumberInput.innerHTML = ''
-    
+
     // render seasons of this series in the select box
     if(selectedSeries.seasons){
         const seasons = Object.entries(selectedSeries.seasons).map((season, index) => {;
@@ -505,13 +505,14 @@ function addOrEditEpisode () {
             body : JSON.stringify(dataToFetch)
         })
             .then(res => res.json())
-            .then(message => {
+            .then(getAllSeries)
+            .then(() => {
                 alert(`Episode added successfully :)`)
                 isNewSeason = false
+                showSeries(allSeries)
                 window.scrollTo({top : 0, behavior : 'smooth'})
                 clearInputs()
                 $.body.className = ''
-                console.log(message);
             })
             .catch(err =>{
                 alert('An error occurred while adding the new episode')
