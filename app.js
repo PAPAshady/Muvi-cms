@@ -340,7 +340,7 @@ function showEpisodesForm (seriesTitle, id){
     const selectedSeries = allSeries.find(series => series[0] === id)[1]
 
     episodeSeasonNumberInput.innerHTML = ''
-    console.log(selectedSeries);
+    
     // render seasons of this series in the select box
     if(selectedSeries.seasons){
         const seasons = Object.entries(selectedSeries.seasons).map((season, index) => {;
@@ -508,6 +508,9 @@ function addOrEditEpisode () {
             .then(message => {
                 alert(`Episode added successfully :)`)
                 isNewSeason = false
+                window.scrollTo({top : 0, behavior : 'smooth'})
+                clearInputs()
+                $.body.className = ''
                 console.log(message);
             })
             .catch(err =>{
@@ -582,6 +585,11 @@ function clearInputs () {
     landscapeImg.parentElement.classList.remove('loading')
     genres = []
     casts = []
+    videoQualities = []
+    subtitles = []
+    videoUrlsContainer.innerHTML = ''
+    subtitleUrlsContainer.innerHTML = ''
+    $.querySelectorAll('select').forEach(elem => elem.value = 'false')
 }
 
 
