@@ -13,12 +13,15 @@ const series = {
     seasons : [
         {
             //seasonNumber : '',
-            //numberOfEpisodes : '',
             epsidoes :[
                 {   // needs id
-                    //duration : '',
                     //episodeName : '',
-                    //qualityUrls : [''],
+                    //videoQualities : [
+                        //{
+                            //quality : '720p',
+                            //url : ''
+                        //}
+                    //],
                     // isVisible : true,
                     //subtitles : [
                        // {

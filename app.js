@@ -40,7 +40,7 @@ const subtitleLangInput = $.getElementById('subtitleLangInput')
 const addSubtitleUrlBtn = $.getElementById('addSubtitleUrlBtn')
 const subtitleUrlsContainer = $.getElementById('subtitleUrlsContainer')
 const episodeCheckbox = $.getElementById('episodeCheckbox')
-const submitEpisodeForm = $.getElementById('addEpisodeBtn')
+const submitEpisodeFormBtn = $.getElementById('addEpisodeBtn')
 
 // modal elements
 const modalWrapper = $.querySelector('.modal-wrapper')
@@ -52,7 +52,7 @@ const editSeriesEpisodesBtn = $.getElementById('editSeriesEpisodesBtn')
 let [genres, casts, videoQualities, subtitles] = [[], [], [], []]
 let [seriesID, allSeries] = [null, null]
 let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
-
+let isNewSeason = false // sepcifies if user wants to add a new season or a new episode
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
 
@@ -340,18 +340,18 @@ function showEpisodesForm (seriesTitle, id){
     const selectedSeries = allSeries.find(series => series[0] === id)[1]
 
     episodeSeasonNumberInput.innerHTML = ''
-
+    console.log(selectedSeries);
     // render seasons of this series in the select box
     if(selectedSeries.seasons){
-        const seasons = selectedSeries.seasons.map(season => {
-            return `<option value="${season.seasonNumber}">Season ${season.seasonNumber}</option>`
+        const seasons = Object.entries(selectedSeries.seasons).map((season, index) => {;
+            return `<option value="${index + 1}">Season ${index + 1}</option>`
         }).join('')
 
         episodeSeasonNumberInput.insertAdjacentHTML('afterbegin' ,seasons)
 
         // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
         episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
-        `<option value="${selectedSeries.seasons.length + 1}">Season ${selectedSeries.seasons.length + 1} (New Season)</option>`
+        `<option value="${Object.entries(selectedSeries.seasons).length + 1}">Season ${Object.entries(selectedSeries.seasons).length + 1} (New Season)</option>`
         )
     }else {
         episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
@@ -457,9 +457,71 @@ function removeURL (urlArrayName, urlArrayProperty){
 }
 
 function addOrEditEpisode () {
-    if(validateInputs('episode')){
-        alert('done')
-    }
+
+    // if(validateInputs('episode')){
+        submitEpisodeFormBtn.classList.add('loading')
+        submitEpisodeFormBtn.setAttribute('disabled', true)
+    
+        if(episodeSeasonNumberInput.value === episodeSeasonNumberInput.lastElementChild.value){
+            isNewSeason = true
+        }
+        const currentSeries = allSeries.find(series => series[0] === seriesID)[1]
+        const seasonNumber = episodeSeasonNumberInput.value
+        const newEpisode = {
+            episodeID : `${currentSeries.seriesID}-S${seasonNumber}E1`,
+            episodeName : episodeNameInput.value.trim(),
+            videoQualities,
+            subtitles,
+            isVisible : episodeCheckbox.checked,
+            comments : []
+        }
+
+        let fetchUrl
+        let dataToFetch
+
+        if(isNewSeason){
+            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons.json`
+            dataToFetch = {
+                seasonNumber,
+                episodes : [newEpisode]
+            }
+        }else{
+            const selectedSeasonID = Object.entries(currentSeries.seasons)[seasonNumber - 1][0]
+            const uploadedEpisodes = currentSeries.seasons[selectedSeasonID].episodes.length
+
+            newEpisode.episodeID = `${currentSeries.seriesID}-S${seasonNumber}E${uploadedEpisodes + 1}`
+            
+            dataToFetch = [
+                ...currentSeries.seasons[selectedSeasonID].episodes,
+                newEpisode
+            ]
+
+            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons/${selectedSeasonID}/episodes.json`
+        }
+
+        fetch(fetchUrl, {
+            method : `${isNewSeason ? 'POST' : 'PUT'}`,
+            'Content-type' : 'Application/json',
+            body : JSON.stringify(dataToFetch)
+        })
+            .then(res => res.json())
+            .then(message => {
+                alert(`Episode added successfully :)`)
+                isNewSeason = false
+                console.log(message);
+            })
+            .catch(err =>{
+                alert('An error occurred while adding the new episode')
+                console.log(err);
+            })
+            .finally(()=>{
+                submitEpisodeFormBtn.classList.remove('loading')
+                submitEpisodeFormBtn.removeAttribute('disabled')
+            })
+                
+            
+
+    // }
 }
 
 // ---------- CODES FOR INPUT VALIDATION ---------- //
@@ -546,7 +608,7 @@ imageUrlInput.addEventListener('input', e => showImagePreviewHandler(e, portrait
 videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, landscapeImg))
 editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 
-submitEpisodeForm.addEventListener('click', addOrEditEpisode)
+submitEpisodeFormBtn.addEventListener('click', addOrEditEpisode)
 addVideoUrlBtn.addEventListener('click', e => addURLHandler(e,videoUrlInput))
 addSubtitleUrlBtn.addEventListener('click', e => addURLHandler(e, subtitleUrlInput))
 
