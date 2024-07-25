@@ -336,6 +336,7 @@ function addNewFile (e) {
     const selectBox = e.target.parentElement.querySelector('select')
     const errorMsg = e.target.previousElementSibling
 
+    // check if user selected any file
     if(fileInput.files.length){
         fileInput.classList.remove('invalid')
         errorMsg.classList.remove('show')
@@ -346,6 +347,17 @@ function addNewFile (e) {
         return
     }
 
+    // check if selected file has a valid format
+    if(!fileInput.accept.includes(fileInput.files[0].type)){
+        errorMsg.textContent = 'Invalid file format'
+        errorMsg.classList.add('show')
+        fileInputWrapper.classList.add('invalid')
+        return
+    }else{
+        errorMsg.classList.remove('show')
+    }
+    
+    // check if user selected any value from select-gbox
     if(selectBox.value === 'false'){
         selectBox.classList.add('invalid')
         errorMsg.textContent = 'Please chose a value from select-box'
