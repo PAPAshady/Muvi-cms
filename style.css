@@ -828,10 +828,47 @@ input[type="checkbox"] {
     flex-direction: column;
     gap: 10px;
     align-items: start;
+    margin-top: 20px;
 }
 
 .url-input-and-select-box.invalid ~ .error-msg{
     color: var(--red);
+}
+
+.file-input{
+    position: relative;
+    padding: 10px;
+    background-color: #fff;
+    color: var(--green);
+    border-radius: 5px;
+    opacity: .8;
+    transition: all .2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: .8rem;
+    border: 2px solid var(--green);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.file-input:hover{
+    opacity: 1;
+}
+
+.file-input.invalid{
+    border-color: var(--red);
+}
+
+.file-input svg {
+    width: 20px;
+    height: 20px;
+}
+
+input[type="file"]{
+    opacity: 0;
+    position: absolute;
 }
 
 select{
@@ -899,10 +936,17 @@ select.invalid{
 }
 
 @media screen and (min-width : 768px) {
-    .url-input-and-select-box{
-        flex-direction: row;
-        align-items: center;
+
+    .file-input{
+        padding: 15px;
+        font-size: .9rem;
     }
+
+    .file-input svg {
+        width: 25px;
+        height: 25px;
+    }
+    
 
     select {
         height: 49px;
@@ -931,6 +975,11 @@ select.invalid{
 }
 
 @media screen and (min-width : 992px) {
+
+    .file-input{
+        width: 200px;
+        font-size: 1rem;
+    }
 
     .urls-wrapper{
         width: 720px;
