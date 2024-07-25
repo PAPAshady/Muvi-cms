@@ -853,6 +853,7 @@ select.invalid{
     display: inline-flex;
     flex-direction: column;
     gap: 10px;
+    width: 100%;
 }
 
 .url {
@@ -876,6 +877,13 @@ select.invalid{
     word-break:keep-all;
 }
 
+.url p {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .url svg{
     color: var(--red);
     width: 30px;
@@ -884,11 +892,10 @@ select.invalid{
 }
 
 @media screen and (min-width : 480px){
-.url svg{
-    width: 20px;
-    height: 20px;
-}
-
+    .url svg{
+        width: 20px;
+        height: 20px;
+    }
 }
 
 @media screen and (min-width : 768px) {
@@ -901,6 +908,10 @@ select.invalid{
         height: 49px;
         width: 230px;
         font-size: 1rem;
+    }
+
+    .urls-wrapper{
+        width: 620px;
     }
 
     .url{
@@ -920,6 +931,11 @@ select.invalid{
 }
 
 @media screen and (min-width : 992px) {
+
+    .urls-wrapper{
+        width: 720px;
+    }
+
     .url{
         font-size: 1rem;
     }
