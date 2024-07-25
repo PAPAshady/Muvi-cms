@@ -32,12 +32,12 @@ const seriesCheckbox = $.getElementById('seriesCheckbox')
 const episodeSeasonNumberInput = $.getElementById('episodeSeasonNumberInput')
 const episodeNameInput = $.getElementById('episodeNameInput')
 const videoUrlInput = $.getElementById('videoUrlInput')
-const videoQualityInput = $.getElementById('videoQualityInput')
-const addVideoUrlBtn = $.getElementById('addVideoUrlBtn')
+const videoQualityInput = $.getElementById('episodeInput')
+const addVideoBtn = $.getElementById('addVideoUrlBtn')
 const videoUrlsContainer = $.getElementById('videoUrlsContainer')
-const subtitleUrlInput = $.getElementById('subtitleUrlInput')
+const subtitleInput = $.getElementById('subtitleInput')
 const subtitleLangInput = $.getElementById('subtitleLangInput')
-const addSubtitleUrlBtn = $.getElementById('addSubtitleUrlBtn')
+const addSubtitleBtn = $.getElementById('addSubtitleUrlBtn')
 const subtitleUrlsContainer = $.getElementById('subtitleUrlsContainer')
 const episodeCheckbox = $.getElementById('episodeCheckbox')
 const submitEpisodeFormBtn = $.getElementById('addEpisodeBtn')
@@ -329,6 +329,35 @@ function editSeriesInfos () {
 
 // ---------- CODES FOR ADDING OR EDITING AN EPISODE ---------- //
 
+
+function addNewFile (e) {
+    const fileInputWrapper = e.target.parentElement.querySelector('.file-input')
+    const fileInput = e.target.parentElement.querySelector('input[type="file"]')
+    const selectBox = e.target.parentElement.querySelector('select')
+    const errorMsg = e.target.previousElementSibling
+
+    if(fileInput.files.length){
+        fileInput.classList.remove('invalid')
+        errorMsg.classList.remove('show')
+    }else{
+        fileInputWrapper.classList.add('invalid')
+        errorMsg.textContent = 'Please select a file'
+        errorMsg.classList.add("show")
+        return
+    }
+
+    if(selectBox.value === 'false'){
+        selectBox.classList.add('invalid')
+        errorMsg.textContent = 'Please chose a value from select-box'
+        errorMsg.classList.add('show')
+        return
+    }
+
+    selectBox.classList.remove('invalid')
+    errorMsg.classList.remove('show')
+
+}
+
 //makes the episodes form visible to the user
 function showEpisodesForm (seriesTitle, id){
     $.body.className = ''
@@ -360,69 +389,69 @@ function showEpisodesForm (seriesTitle, id){
 
 }
 
-function addURLHandler (e,inputElem){
-    const isSelectBoxValid = inputElem.nextElementSibling.value === 'false' ? false : true
-    const isUrlValid = v.isURL(inputElem.value.trim()) 
-    const errorMsg = e.target.previousElementSibling
+// function addURLHandler (e,inputElem){
+//     const isSelectBoxValid = inputElem.nextElementSibling.value === 'false' ? false : true
+//     const isUrlValid = v.isURL(inputElem.value.trim()) 
+//     const errorMsg = e.target.previousElementSibling
 
-    //show error if url input is not valid
-    if(!isUrlValid){
-        inputElem.classList.add('invalid')
-        errorMsg.textContent = 'Please enter a valid URL'
-        errorMsg.classList.add('show')
-        return
-    }else{
-        inputElem.classList.remove('invalid')
-    }
+//     //show error if url input is not valid
+//     if(!isUrlValid){
+//         inputElem.classList.add('invalid')
+//         errorMsg.textContent = 'Please enter a valid URL'
+//         errorMsg.classList.add('show')
+//         return
+//     }else{
+//         inputElem.classList.remove('invalid')
+//     }
 
-    //show error if user didn't select a value from select-box
-    if(!isSelectBoxValid){
-        inputElem.nextElementSibling.classList.add('invalid')
-        errorMsg.textContent = 'Please chose a value from select-box'
-        errorMsg.classList.add('show')
-        return
-    }
+//     //show error if user didn't select a value from select-box
+//     if(!isSelectBoxValid){
+//         inputElem.nextElementSibling.classList.add('invalid')
+//         errorMsg.textContent = 'Please chose a value from select-box'
+//         errorMsg.classList.add('show')
+//         return
+//     }
 
-    // if user fixed the error, remove the error message
-    inputElem.nextElementSibling.classList.remove('invalid')
-    errorMsg.classList.remove('show')
+//     // if user fixed the error, remove the error message
+//     inputElem.nextElementSibling.classList.remove('invalid')
+//     errorMsg.classList.remove('show')
 
-    const newURL = {
-        url : inputElem.value.trim(),
+//     const newURL = {
+//         url : inputElem.value.trim(),
 
-        // specifies if this object is a subtitle url or video url
-        [e.target.id === 'addVideoUrlBtn' ? 'quality' : 'language'] : inputElem.nextElementSibling.value
-    }
+//         // specifies if this object is a subtitle url or video url
+//         [e.target.id === 'addVideoUrlBtn' ? 'quality' : 'language'] : inputElem.nextElementSibling.value
+//     }
 
-    let isAlreadyAdded
+//     let isAlreadyAdded
 
-    if(e.target.id === 'addVideoUrlBtn'){
-        isAlreadyAdded = videoQualities.some(url => url.quality === newURL.quality)
+//     if(e.target.id === 'addVideoUrlBtn'){
+//         isAlreadyAdded = videoQualities.some(url => url.quality === newURL.quality)
 
-        if(isAlreadyAdded){
-            alert(`You've already added ${newURL.quality + 'p'} quality`)
-            return
-        }
+//         if(isAlreadyAdded){
+//             alert(`You've already added ${newURL.quality + 'p'} quality`)
+//             return
+//         }
 
-        videoQualities.push(newURL)
-        renderURL(videoQualities)
+//         videoQualities.push(newURL)
+//         renderURL(videoQualities)
 
-    }else{
-        isAlreadyAdded = subtitles.some(subtitle => subtitle.language === newURL.language)
+//     }else{
+//         isAlreadyAdded = subtitles.some(subtitle => subtitle.language === newURL.language)
 
-        if(isAlreadyAdded){
-            alert("You've already added this subtitle language")
-            return
-        }
+//         if(isAlreadyAdded){
+//             alert("You've already added this subtitle language")
+//             return
+//         }
 
-        subtitles.push(newURL)
-        renderURL(subtitles)
-    }
+//         subtitles.push(newURL)
+//         renderURL(subtitles)
+//     }
 
-    // reset the inputs
-    inputElem.value = ''
-    inputElem.nextElementSibling.value = 'false'
-}
+//     // reset the inputs
+//     inputElem.value = ''
+//     inputElem.nextElementSibling.value = 'false'
+// }
 
 function renderURL (urlArray){
     const urls = urlArray.map(item => {
@@ -623,8 +652,10 @@ videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, lands
 editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 
 submitEpisodeFormBtn.addEventListener('click', addEpisodeOrSeason)
-addVideoUrlBtn.addEventListener('click', e => addURLHandler(e,videoUrlInput))
-addSubtitleUrlBtn.addEventListener('click', e => addURLHandler(e, subtitleUrlInput))
+// addVideoUrlBtn.addEventListener('click', e => addURLHandler(e,videoUrlInput))
+// addSubtitleUrlBtn.addEventListener('click', e => addURLHandler(e, subtitleUrlInput))
+addVideoBtn.addEventListener('click', addNewFile)
+addSubtitleBtn.addEventListener('click', addNewFile)
 
 searchInput.addEventListener('input', searchHandler)
 // preventDefault all forms
@@ -648,8 +679,8 @@ modalWrapper.addEventListener('click', e => {
     }
 })
 
-window.addEventListener('load', async ()=>{
-    await getAllSeries()
-    showSeries(allSeries)
-})
+// window.addEventListener('load', async ()=>{
+//     await getAllSeries()
+//     showSeries(allSeries)
+// })
 
