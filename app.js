@@ -456,9 +456,9 @@ function removeURL (urlArrayName, urlArrayProperty){
     }
 }
 
-function addOrEditEpisode () {
+function addEpisodeOrSeason () {
 
-    // if(validateInputs('episode')){
+    if(validateInputs('episode')){
         submitEpisodeFormBtn.classList.add('loading')
         submitEpisodeFormBtn.setAttribute('disabled', true)
     
@@ -527,12 +527,11 @@ function addOrEditEpisode () {
             .finally(()=>{
                 submitEpisodeFormBtn.classList.remove('loading')
                 submitEpisodeFormBtn.removeAttribute('disabled')
-            })
-                
-            
-
-    // }
+            })    
+    }
 }
+
+
 
 // ---------- CODES FOR INPUT VALIDATION ---------- //
 
@@ -623,7 +622,7 @@ imageUrlInput.addEventListener('input', e => showImagePreviewHandler(e, portrait
 videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, landscapeImg))
 editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 
-submitEpisodeFormBtn.addEventListener('click', addOrEditEpisode)
+submitEpisodeFormBtn.addEventListener('click', addEpisodeOrSeason)
 addVideoUrlBtn.addEventListener('click', e => addURLHandler(e,videoUrlInput))
 addSubtitleUrlBtn.addEventListener('click', e => addURLHandler(e, subtitleUrlInput))
 
