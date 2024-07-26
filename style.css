@@ -852,6 +852,22 @@ input[type="checkbox"] {
     font-weight: 600;
 }
 
+.file-input-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
+    width: 100%;
+}
+
+.file-input-state{
+    color: var(--green);
+    padding: 5px;
+    text-decoration: underline;
+    width: 100%;
+    word-wrap: break-word;
+}
+
 .file-input,
 .file-input * {
     cursor: pointer;
@@ -940,6 +956,12 @@ select.invalid{
 }
 
 @media screen and (min-width : 768px) {
+
+    .file-input-container{
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+    }
 
     .file-input{
         padding: 15px;

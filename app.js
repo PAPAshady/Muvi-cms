@@ -357,7 +357,7 @@ function addNewFile (e) {
         errorMsg.classList.remove('show')
     }
     
-    // check if user selected any value from select-gbox
+    // check if user selected any value from select-box
     if(selectBox.value === 'false'){
         selectBox.classList.add('invalid')
         errorMsg.textContent = 'Please chose a value from select-box'
@@ -367,6 +367,7 @@ function addNewFile (e) {
 
     selectBox.classList.remove('invalid')
     errorMsg.classList.remove('show')
+    fileInputWrapper.nextElementSibling.textContent = ''
 
 }
 
@@ -672,6 +673,11 @@ addSubtitleBtn.addEventListener('click', addNewFile)
 searchInput.addEventListener('input', searchHandler)
 // preventDefault all forms
 allForms.forEach(form => form.addEventListener('submit', e => e.preventDefault()))
+
+// show the name of selected file by file input
+$.querySelectorAll('.file-input').forEach(input => input.addEventListener('change', e => {
+    e.target.parentElement.nextElementSibling.textContent = e.target.files[0].name
+}))
 
 tagsInput.addEventListener('keydown', e => {
     if(e.key === 'Enter'){
