@@ -850,6 +850,7 @@ input[type="checkbox"] {
     font-size: .8rem;
     border: 2px solid var(--green);
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .file-input-container{
