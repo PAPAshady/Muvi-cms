@@ -1022,6 +1022,166 @@ select.invalid{
 }
 /* episode section end */
 
+/* upload section start */
+
+.uploads {
+    margin-top: 10px;
+    display: none;
+}
+
+body.uploading .uploads{
+    display: block;
+}
+
+.uploads-wrapper{
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.uploads .progress {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    background-color: var(--section-color);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.uploads .progress p {
+    font-size: .7rem;
+    font-weight: bold;
+    word-wrap: break-word;
+    color: var(--dark-gray);
+}
+
+.uploads .bar {
+    width: 70%;
+    height: 15px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.uploads .bar-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress .progress-bar{
+    height: 100%;
+    width: 30%;
+    background: var(--light-gray);
+    transition: width .2s;
+}
+
+.progress .bar-wrapper::after{
+    font-size: .8rem;
+    content: 'Queued';
+    color: var(--light-gray);
+}
+
+.progress.uploading .bar-wrapper::after{
+    content: 'Uploading';
+    color: var(--green);
+}
+
+.progress.uploading .progress-bar{
+    background-color: var(--green);
+}
+
+.progress.paused .bar-wrapper::after{
+    content: 'Paused';
+    color: #ffa500;
+}
+
+.progress.paused .progress-bar{
+    background-color: #ffa500;
+}
+
+.progress.canceled .bar-wrapper::after{
+    content: 'Canceled';
+    color: var(--red);
+}
+
+.progress.canceled .progress-bar{
+    background-color: var(--red);
+}
+
+.progress .percentage{
+    font-size: .7rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: 1px;
+}
+
+.progress .btn-wrapper{
+    display: flex;
+    gap: 5px;
+}
+
+.progress button {
+    font-family: "Poppins", sans-serif;
+    font-size: .7rem;
+    border: none;
+    padding: 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    cursor: pointer;
+}
+
+.progress svg {
+    width: 20px;
+    height: 20px;
+}
+
+.progress #cancelBtn svg{
+    color: var(--red);
+}
+
+.progress #playOrPauseBtn svg{
+    color: #ffa500;
+}
+
+.progress #playOrPauseBtn.play svg {
+    color: var(--green);
+}
+
+.progress.queued #playOrPauseBtn{
+    display: none;
+}
+
+.progress.canceled button{
+    display: none;
+}
+
+@media screen and (min-width : 768px) {
+    .uploads .progress p {
+        font-size: .8rem;
+    }
+
+    .uploads-wrapper{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media screen and (min-width : 1200px) {
+    .uploads-wrapper{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* upload section end */
+
 /* all series start */
 
 .all-series .search-box p{
