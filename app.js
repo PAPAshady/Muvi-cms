@@ -629,8 +629,7 @@ videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, lands
 editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 
 submitEpisodeFormBtn.addEventListener('click', addEpisodeOrSeason)
-// addVideoUrlBtn.addEventListener('click', e => addURLHandler(e,videoUrlInput))
-// addSubtitleUrlBtn.addEventListener('click', e => addURLHandler(e, subtitleUrlInput))
+
 addVideoBtn.addEventListener('click', e => addNewFile(e, videoQualities))
 addSubtitleBtn.addEventListener('click', e => addNewFile(e, subtitles))
 
@@ -661,8 +660,8 @@ modalWrapper.addEventListener('click', e => {
     }
 })
 
-// window.addEventListener('load', async ()=>{
-//     await getAllSeries()
-//     showSeries(allSeries)
-// })
+window.addEventListener('load', async ()=>{
+    await getAllSeries()
+    showSeries(allSeries)
+})
 
