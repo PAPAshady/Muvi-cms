@@ -1064,6 +1064,7 @@ body.uploading .uploads{
     border-radius: 2px;
     overflow: hidden;
     position: relative;
+    background-color: #fff;
 }
 
 .uploads .bar-wrapper{
@@ -1074,7 +1075,7 @@ body.uploading .uploads{
 
 .progress .progress-bar{
     height: 100%;
-    width: 30%;
+    width: 0;
     background: var(--light-gray);
     transition: width .2s;
 }
@@ -1083,6 +1084,7 @@ body.uploading .uploads{
     font-size: .8rem;
     content: 'Queued';
     color: var(--light-gray);
+    font-weight: 600;
 }
 
 .progress.uploading .bar-wrapper::after{
@@ -1103,13 +1105,12 @@ body.uploading .uploads{
     background-color: #ffa500;
 }
 
-.progress.canceled .bar-wrapper::after{
-    content: 'Canceled';
-    color: var(--red);
+.progress.done .bar-wrapper::after{
+    content: 'Success !';
 }
 
-.progress.canceled .progress-bar{
-    background-color: var(--red);
+.progress.done button{
+    display: none;
 }
 
 .progress .percentage{
@@ -1131,11 +1132,14 @@ body.uploading .uploads{
     font-size: .7rem;
     border: none;
     padding: 0 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: none;
     background: none;
     cursor: pointer;
+}
+
+.progress.uploading #cancelBtn,
+.progress.paused #cancelBtn{
+    display: block;
 }
 
 .progress svg {
@@ -1147,19 +1151,34 @@ body.uploading .uploads{
     color: var(--red);
 }
 
-.progress #playOrPauseBtn svg{
-    color: #ffa500;
-}
-
-.progress #playOrPauseBtn.play svg {
-    color: var(--green);
-}
-
-.progress.queued #playOrPauseBtn{
+.progress #playOrPauseBtn {
     display: none;
 }
 
-.progress.canceled button{
+.progress.paused #playOrPauseBtn,
+.progress.uploading #playOrPauseBtn{
+    display: block;
+}
+
+.progress #playOrPauseBtn svg:first-child{
+    color: #ffa500;
+}
+
+.progress #playOrPauseBtn svg:last-child{
+    color: var(--green);
+}
+
+.progress #playOrPauseBtn.paused svg:first-child {
+    display: none;
+}
+.progress #playOrPauseBtn.paused svg:last-child {
+    display: block;
+}
+
+.progress #playOrPauseBtn.running svg:first-child {
+    display: block;
+}
+.progress #playOrPauseBtn.running svg:last-child {
     display: none;
 }
 

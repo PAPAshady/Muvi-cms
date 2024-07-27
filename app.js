@@ -41,6 +41,7 @@ const addSubtitleBtn = $.getElementById('addSubtitleUrlBtn')
 const subtitlesContainer = $.getElementById('subtitleUrlsContainer')
 const episodeCheckbox = $.getElementById('episodeCheckbox')
 const submitEpisodeFormBtn = $.getElementById('addEpisodeBtn')
+const uploadsWrapper = $.querySelector('.uploads-wrapper')
 
 // modal elements
 const modalWrapper = $.querySelector('.modal-wrapper')
@@ -53,6 +54,7 @@ let [genres, casts, videoQualities, subtitles] = [[], [], [], []]
 let [seriesID, allSeries] = [null, null]
 let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
 let isNewSeason = false // sepcifies if user wants to add a new season or a new episode
+let folderRef = null // refrences to the folder in firebase cloud storage where user wants to upload the file
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
 
@@ -461,10 +463,9 @@ function removeFile(array, fileId) {
     }
 }
 
-
 function addEpisodeOrSeason () {
 
-    if(validateInputs('episode')){
+    // if(validateInputs('episode')){
         submitEpisodeFormBtn.classList.add('loading')
         submitEpisodeFormBtn.setAttribute('disabled', true)
     
@@ -484,6 +485,7 @@ function addEpisodeOrSeason () {
 
         let fetchUrl
         let dataToFetch
+        let uploadedEpisodes = 0
 
         if(isNewSeason){
             dataToFetch = [
@@ -499,7 +501,7 @@ function addEpisodeOrSeason () {
 
             fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons.json`
         }else{
-            const uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
+            uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
 
             newEpisode.episodeID = `${currentSeries.seriesID}-S${seasonNumber}E${uploadedEpisodes + 1}`
             
@@ -511,33 +513,151 @@ function addEpisodeOrSeason () {
             fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons/${seasonNumber -1}/episodes.json`
         }
 
-        fetch(fetchUrl, {
-            method : 'PUT',
-            'Content-type' : 'Application/json',
-            body : JSON.stringify(dataToFetch)
-        })
-            .then(res => res.json())
-            .then(getAllSeries)
-            .then(() => {
-                alert(`Episode added successfully :)`)
-                isNewSeason = false
-                showSeries(allSeries)
-                window.scrollTo({top : 0, behavior : 'smooth'})
-                clearInputs()
-                $.body.className = ''
-            })
-            .catch(err =>{
-                alert('An error occurred while adding the new episode')
-                console.log(err);
-            })
-            .finally(()=>{
-                submitEpisodeFormBtn.classList.remove('loading')
-                submitEpisodeFormBtn.removeAttribute('disabled')
-            })    
-    }
+        //// Uploading files using firebase  ////
+
+        $.body.classList.add('uploading')
+        folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${uploadedEpisodes + 1}`
+
+        showUploadElems(videoQualities)
+        uploadData(videoQualities)
+
+        // fetch episode infos to database
+        // fetch(fetchUrl, {
+        //     method : 'PUT',
+        //     'Content-type' : 'Application/json',
+        //     body : JSON.stringify(dataToFetch)
+        // })
+        //     .then(res => res.json())
+        //     .then(getAllSeries)
+        //     .then(() => {
+        //         alert(`Episode added successfully :)`)
+        //         isNewSeason = false
+        //         showSeries(allSeries)
+        //         window.scrollTo({top : 0, behavior : 'smooth'})
+        //         clearInputs()
+        //         $.body.className = ''
+        //     })
+        //     .catch(err =>{
+        //         alert('An error occurred while adding the new episode')
+        //         console.log(err);
+        //     })
+        //     .finally(()=>{
+        //         submitEpisodeFormBtn.classList.remove('loading')
+        //         submitEpisodeFormBtn.removeAttribute('disabled')
+        //     })   
+    
+    // }
 }
 
+// upload the files using firebase 
+function uploadData (fileArray, fileIndex = 0){
 
+    // return true if all of the files are uploaded
+    if(fileIndex > fileArray.length - 1){
+        return true
+    }
+
+    const progressElem = $.getElementById(`file${fileIndex}`)
+    const cancelBtn = progressElem.querySelector('#cancelBtn')
+    const playOrPauseBtn = progressElem.querySelector('#playOrPauseBtn')
+
+    const fileRef = ref(storage, `${folderRef}/${fileArray[fileIndex].name}`)
+
+    const uploadTask = uploadBytesResumable(fileRef, fileArray[fileIndex].file)
+    progressElem.classList.replace('queued', 'uploading')
+
+    let uploadState
+
+    uploadTask.on('state_changed', snapshot => {
+        uploadState = snapshot.state
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        progressElem.querySelector('.progress-bar').style.width = progress + '%'
+        progressElem.querySelector('.percentage').textContent = Math.floor(progress) + '%'
+    },
+    error => {
+        alert('An error occurred while uploading')
+        console.log('error : ', error);
+    },
+    () => {
+        progressElem.className = 'progress done'
+        console.log(`${fileArray[fileIndex].name} uploaded successfully`);
+        uploadData(fileArray, fileIndex + 1)
+    })
+
+
+    cancelBtn.addEventListener('click', e => {
+        uploadTask.cancel()
+        removeUploadElems(e)
+
+        // if upload canceled, upload the next file
+        uploadData(fileArray, fileIndex + 1)
+    })
+
+    //change play or pause state
+    playOrPauseBtn.addEventListener('click', () => {
+        switch (uploadState) {
+            case 'paused':
+                uploadTask.resume()
+                progressElem.className = 'progress uploading'
+                playOrPauseBtn.classList.replace('paused', 'running')
+                break;
+                
+            case 'running':
+                uploadTask.pause()
+                progressElem.className = 'progress paused'
+                playOrPauseBtn.classList.replace('running', 'paused')
+            break;
+        }
+    })
+}
+
+function showUploadElems (arr) {
+    
+    uploadsWrapper.innerHTML = '' // this should modify so it specifies if it should empties subtitles-uplaods-wrapper or videoQuality-uplaods-wrapper
+    const uploadingElements = arr.map((item, index) => {
+        return `
+            <div class="progress ${index ? 'queued' : 'uploading'}" id="file${index}">
+                <p>${item.name}</p>
+                <div class="bar-wrapper">
+                    <div class="bar">
+                        <span class="percentage">0%</span>
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="btn-wrapper">
+                    <button id="cancelBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                        </svg>
+                    </button>
+                    <button id="playOrPauseBtn" class="running">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>`
+    }).join('')
+
+    uploadsWrapper.insertAdjacentHTML('beforeend', uploadingElements)
+}
+
+// this function only removes the ui elements... canceling the download is done by uploadData function
+function removeUploadElems(e) {
+    let progressElem = e.target
+
+    // itirates trough all parent elements until it reaches the main element with 'progress' class
+    while(!progressElem.classList.contains('progress')){
+        progressElem = progressElem.parentElement
+    }
+
+    progressElem.remove()
+}
 
 // ---------- CODES FOR INPUT VALIDATION ---------- //
 
