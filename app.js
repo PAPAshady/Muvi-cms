@@ -329,6 +329,36 @@ function editSeriesInfos () {
 
 // ---------- CODES FOR ADDING OR EDITING AN EPISODE ---------- //
 
+//makes the episodes form visible to the user
+function showEpisodesForm (seriesTitle, id){
+    $.body.className = ''
+    $.body.classList.add('add-episode')
+    formTitle.textContent = `Add ${seriesTitle} episode`
+    seriesID = id
+    $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
+
+    const selectedSeries = allSeries.find(series => series[0] === id)[1]
+
+    episodeSeasonNumberInput.innerHTML = ''
+
+    // render seasons of this series in the select box
+    if(selectedSeries.seasons){
+        const seasons = Object.entries(selectedSeries.seasons).map((season, index) => {;
+            return `<option value="${index + 1}">Season ${index + 1}</option>`
+        }).join('')
+
+        episodeSeasonNumberInput.insertAdjacentHTML('afterbegin' ,seasons)
+
+        // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
+        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
+        `<option value="${Object.entries(selectedSeries.seasons).length + 1}">Season ${Object.entries(selectedSeries.seasons).length + 1} (New Season)</option>`
+        )
+    }else {
+        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
+    }
+
+
+}
 
 function addNewFile (e, filesArray) {
     const fileInputWrapper = e.target.parentElement.querySelector('.file-input')
@@ -375,7 +405,7 @@ function addNewFile (e, filesArray) {
         [propertyName] : selectBox.value,
         id : filesArray.length + 1
     }
-    
+
     const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName])
 
     if(isAlreadyAdded){
@@ -393,7 +423,17 @@ function addNewFile (e, filesArray) {
 }
 
 function showFiles (filesArray){
-    const containerElement = filesArray === videoQualities ? videoQualitiesContainer : subtitlesContainer
+
+    let containerElement
+    let arrayName
+
+    if(filesArray === videoQualities){
+        containerElement = videoQualitiesContainer
+        arrayName = 'videoQualities'
+    }else{
+        containerElement = subtitlesContainer
+        arrayName = 'subtitles'
+    }
 
     containerElement.innerHTML = ''
     const fileElements = filesArray.map(item => {
@@ -401,7 +441,7 @@ function showFiles (filesArray){
             <div class="url">
                 <p>${item.name}</p>
                 <span>${item.quality ? item.quality + 'p' : item.language.toUpperCase()}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                <svg onclick="removeFile(${arrayName}, ${item.id})" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                     <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                 </svg>
             </div>
@@ -411,132 +451,16 @@ function showFiles (filesArray){
     containerElement.insertAdjacentHTML('beforeend', fileElements)
 }
 
-//makes the episodes form visible to the user
-function showEpisodesForm (seriesTitle, id){
-    $.body.className = ''
-    $.body.classList.add('add-episode')
-    formTitle.textContent = `Add ${seriesTitle} episode`
-    seriesID = id
-    $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
-
-    const selectedSeries = allSeries.find(series => series[0] === id)[1]
-
-    episodeSeasonNumberInput.innerHTML = ''
-
-    // render seasons of this series in the select box
-    if(selectedSeries.seasons){
-        const seasons = Object.entries(selectedSeries.seasons).map((season, index) => {;
-            return `<option value="${index + 1}">Season ${index + 1}</option>`
-        }).join('')
-
-        episodeSeasonNumberInput.insertAdjacentHTML('afterbegin' ,seasons)
-
-        // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
-        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
-        `<option value="${Object.entries(selectedSeries.seasons).length + 1}">Season ${Object.entries(selectedSeries.seasons).length + 1} (New Season)</option>`
-        )
-    }else {
-        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
+function removeFile(array, fileId) {
+    if(array === videoQualities){
+        videoQualities = videoQualities.filter(quality => quality.id !== fileId)
+        showFiles(videoQualities)
+    }else{
+        subtitles = subtitles.filter(subtitle => subtitle.id !== fileId)
+        showFiles(subtitles)
     }
-
-
 }
 
-// function addURLHandler (e,inputElem){
-//     const isSelectBoxValid = inputElem.nextElementSibling.value === 'false' ? false : true
-//     const isUrlValid = v.isURL(inputElem.value.trim()) 
-//     const errorMsg = e.target.previousElementSibling
-
-//     //show error if url input is not valid
-//     if(!isUrlValid){
-//         inputElem.classList.add('invalid')
-//         errorMsg.textContent = 'Please enter a valid URL'
-//         errorMsg.classList.add('show')
-//         return
-//     }else{
-//         inputElem.classList.remove('invalid')
-//     }
-
-//     //show error if user didn't select a value from select-box
-//     if(!isSelectBoxValid){
-//         inputElem.nextElementSibling.classList.add('invalid')
-//         errorMsg.textContent = 'Please chose a value from select-box'
-//         errorMsg.classList.add('show')
-//         return
-//     }
-
-//     // if user fixed the error, remove the error message
-//     inputElem.nextElementSibling.classList.remove('invalid')
-//     errorMsg.classList.remove('show')
-
-//     const newURL = {
-//         url : inputElem.value.trim(),
-
-//         // specifies if this object is a subtitle url or video url
-//         [e.target.id === 'addVideoUrlBtn' ? 'quality' : 'language'] : inputElem.nextElementSibling.value
-//     }
-
-//     let isAlreadyAdded
-
-//     if(e.target.id === 'addVideoUrlBtn'){
-//         isAlreadyAdded = videoQualities.some(url => url.quality === newURL.quality)
-
-//         if(isAlreadyAdded){
-//             alert(`You've already added ${newURL.quality + 'p'} quality`)
-//             return
-//         }
-
-//         videoQualities.push(newURL)
-//         renderURL(videoQualities)
-
-//     }else{
-//         isAlreadyAdded = subtitles.some(subtitle => subtitle.language === newURL.language)
-
-//         if(isAlreadyAdded){
-//             alert("You've already added this subtitle language")
-//             return
-//         }
-
-//         subtitles.push(newURL)
-//         renderURL(subtitles)
-//     }
-
-//     // reset the inputs
-//     inputElem.value = ''
-//     inputElem.nextElementSibling.value = 'false'
-// }
-
-// function renderURL (urlArray){
-//     const urls = urlArray.map(item => {
-//         return `
-//         <div class="url">
-//             <p>${item.url}</p>
-//             <span>${item.quality ? item.quality + 'p' : item.language.toUpperCase()}</span>
-//             <svg onclick="removeURL('${urlArray === videoQualities ? 'videoQualities' : 'subtitles'}', '${item.quality ? item.quality : item.language}')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-//                 <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-//             </svg>
-//         </div>
-//         `
-//     }).join('')
-
-//     if(urlArray === videoQualities){
-//         videoUrlsContainer.innerHTML = ''
-//         videoUrlsContainer.insertAdjacentHTML("beforeend", urls)
-//     }else{
-//         subtitleUrlsContainer.innerHTML = ''
-//         subtitleUrlsContainer.insertAdjacentHTML('beforeend', urls)
-//     }
-// }
-
-// function removeURL (urlArrayName, urlArrayProperty){
-//     if (urlArrayName === 'videoQualities'){
-//         videoQualities = videoQualities.filter(item => item.quality != urlArrayProperty)
-//         renderURL(videoQualities)
-//     }else{
-//         subtitles = subtitles.filter(subtitle => subtitle.language != urlArrayProperty)
-//         renderURL(subtitles)
-//     }
-// }
 
 function addEpisodeOrSeason () {
 
