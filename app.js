@@ -330,7 +330,7 @@ function editSeriesInfos () {
 // ---------- CODES FOR ADDING OR EDITING AN EPISODE ---------- //
 
 
-function addNewFile (e) {
+function addNewFile (e, arr) {
     const fileInputWrapper = e.target.parentElement.querySelector('.file-input')
     const fileInput = e.target.parentElement.querySelector('input[type="file"]')
     const selectBox = e.target.parentElement.querySelector('select')
@@ -368,7 +368,22 @@ function addNewFile (e) {
     selectBox.classList.remove('invalid')
     errorMsg.classList.remove('show')
     fileInputWrapper.nextElementSibling.textContent = ''
+    
+    const propertyName = arr === videoQualities ? 'quality' : 'language'
+    const newFile = {
+        file : fileInput.files[0],
+        name : fileInput.files[0].name,
+        [propertyName] : selectBox.value,
+    }
 
+    const isAlreadyAdded = arr.some(item => item[propertyName] === newFile[propertyName])
+
+    if(isAlreadyAdded){
+        alert("You've already added this item")
+        return
+    }
+
+    arr.push(newFile)
 }
 
 //makes the episodes form visible to the user
@@ -667,8 +682,8 @@ editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 submitEpisodeFormBtn.addEventListener('click', addEpisodeOrSeason)
 // addVideoUrlBtn.addEventListener('click', e => addURLHandler(e,videoUrlInput))
 // addSubtitleUrlBtn.addEventListener('click', e => addURLHandler(e, subtitleUrlInput))
-addVideoBtn.addEventListener('click', addNewFile)
-addSubtitleBtn.addEventListener('click', addNewFile)
+addVideoBtn.addEventListener('click', e => addNewFile(e, videoQualities))
+addSubtitleBtn.addEventListener('click', e => addNewFile(e, subtitles))
 
 searchInput.addEventListener('input', searchHandler)
 // preventDefault all forms
