@@ -29,16 +29,6 @@ const series = {
                           //  url : ''
                         //},
                     //],
-                    comments : [
-                        {
-                            writerInfos : {},
-                            created_at : '',
-                            text : '',
-                            likes : '',
-                            dislikes : '',
-                            replies : [{}]
-                        }
-                    ]
                 }
             ]
         }
