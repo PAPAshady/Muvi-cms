@@ -60,7 +60,7 @@ let isNewSeason = false // specifies if user wants to add a new season or a new 
 async function getAllSeries () {
     try{
         const querySnapshot = await getDocs(collection(db, 'series'))
-        allSeries = querySnapshot.map(doc => doc.data())
+        querySnapshot.forEach(doc => allSeries.push(doc.data()))
     } catch(err){
         alert('An error occurred while getting the data from server')
         console.log(err)
