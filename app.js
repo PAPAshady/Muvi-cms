@@ -41,7 +41,8 @@ const addSubtitleBtn = $.getElementById('addSubtitleUrlBtn')
 const subtitlesContainer = $.getElementById('subtitleUrlsContainer')
 const episodeCheckbox = $.getElementById('episodeCheckbox')
 const submitEpisodeFormBtn = $.getElementById('addEpisodeBtn')
-const uploadsWrapper = $.querySelector('.uploads-wrapper')
+const videoUploadsWrapper = $.querySelector('.uploads .videos')
+const subtitleUploadsWrapper = $.querySelector('.uploads .subtitles')
 
 // modal elements
 const modalWrapper = $.querySelector('.modal-wrapper')
@@ -518,8 +519,17 @@ function addEpisodeOrSeason () {
         $.body.classList.add('uploading')
         folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${uploadedEpisodes + 1}`
 
+
+
         showUploadElems(videoQualities)
-        uploadData(videoQualities)
+        showUploadElems(subtitles)
+
+        if(uploadData(videoQualities)){
+            console.log('done video');
+            if(uploadData(subtitles)){
+                console.log('done subtitle');
+            }
+        }
 
         // fetch episode infos to database
         // fetch(fetchUrl, {
@@ -612,11 +622,13 @@ function uploadData (fileArray, fileIndex = 0){
 }
 
 function showUploadElems (arr) {
-    
-    uploadsWrapper.innerHTML = '' // this should modify so it specifies if it should empties subtitles-uplaods-wrapper or videoQuality-uplaods-wrapper
+
+    const containerElem = arr === videoQualities ? videoUploadsWrapper : subtitleUploadsWrapper
+
+    containerElem.innerHTML = ''
     const uploadingElements = arr.map((item, index) => {
         return `
-            <div class="progress ${index ? 'queued' : 'uploading'}" id="file${index}">
+            <div class="progress ${index || arr === subtitles ? 'queued' : 'uploading'}" id="file${index}">
                 <p>${item.name}</p>
                 <div class="bar-wrapper">
                     <div class="bar">
@@ -644,9 +656,8 @@ function showUploadElems (arr) {
             </div>`
     }).join('')
 
-    uploadsWrapper.insertAdjacentHTML('beforeend', uploadingElements)
+    containerElem.insertAdjacentHTML('beforeend', uploadingElements)
 }
-
 // this function only removes the ui elements... canceling the download is done by uploadData function
 function removeUploadElems(e) {
     let progressElem = e.target
