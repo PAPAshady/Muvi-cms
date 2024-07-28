@@ -1,5 +1,6 @@
 import { initializeApp  } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js'
 import { getStorage, ref, uploadBytesResumable } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js'
+import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js'
 
 const firebaseConfig = {
     apiKey: "AIzaSyCr_lREx3D2tFfbCAnSlkq-imQKPlUA_5s",
@@ -14,7 +15,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const storage = getStorage()
+const db = getFirestore(app)
 
 window.ref = ref
 window.uploadBytesResumable = uploadBytesResumable
 window.storage = storage
+window.db = db
+window.collection = collection
+window.addDoc = addDoc
