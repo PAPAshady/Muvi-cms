@@ -216,7 +216,7 @@ function showImagePreviewHandler (e, imageElem) {
 function addOrEditSeries (){                
     if(validateInputs('series')){
 
-        const isAlreadyAdded = allSeries.some(series => series[1].title.toUpperCase() === titleInput.value.trim().toUpperCase())
+        const isAlreadyAdded = allSeries.some(series => series.title.toUpperCase() === titleInput.value.trim().toUpperCase())
 
         if(isAlreadyAdded && !seriesInfosEditMode){
             alert("You've added this series before !!!")
@@ -243,7 +243,7 @@ function addOrEditSeries (){
         }
 
         // fetch data to server using firebase methods
-        const seriesRef = doc(db, 'series', series.seriesID)
+        const seriesRef = doc(db, 'series', seriesInfosEditMode ? seriesID : series.seriesID)
 
         setDoc(seriesRef, series, {merge : true})
             .then(getAllSeries)
@@ -263,33 +263,6 @@ function addOrEditSeries (){
                 submitSeriesBtn.classList.remove('loading')
                 submitSeriesBtn.removeAttribute('disabled')
             })
-
-        // change the url dynamically. it specifies if user wants to add a new series or edit a series
-        // fetch(`https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/${seriesInfosEditMode ? `series/${seriesID}` : 'series'}.json`, {
-        //     method : `${seriesInfosEditMode ? 'PUT' : 'POST'}`,
-        //     headers : {
-        //         "Content-type" : 'Application/json'
-        //     },
-        //     body : JSON.stringify(series)
-        // })
-        //     .then(res => res.json())
-        //     .then(getAllSeries)
-        //     .then(()=>{
-        //         alert(`Series ${seriesInfosEditMode ? 'edited' : 'added'} successfully :)`)
-        //         clearInputs()
-        //         showSeries(allSeries)
-        //         window.scrollTo({top : 0, behavior : 'smooth'})
-        //         seriesInfosEditMode = false
-        //         $.body.classList.remove('add-series')
-        //     })
-        //     .catch(err => {
-        //         alert('Error, something went wrong. Please turn on your VPN and try again :)')
-        //         console.log(err)
-        //     })
-        //     .finally(()=> {
-        //         submitSeriesBtn.classList.remove('loading')
-        //         submitSeriesBtn.removeAttribute('disabled')
-        //     })
     }
 }
 
@@ -300,19 +273,31 @@ function deleteSeries(seriesTitle, seriesID){
         const shouldDelete = prompt(`If you are sure about deleting ${seriesTitle} permanently, please write  ${seriesTitle}  in the input below`)
 
         if(shouldDelete.toUpperCase().trim() === seriesTitle.toUpperCase()){
-            fetch(`https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}.json`, {
-                method : 'DELETE'
-            })
-                .then(res => res.json())
+
+            deleteDoc(doc(db, 'series', seriesID))
                 .then(getAllSeries)
                 .then(()=>{
                     alert(`${seriesTitle} deleted successfully !`)
                     showSeries(allSeries)
                 })
                 .catch(err => {
-                    alert(`An error occured while deleting ${seriesTitle} series`)
+                    alert(`An error occurred while deleting ${seriesTitle} series`)
                     console.log(err);
                 })
+
+            // fetch(`https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}.json`, {
+            //     method : 'DELETE'
+            // })
+            //     .then(res => res.json())
+            //     .then(getAllSeries)
+            //     .then(()=>{
+            //         alert(`${seriesTitle} deleted successfully !`)
+            //         showSeries(allSeries)
+            //     })
+            //     .catch(err => {
+            //         alert(`An error occurred while deleting ${seriesTitle} series`)
+            //         console.log(err);
+            //     })
         }else{
             alert("You've entered the wrong name. Series will not be deleted haha !!!")
         }
@@ -322,7 +307,7 @@ function deleteSeries(seriesTitle, seriesID){
 // fills the input with the infos of the series that user wants to edit
 function editSeriesInfos () {
     closeModal()
-    const seriesInfos = allSeries.find(series => series[0] === seriesID)[1]
+    const seriesInfos = allSeries.find(series => series.seriesID === seriesID)
 
     titleInput.value = seriesInfos.title
     descriptionInput.value = seriesInfos.description
