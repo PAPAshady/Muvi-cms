@@ -4,6 +4,7 @@ import {
     getFirestore,
     collection,
     getDoc,
+    getDocs,
     setDoc,
     addDoc,
     doc,
@@ -34,6 +35,7 @@ window.storage = storage
 window.db = db
 window.collection = collection
 window.getDoc = getDoc
+window.getDocs = getDocs
 window.setDoc = setDoc
 window.addDoc = addDoc
 window.doc = doc
