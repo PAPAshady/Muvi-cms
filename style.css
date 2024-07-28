@@ -1035,9 +1035,24 @@ body.uploading .uploads{
 
 .uploads-wrapper{
     padding-top: 20px;
+}
+
+.uploads .videos,
+.uploads .subtitles{
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
+}
+
+.uploads .videos{
+    margin-bottom: 25px;
+}
+
+.uploads-wrapper > p{
+    margin-bottom: 15px;
+    color: var(--green);
+    font-weight: 600;
+    text-decoration: underline;
 }
 
 .uploads .progress {
@@ -1182,19 +1197,32 @@ body.uploading .uploads{
     display: none;
 }
 
+@media screen and (min-width : 480px) {
+    .uploads-wrapper{
+        width: 400px;
+    }
+}
+
 @media screen and (min-width : 768px) {
+
+    .uploads-wrapper{
+        width: 100%;
+    }
+
     .uploads .progress p {
         font-size: .8rem;
     }
 
-    .uploads-wrapper{
+    .uploads .videos,
+    .uploads .subtitles{
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 
 @media screen and (min-width : 1200px) {
-    .uploads-wrapper{
+    .uploads .videos,
+    .uploads .subtitles{
         grid-template-columns: repeat(3, 1fr);
     }
 }
