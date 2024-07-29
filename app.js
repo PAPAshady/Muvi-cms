@@ -320,13 +320,13 @@ function showEpisodesForm (seriesTitle, id){
     seriesID = id
     $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
 
-    const selectedSeries = allSeries.find(series => series[0] === id)[1]
+    const selectedSeries = allSeries.find(series => series.seriesID === id)
 
     episodeSeasonNumberInput.innerHTML = ''
 
     // render seasons of this series in the select box
     if(selectedSeries.seasons){
-        const seasons = Object.entries(selectedSeries.seasons).map((season, index) => {;
+        const seasons = selectedSeries.seasons.map((season, index) => {;
             return `<option value="${index + 1}">Season ${index + 1}</option>`
         }).join('')
 
@@ -334,7 +334,7 @@ function showEpisodesForm (seriesTitle, id){
 
         // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
         episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
-        `<option value="${Object.entries(selectedSeries.seasons).length + 1}">Season ${Object.entries(selectedSeries.seasons).length + 1} (New Season)</option>`
+        `<option value="${selectedSeries.seasons.length + 1}">Season ${selectedSeries.seasons.length + 1} (New Season)</option>`
         )
     }else {
         episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
@@ -445,7 +445,7 @@ function removeFile(array, fileId) {
 }
 
 
-function addEpisodeOrSeason () {
+async function addEpisodeOrSeason () {
 
     if(validateInputs('episode')){
         submitEpisodeFormBtn.classList.add('loading')
@@ -454,69 +454,57 @@ function addEpisodeOrSeason () {
         if(episodeSeasonNumberInput.value === episodeSeasonNumberInput.lastElementChild.value){
             isNewSeason = true
         }
-        const currentSeries = allSeries.find(series => series[0] === seriesID)[1]
+        const currentSeries = JSON.parse(JSON.stringify(allSeries.find(series => series.seriesID === seriesID))) 
         const seasonNumber = episodeSeasonNumberInput.value
         const newEpisode = {
             episodeID : `${currentSeries.seriesID}-S${seasonNumber}E1`,
             episodeName : episodeNameInput.value.trim(),
-            videoQualities,
-            subtitles,
+            videoQualities : videoQualities.map(video => ({name : video.name, quality : video.quality})),
+            subtitles : subtitles.map(subtitle => ({name : subtitle.name, language : subtitle.language})),
             isVisible : episodeCheckbox.checked,
             comments : []
         }
 
-        let fetchUrl
-        let dataToFetch
-
         if(isNewSeason){
-            dataToFetch = [
-                {
-                    seasonNumber,
-                    episodes : [newEpisode]
-                }
-            ]
-            
-            if(currentSeries.seasons){
-                dataToFetch.unshift(...currentSeries.seasons)
+
+            const seasons = []
+
+            // if series has prev seasons, include them
+            if(currentSeries.seasons.length){
+                seasons.push(...currentSeries.seasons)
             }
 
-            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons.json`
+            // add new season with its new episode
+            seasons.push({
+                seasonNumber,
+                episodes : [newEpisode]
+            })
+
+            currentSeries.seasons = seasons
+
         }else{
             const uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
-
             newEpisode.episodeID = `${currentSeries.seriesID}-S${seasonNumber}E${uploadedEpisodes + 1}`
-            
-            dataToFetch = [
-                ...currentSeries.seasons[seasonNumber -1].episodes,
-                newEpisode
-            ]
-
-            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons/${seasonNumber -1}/episodes.json`
+            currentSeries.seasons[seasonNumber - 1].episodes.push(newEpisode)
         }
 
-        fetch(fetchUrl, {
-            method : 'PUT',
-            'Content-type' : 'Application/json',
-            body : JSON.stringify(dataToFetch)
-        })
-            .then(res => res.json())
-            .then(getAllSeries)
-            .then(() => {
-                alert(`Episode added successfully :)`)
-                isNewSeason = false
-                showSeries(allSeries)
-                window.scrollTo({top : 0, behavior : 'smooth'})
-                clearInputs()
-                $.body.className = ''
-            })
-            .catch(err =>{
-                alert('An error occurred while adding the new episode')
-                console.log(err);
-            })
-            .finally(()=>{
-                submitEpisodeFormBtn.classList.remove('loading')
-                submitEpisodeFormBtn.removeAttribute('disabled')
-            })    
+        const episodeRef = doc(db, 'series', currentSeries.seriesID)
+
+        try{
+            await setDoc(episodeRef, {seasons : currentSeries.seasons}, {merge : true})
+            alert(`Episode added successfully :)`)
+            isNewSeason = false
+            showSeries(allSeries)
+            window.scrollTo({top : 0, behavior : 'smooth'})
+            clearInputs()
+            $.body.className = ''
+        }catch (err) {
+            alert('An error occurred while adding the new episode')
+            console.log(err);
+        }finally{
+            submitEpisodeFormBtn.classList.remove('loading')
+            submitEpisodeFormBtn.removeAttribute('disabled')
+        }
     }
 }
 
