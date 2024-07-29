@@ -380,6 +380,7 @@ function addNewFile (e, filesArray) {
 
     selectBox.classList.remove('invalid')
     errorMsg.classList.remove('show')
+    fileInputWrapper.classList.remove('invalid')
     
     const propertyName = filesArray === videoQualities ? 'quality' : 'language'
     const newFile = {
