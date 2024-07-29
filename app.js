@@ -57,15 +57,6 @@ let isNewSeason = false // specifies if user wants to add a new season or a new 
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
 
-async function getAllSeries () {
-    try{
-        const querySnapshot = await getDocs(collection(db, 'series'))
-        querySnapshot.forEach(doc => allSeries.push(doc.data()))
-    } catch(err){
-        alert('An error occurred while getting the data from server')
-        console.log(err)
-    }
-}
 
 async function showSeries (seriesArray) {
     
@@ -227,7 +218,6 @@ function addOrEditSeries (){
         submitSeriesBtn.setAttribute('disabled', true)
 
         const series = {
-            seriesID : titleInput.value.trim().split(' ').join('-') + '-series', // add a dash between words
             title : titleInput.value.trim(),
             description : descriptionInput.value.trim(),
             imageURL : imageUrlInput.value.trim(),
@@ -242,15 +232,17 @@ function addOrEditSeries (){
             seasons : []
         }
 
+        if(!seriesInfosEditMode){
+            series.seriesID = titleInput.value.trim().split(' ').join('-') + '-series' // add a dash between words
+        }
+
         // fetch data to server using firebase methods
         const seriesRef = doc(db, 'series', seriesInfosEditMode ? seriesID : series.seriesID)
 
         setDoc(seriesRef, series, {merge : true})
-            .then(getAllSeries)
             .then(() => {
                 alert(`Series ${seriesInfosEditMode ? 'edited' : 'added'} successfully :)`)
                 clearInputs()
-                showSeries(allSeries)
                 window.scrollTo({top : 0, behavior : 'smooth'})
                 seriesInfosEditMode = false
                 $.body.classList.remove('add-series')
@@ -275,29 +267,13 @@ function deleteSeries(seriesTitle, seriesID){
         if(shouldDelete.toUpperCase().trim() === seriesTitle.toUpperCase()){
 
             deleteDoc(doc(db, 'series', seriesID))
-                .then(getAllSeries)
                 .then(()=>{
                     alert(`${seriesTitle} deleted successfully !`)
-                    showSeries(allSeries)
                 })
                 .catch(err => {
                     alert(`An error occurred while deleting ${seriesTitle} series`)
                     console.log(err);
                 })
-
-            // fetch(`https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}.json`, {
-            //     method : 'DELETE'
-            // })
-            //     .then(res => res.json())
-            //     .then(getAllSeries)
-            //     .then(()=>{
-            //         alert(`${seriesTitle} deleted successfully !`)
-            //         showSeries(allSeries)
-            //     })
-            //     .catch(err => {
-            //         alert(`An error occurred while deleting ${seriesTitle} series`)
-            //         console.log(err);
-            //     })
         }else{
             alert("You've entered the wrong name. Series will not be deleted haha !!!")
         }
@@ -668,7 +644,16 @@ modalWrapper.addEventListener('click', e => {
 })
 
 window.addEventListener('load', async ()=>{
-    await getAllSeries()
-    showSeries(allSeries)
+
+    // listens for any changes in database and gets the fresh data from database and shows them to user
+    const seriesRef = collection(db, 'series')
+    onSnapshot(seriesRef, snapshot => {
+        allSeries = snapshot.docs.map(doc => doc.data())
+        showSeries(allSeries)
+    },
+    err => {
+        alert('Failed to get data from server, please check you connection and turn on your VPN')
+        console.log(err);
+    })
 })
 

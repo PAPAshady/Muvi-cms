@@ -12,6 +12,7 @@ import {
     arrayUnion,
     arrayRemove,
     deleteDoc,
+    onSnapshot,
 } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js'
 
 const firebaseConfig = {
@@ -43,3 +44,4 @@ window.updateDoc = updateDoc
 window.arrayUnion = arrayUnion
 window.arrayRemove = arrayRemove
 window.deleteDoc = deleteDoc
+window.onSnapshot  = onSnapshot 
