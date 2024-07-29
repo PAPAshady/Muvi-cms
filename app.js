@@ -52,25 +52,16 @@ const editSeriesInfosBtn = $.getElementById('editSeriesInfosBtn')
 const editSeriesEpisodesBtn = $.getElementById('editSeriesEpisodesBtn')
 
 let [genres, casts, videoQualities, subtitles] = [[], [], [], []]
-let [seriesID, allSeries] = [null, null]
+let seriesID = null
+let allSeries = []
 let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
-let isNewSeason = false // sepcifies if user wants to add a new season or a new episode
+let isNewSeason = false // specifies if user wants to add a new season or a new episode
 let folderRef = null // refrences to the folder in firebase cloud storage where user wants to upload the file
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
 
-async function getAllSeries () {
-    try {
-        const res = await fetch('https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series.json')
-        const data = await res.json()
-        allSeries = Object.entries(data)
-    } catch (error) {
-        alert('An error occurred while getting the data from server')
-        console.log(error);
-    }
-}
 
-async function showSeries (seriesArray) {
+function showSeries (seriesArray) {
     
     if(seriesArray){
         allSeriesContainer.querySelectorAll('.media-card').forEach(elem => elem.remove())
@@ -78,22 +69,22 @@ async function showSeries (seriesArray) {
             return `
                 <div class="media-card">
                     <a href="#">
-                        <img loading="lazy" src="${series[1].imageURL}" alt="${series[1].title}">
+                        <img loading="lazy" src="${series.imageURL}" alt="${series.title}">
                     </a>
                     <div class="media-info">
-                        <a href="#">${series[1].title}</a>
+                        <a href="#">${series.title}</a>
                         <div class="btn-wrapper">
-                            <button onclick="deleteSeries('${series[1].title}', '${series[0]}')" class="btn-fill">
+                            <button onclick="deleteSeries('${series.title}', '${series.seriesID}')" class="btn-fill">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                                     <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                                 </svg>
                             </button>
-                            <button onclick="openModal('${series[0]}')" class="btn-fill">
+                            <button onclick="openModal('${series.seriesID}')" class="btn-fill">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg>
                             </button>
-                            <button onclick="showEpisodesForm('${series[1].title}', '${series[0]}', 'add-episode')" class="btn-fill">
+                            <button onclick="showEpisodesForm('${series.title}', '${series.seriesID}', 'add-episode')" class="btn-fill">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                                 </svg>
@@ -219,7 +210,7 @@ function showImagePreviewHandler (e, imageElem) {
 function addOrEditSeries (){                
     if(validateInputs('series')){
 
-        const isAlreadyAdded = allSeries.some(series => series[1].title.toUpperCase() === titleInput.value.trim().toUpperCase())
+        const isAlreadyAdded = allSeries.some(series => series.title.toUpperCase() === titleInput.value.trim().toUpperCase())
 
         if(isAlreadyAdded && !seriesInfosEditMode){
             alert("You've added this series before !!!")
@@ -230,7 +221,6 @@ function addOrEditSeries (){
         submitSeriesBtn.setAttribute('disabled', true)
 
         const series = {
-            seriesID : titleInput.value.trim().split(' ').join('-') + '-series', // add a dash between words
             title : titleInput.value.trim(),
             description : descriptionInput.value.trim(),
             imageURL : imageUrlInput.value.trim(),
@@ -245,20 +235,17 @@ function addOrEditSeries (){
             seasons : []
         }
 
-        // change the url dynamically. it specifies if user wants to add a new series or edit a series
-        fetch(`https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/${seriesInfosEditMode ? `series/${seriesID}` : 'series'}.json`, {
-            method : `${seriesInfosEditMode ? 'PUT' : 'POST'}`,
-            headers : {
-                "Content-type" : 'Application/json'
-            },
-            body : JSON.stringify(series)
-        })
-            .then(res => res.json())
-            .then(getAllSeries)
-            .then(()=>{
+        if(!seriesInfosEditMode){
+            series.seriesID = titleInput.value.trim().split(' ').join('-') + '-series' // add a dash between words
+        }
+
+        // fetch data to server using firebase methods
+        const seriesRef = doc(db, 'series', seriesInfosEditMode ? seriesID : series.seriesID)
+
+        setDoc(seriesRef, series, {merge : true})
+            .then(() => {
                 alert(`Series ${seriesInfosEditMode ? 'edited' : 'added'} successfully :)`)
                 clearInputs()
-                showSeries(allSeries)
                 window.scrollTo({top : 0, behavior : 'smooth'})
                 seriesInfosEditMode = false
                 $.body.classList.remove('add-series')
@@ -267,7 +254,7 @@ function addOrEditSeries (){
                 alert('Error, something went wrong. Please turn on your VPN and try again :)')
                 console.log(err)
             })
-            .finally(()=> {
+            .finally(() => {
                 submitSeriesBtn.classList.remove('loading')
                 submitSeriesBtn.removeAttribute('disabled')
             })
@@ -281,17 +268,13 @@ function deleteSeries(seriesTitle, seriesID){
         const shouldDelete = prompt(`If you are sure about deleting ${seriesTitle} permanently, please write  ${seriesTitle}  in the input below`)
 
         if(shouldDelete.toUpperCase().trim() === seriesTitle.toUpperCase()){
-            fetch(`https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}.json`, {
-                method : 'DELETE'
-            })
-                .then(res => res.json())
-                .then(getAllSeries)
+
+            deleteDoc(doc(db, 'series', seriesID))
                 .then(()=>{
                     alert(`${seriesTitle} deleted successfully !`)
-                    showSeries(allSeries)
                 })
                 .catch(err => {
-                    alert(`An error occured while deleting ${seriesTitle} series`)
+                    alert(`An error occurred while deleting ${seriesTitle} series`)
                     console.log(err);
                 })
         }else{
@@ -303,7 +286,7 @@ function deleteSeries(seriesTitle, seriesID){
 // fills the input with the infos of the series that user wants to edit
 function editSeriesInfos () {
     closeModal()
-    const seriesInfos = allSeries.find(series => series[0] === seriesID)[1]
+    const seriesInfos = allSeries.find(series => series.seriesID === seriesID)
 
     titleInput.value = seriesInfos.title
     descriptionInput.value = seriesInfos.description
@@ -340,13 +323,13 @@ function showEpisodesForm (seriesTitle, id){
     seriesID = id
     $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
 
-    const selectedSeries = allSeries.find(series => series[0] === id)[1]
+    const selectedSeries = allSeries.find(series => series.seriesID === id)
 
     episodeSeasonNumberInput.innerHTML = ''
 
     // render seasons of this series in the select box
     if(selectedSeries.seasons){
-        const seasons = Object.entries(selectedSeries.seasons).map((season, index) => {;
+        const seasons = selectedSeries.seasons.map((season, index) => {;
             return `<option value="${index + 1}">Season ${index + 1}</option>`
         }).join('')
 
@@ -354,7 +337,7 @@ function showEpisodesForm (seriesTitle, id){
 
         // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
         episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
-        `<option value="${Object.entries(selectedSeries.seasons).length + 1}">Season ${Object.entries(selectedSeries.seasons).length + 1} (New Season)</option>`
+        `<option value="${selectedSeries.seasons.length + 1}">Season ${selectedSeries.seasons.length + 1} (New Season)</option>`
         )
     }else {
         episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
@@ -400,6 +383,7 @@ function addNewFile (e, filesArray) {
 
     selectBox.classList.remove('invalid')
     errorMsg.classList.remove('show')
+    fileInputWrapper.classList.remove('invalid')
     
     const propertyName = filesArray === videoQualities ? 'quality' : 'language'
     const newFile = {
@@ -464,99 +448,68 @@ function removeFile(array, fileId) {
     }
 }
 
-function addEpisodeOrSeason () {
 
-    // if(validateInputs('episode')){
+async function addEpisodeOrSeason () {
+
+    if(validateInputs('episode')){
         submitEpisodeFormBtn.classList.add('loading')
         submitEpisodeFormBtn.setAttribute('disabled', true)
     
         if(episodeSeasonNumberInput.value === episodeSeasonNumberInput.lastElementChild.value){
             isNewSeason = true
         }
-        const currentSeries = allSeries.find(series => series[0] === seriesID)[1]
+        const currentSeries = JSON.parse(JSON.stringify(allSeries.find(series => series.seriesID === seriesID))) 
         const seasonNumber = episodeSeasonNumberInput.value
         const newEpisode = {
             episodeID : `${currentSeries.seriesID}-S${seasonNumber}E1`,
             episodeName : episodeNameInput.value.trim(),
-            videoQualities,
-            subtitles,
+            videoQualities : videoQualities.map(video => ({name : video.name, quality : video.quality})),
+            subtitles : subtitles.map(subtitle => ({name : subtitle.name, language : subtitle.language})),
             isVisible : episodeCheckbox.checked,
             comments : []
         }
 
-        let fetchUrl
-        let dataToFetch
-        let uploadedEpisodes = 0
-
         if(isNewSeason){
-            dataToFetch = [
-                {
-                    seasonNumber,
-                    episodes : [newEpisode]
-                }
-            ]
-            
-            if(currentSeries.seasons){
-                dataToFetch.unshift(...currentSeries.seasons)
+
+            const seasons = []
+
+            // if series has prev seasons, include them
+            if(currentSeries.seasons.length){
+                seasons.push(...currentSeries.seasons)
             }
 
-            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons.json`
+            // add new season with its new episode
+            seasons.push({
+                seasonNumber,
+                episodes : [newEpisode]
+            })
+
+            currentSeries.seasons = seasons
+
         }else{
-            uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
-
+            const uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
             newEpisode.episodeID = `${currentSeries.seriesID}-S${seasonNumber}E${uploadedEpisodes + 1}`
-            
-            dataToFetch = [
-                ...currentSeries.seasons[seasonNumber -1].episodes,
-                newEpisode
-            ]
-
-            fetchUrl = `https://muvi-86973-default-rtdb.asia-southeast1.firebasedatabase.app/series/${seriesID}/seasons/${seasonNumber -1}/episodes.json`
+            currentSeries.seasons[seasonNumber - 1].episodes.push(newEpisode)
         }
 
-        //// Uploading files using firebase  ////
+        const episodeRef = doc(db, 'series', currentSeries.seriesID)
 
-        $.body.classList.add('uploading')
-        folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${uploadedEpisodes + 1}`
-
-
-
-        showUploadElems(videoQualities)
-        showUploadElems(subtitles)
-
-        if(uploadData(videoQualities)){
-            console.log('done video');
-            if(uploadData(subtitles)){
-                console.log('done subtitle');
-            }
+        try{
+            await setDoc(episodeRef, {seasons : currentSeries.seasons}, {merge : true})
+            alert(`Episode added successfully :)`)
+            isNewSeason = false
+            showSeries(allSeries)
+            window.scrollTo({top : 0, behavior : 'smooth'})
+            clearInputs()
+            $.body.className = ''
+        }catch (err) {
+            alert('An error occurred while adding the new episode')
+            console.log(err);
+        }finally{
+            submitEpisodeFormBtn.classList.remove('loading')
+            submitEpisodeFormBtn.removeAttribute('disabled')
         }
-
-        // fetch episode infos to database
-        // fetch(fetchUrl, {
-        //     method : 'PUT',
-        //     'Content-type' : 'Application/json',
-        //     body : JSON.stringify(dataToFetch)
-        // })
-        //     .then(res => res.json())
-        //     .then(getAllSeries)
-        //     .then(() => {
-        //         alert(`Episode added successfully :)`)
-        //         isNewSeason = false
-        //         showSeries(allSeries)
-        //         window.scrollTo({top : 0, behavior : 'smooth'})
-        //         clearInputs()
-        //         $.body.className = ''
-        //     })
-        //     .catch(err =>{
-        //         alert('An error occurred while adding the new episode')
-        //         console.log(err);
-        //     })
-        //     .finally(()=>{
-        //         submitEpisodeFormBtn.classList.remove('loading')
-        //         submitEpisodeFormBtn.removeAttribute('disabled')
-        //     })   
-    
-    // }
+    }
 }
 
 // upload the files using firebase 
@@ -730,8 +683,10 @@ function clearInputs () {
     casts = []
     videoQualities = []
     subtitles = []
-    videoUrlsContainer.innerHTML = ''
-    subtitleUrlsContainer.innerHTML = ''
+    videoQualitiesContainer.innerHTML = ''
+    subtitlesContainer.innerHTML = ''
+    landscapeImg.src = 'images/no-image.jpg'
+    portraitImg.src = 'images/no-image.jpg'
     $.querySelectorAll('select').forEach(elem => elem.value = 'false')
 }
 
@@ -791,8 +746,17 @@ modalWrapper.addEventListener('click', e => {
     }
 })
 
-window.addEventListener('load', async ()=>{
-    await getAllSeries()
-    showSeries(allSeries)
+window.addEventListener('load', ()=>{
+
+    // listens for any changes in database and gets the fresh data from database and shows them to user
+    const seriesRef = collection(db, 'series')
+    onSnapshot(seriesRef, snapshot => {
+        allSeries = snapshot.docs.map(doc => doc.data())
+        showSeries(allSeries)
+    },
+    err => {
+        alert('Failed to get data from server, please check you connection and turn on your VPN')
+        console.log(err);
+    })
 })
 
