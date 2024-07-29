@@ -497,20 +497,23 @@ async function addEpisodeOrSeason () {
         //// Uploading files using firebase  ////
 
         $.body.classList.add('uploading')
-        folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${uploadedEpisodes + 1}`
-        
-        
+        const uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
+        folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${uploadedEpisodes}`
         
         showUploadElems(videoQualities)
         showUploadElems(subtitles)
-        
-        if(uploadData(videoQualities)){
-            console.log('done video');
+        const videosAreUploaded = await uploadData(videoQualities)
 
-            if(uploadData(subtitles)){
-                console.log('done subtitle');
-            }
+        // this part some error handling...if user pause and then cancel all video uploads. no error would show to user..also if user cancels all uploads...it show an error in console nut you shoud handle it with firestore error handling
+        if(videosAreUploaded){
             
+            if(subtitles.length){
+                const subtitlesAreUploaded = await uploadData(subtitles)
+                if(!subtitlesAreUploaded){
+                    alert("Your videos have uploaded successfully but not your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)")
+                }
+            }
+
             try{
                 await setDoc(episodeRef, {seasons : currentSeries.seasons}, {merge : true})
                 alert(`Episode added successfully :)`)
@@ -522,75 +525,81 @@ async function addEpisodeOrSeason () {
             }catch (err) {
                 alert('An error occurred while adding the new episode')
                 console.log(err);
-            }finally{
-                submitEpisodeFormBtn.classList.remove('loading')
-                submitEpisodeFormBtn.removeAttribute('disabled')
             }
         }
 
+        submitEpisodeFormBtn.classList.remove('loading')
+        submitEpisodeFormBtn.removeAttribute('disabled')
     }
 }
 
 // upload the files using firebase 
 function uploadData (fileArray, fileIndex = 0){
 
-    // return true if all of the files are uploaded
-    if(fileIndex > fileArray.length - 1){
-        return true
-    }
+    return new Promise((resolve, reject) => {
 
-    const progressElem = $.getElementById(`file${fileIndex}`)
-    const cancelBtn = progressElem.querySelector('#cancelBtn')
-    const playOrPauseBtn = progressElem.querySelector('#playOrPauseBtn')
-
-    const fileRef = ref(storage, `${folderRef}/${fileArray[fileIndex].name}`)
-
-    const uploadTask = uploadBytesResumable(fileRef, fileArray[fileIndex].file)
-    progressElem.classList.replace('queued', 'uploading')
-
-    let uploadState
-
-    uploadTask.on('state_changed', snapshot => {
-        uploadState = snapshot.state
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        progressElem.querySelector('.progress-bar').style.width = progress + '%'
-        progressElem.querySelector('.percentage').textContent = Math.floor(progress) + '%'
-    },
-    error => {
-        alert('An error occurred while uploading')
-        console.log('error : ', error);
-    },
-    () => {
-        progressElem.className = 'progress done'
-        console.log(`${fileArray[fileIndex].name} uploaded successfully`);
-        uploadData(fileArray, fileIndex + 1)
-    })
-
-
-    cancelBtn.addEventListener('click', e => {
-        uploadTask.cancel()
-        removeUploadElems(e)
-
-        // if upload canceled, upload the next file
-        uploadData(fileArray, fileIndex + 1)
-    })
-
-    //change play or pause state
-    playOrPauseBtn.addEventListener('click', () => {
-        switch (uploadState) {
-            case 'paused':
-                uploadTask.resume()
-                progressElem.className = 'progress uploading'
-                playOrPauseBtn.classList.replace('paused', 'running')
-                break;
-                
-            case 'running':
-                uploadTask.pause()
-                progressElem.className = 'progress paused'
-                playOrPauseBtn.classList.replace('running', 'paused')
-            break;
+        // resolve with true if all of the files are uploaded
+        if(fileIndex > fileArray.length - 1){
+            resolve(true)
+            return
         }
+    
+        const progressElem = $.getElementById(`${fileArray === subtitles ? 'subtitle' : 'video'}File${fileIndex}`)
+        const cancelBtn = progressElem.querySelector('#cancelBtn')
+        const playOrPauseBtn = progressElem.querySelector('#playOrPauseBtn')
+    
+        const fileRef = ref(storage, `${folderRef}/${fileArray[fileIndex].name}`)
+    
+        const uploadTask = uploadBytesResumable(fileRef, fileArray[fileIndex].file)
+        progressElem.classList.replace('queued', 'uploading')
+    
+        let uploadState
+    
+        uploadTask.on('state_changed', snapshot => {
+            uploadState = snapshot.state
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            progressElem.querySelector('.progress-bar').style.width = progress + '%'
+            progressElem.querySelector('.percentage').textContent = Math.floor(progress) + '%'
+        },
+        error => {
+            alert(`An error occurred while uploading ${fileArray[fileIndex].name}`)
+            console.log('error : ', error);
+            reject(error)
+        },
+        () => {
+            progressElem.className = 'progress done'
+            console.log(`${fileArray[fileIndex].name} uploaded successfully`);
+            uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
+        })
+    
+    
+        cancelBtn.addEventListener('click', e => {
+            uploadTask.cancel()
+            removeUploadElems(e)
+    
+            // if upload canceled, upload the next file
+            uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
+        })
+    
+        //change play or pause state
+        playOrPauseBtn.addEventListener('click', () => {
+            switch (uploadState) {
+                case 'paused':
+                    uploadTask.resume()
+                    progressElem.className = 'progress uploading'
+                    playOrPauseBtn.classList.replace('paused', 'running')
+                    break;
+                    
+                case 'running':
+                    uploadTask.pause()
+                    progressElem.className = 'progress paused'
+                    playOrPauseBtn.classList.replace('running', 'paused')
+                break;
+            }
+        })
+
     })
+
 }
 
 function showUploadElems (arr) {
@@ -600,7 +609,7 @@ function showUploadElems (arr) {
     containerElem.innerHTML = ''
     const uploadingElements = arr.map((item, index) => {
         return `
-            <div class="progress ${index || arr === subtitles ? 'queued' : 'uploading'}" id="file${index}">
+            <div class="progress ${index || arr === subtitles ? 'queued' : 'uploading'}" id="${arr === subtitles ? 'subtitle' : 'video'}File${index}">
                 <p>${item.name}</p>
                 <div class="bar-wrapper">
                     <div class="bar">

@@ -1122,6 +1122,11 @@ body.uploading .uploads{
 
 .progress.done .bar-wrapper::after{
     content: 'Success !';
+    color: var(--green);
+}
+
+.progress.done .progress-bar{
+    background-color: var(--green);
 }
 
 .progress.done button{
