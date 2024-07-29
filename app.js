@@ -574,11 +574,14 @@ function uploadData (fileArray, fileIndex = 0){
     
     
         cancelBtn.addEventListener('click', e => {
-            uploadTask.cancel()
-            removeUploadElems(e)
-    
-            // if upload canceled, upload the next file
-            uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
+            const shouldRemove = confirm('Are you sure you want to cancel this upload ?')
+            if(shouldRemove){
+                uploadTask.cancel()
+                removeUploadElems(e)
+        
+                // if upload canceled, upload the next file
+                uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
+            }
         })
     
         //change play or pause state
