@@ -58,7 +58,7 @@ let isNewSeason = false // specifies if user wants to add a new season or a new 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
 
 
-async function showSeries (seriesArray) {
+function showSeries (seriesArray) {
     
     if(seriesArray){
         allSeriesContainer.querySelectorAll('.media-card').forEach(elem => elem.remove())
