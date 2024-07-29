@@ -582,8 +582,10 @@ function clearInputs () {
     casts = []
     videoQualities = []
     subtitles = []
-    videoUrlsContainer.innerHTML = ''
-    subtitleUrlsContainer.innerHTML = ''
+    videoQualitiesContainer.innerHTML = ''
+    subtitlesContainer.innerHTML = ''
+    landscapeImg.src = 'images/no-image.jpg'
+    portraitImg.src = 'images/no-image.jpg'
     $.querySelectorAll('select').forEach(elem => elem.value = 'false')
 }
 
@@ -643,7 +645,7 @@ modalWrapper.addEventListener('click', e => {
     }
 })
 
-window.addEventListener('load', async ()=>{
+window.addEventListener('load', ()=>{
 
     // listens for any changes in database and gets the fresh data from database and shows them to user
     const seriesRef = collection(db, 'series')
