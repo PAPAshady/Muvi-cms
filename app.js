@@ -494,21 +494,40 @@ async function addEpisodeOrSeason () {
 
         const episodeRef = doc(db, 'series', currentSeries.seriesID)
 
-        try{
-            await setDoc(episodeRef, {seasons : currentSeries.seasons}, {merge : true})
-            alert(`Episode added successfully :)`)
-            isNewSeason = false
-            showSeries(allSeries)
-            window.scrollTo({top : 0, behavior : 'smooth'})
-            clearInputs()
-            $.body.className = ''
-        }catch (err) {
-            alert('An error occurred while adding the new episode')
-            console.log(err);
-        }finally{
-            submitEpisodeFormBtn.classList.remove('loading')
-            submitEpisodeFormBtn.removeAttribute('disabled')
+        //// Uploading files using firebase  ////
+
+        $.body.classList.add('uploading')
+        folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${uploadedEpisodes + 1}`
+        
+        
+        
+        showUploadElems(videoQualities)
+        showUploadElems(subtitles)
+        
+        if(uploadData(videoQualities)){
+            console.log('done video');
+
+            if(uploadData(subtitles)){
+                console.log('done subtitle');
+            }
+            
+            try{
+                await setDoc(episodeRef, {seasons : currentSeries.seasons}, {merge : true})
+                alert(`Episode added successfully :)`)
+                isNewSeason = false
+                showSeries(allSeries)
+                window.scrollTo({top : 0, behavior : 'smooth'})
+                clearInputs()
+                $.body.className = ''
+            }catch (err) {
+                alert('An error occurred while adding the new episode')
+                console.log(err);
+            }finally{
+                submitEpisodeFormBtn.classList.remove('loading')
+                submitEpisodeFormBtn.removeAttribute('disabled')
+            }
         }
+
     }
 }
 
