@@ -207,7 +207,7 @@ function showImagePreviewHandler (e, imageElem) {
     })
 }
 
-function addOrEditSeries (){                
+function addOrEditSeries (){               
     if(validateInputs('series')){
 
         const isAlreadyAdded = allSeries.some(series => series.title.toUpperCase() === titleInput.value.trim().toUpperCase())
@@ -751,8 +751,14 @@ addVideoBtn.addEventListener('click', e => addNewFile(e, videoQualities))
 addSubtitleBtn.addEventListener('click', e => addNewFile(e, subtitles))
 
 searchInput.addEventListener('input', searchHandler)
+
 // preventDefault all forms
 allForms.forEach(form => form.addEventListener('submit', e => e.preventDefault()))
+$.querySelectorAll('input').forEach(input => input.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+        e.preventDefault()
+    }
+}))
 
 // show the name of selected file by file input
 $.querySelectorAll('.file-input').forEach(input => input.addEventListener('change', e => {
