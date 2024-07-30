@@ -56,7 +56,9 @@ let seriesID = null
 let allSeries = []
 let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
 let isNewSeason = false // specifies if user wants to add a new season or a new episode
-let folderRef = null // refrences to the folder in firebase cloud storage where user wants to upload the file
+let folderRef = null // refrence to the folder in firebase cloud storage where user wants to upload the file
+let uploadedVideosCounter = 0 // number of uploaded videos successfully
+let uploadedSubtitlesCounter = 0 // number of uploaded subtitles successfully 
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
 
@@ -393,7 +395,9 @@ function addNewFile (e, filesArray) {
         id : filesArray.length + 1
     }
 
-    const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName] || item.name === newFile.name)
+    // const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName] || item.name === newFile.name)
+    const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName])
+
 
     if(isAlreadyAdded){
         alert("You've already added this item")
@@ -494,8 +498,6 @@ async function addEpisodeOrSeason () {
 
         const episodeRef = doc(db, 'series', currentSeries.seriesID)
 
-        //// Uploading files using firebase  ////
-
         $.body.classList.add('uploading')
         const uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
         folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${uploadedEpisodes}`
@@ -504,13 +506,19 @@ async function addEpisodeOrSeason () {
         showUploadElems(subtitles)
         const videosAreUploaded = await uploadData(videoQualities)
 
-        // this part some error handling...if user pause and then cancel all video uploads. no error would show to user..also if user cancels all uploads...it show an error in console nut you shoud handle it with firestore error handling
+        //if we cancel all uploads an error occurres in console...fix it
         if(videosAreUploaded){
+            console.log(uploadedVideosCounter);
+            console.log(videoQualities.length);
             
+            alert(`${uploadedVideosCounter} videos uploaded out of ${videoQualities.length}`)
+
             if(subtitles.length){
                 const subtitlesAreUploaded = await uploadData(subtitles)
-                if(!subtitlesAreUploaded){
-                    alert("Your videos have uploaded successfully but not your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)")
+                if(subtitlesAreUploaded){
+                    alert(`${uploadedSubtitlesCounter} subtitles uploaded out of ${subtitles.length}`)
+                }else{
+                    alert(`${uploadedVideosCounter} videos have uploaded successfully but failed to upload your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)`)
                 }
             }
 
@@ -526,6 +534,8 @@ async function addEpisodeOrSeason () {
                 alert('An error occurred while adding the new episode')
                 console.log(err);
             }
+        }else{
+            alert('In order to add a new episode, you need to upload at least 1 video. \n Failed to upload the episode because no videos were uploaded \n Please try again.')
         }
 
         submitEpisodeFormBtn.classList.remove('loading')
@@ -538,9 +548,12 @@ function uploadData (fileArray, fileIndex = 0){
 
     return new Promise((resolve, reject) => {
 
-        // resolve with true if all of the files are uploaded
+        // checks if any files left to upload
         if(fileIndex > fileArray.length - 1){
-            resolve(true)
+            const uploadCounter = fileArray === subtitles ? uploadedSubtitlesCounter : uploadedVideosCounter
+
+            // resolve true if at least one file is uploaded
+            uploadCounter ? resolve(true) : reject(false)
             return
         }
     
@@ -550,6 +563,7 @@ function uploadData (fileArray, fileIndex = 0){
     
         const fileRef = ref(storage, `${folderRef}/${fileArray[fileIndex].name}`)
     
+        // using firebase uploadBytesResumable method to upload the file 
         const uploadTask = uploadBytesResumable(fileRef, fileArray[fileIndex].file)
         progressElem.classList.replace('queued', 'uploading')
     
@@ -562,14 +576,30 @@ function uploadData (fileArray, fileIndex = 0){
             progressElem.querySelector('.percentage').textContent = Math.floor(progress) + '%'
         },
         error => {
-            alert(`An error occurred while uploading ${fileArray[fileIndex].name}`)
-            console.log('error : ', error);
-            reject(error)
+            // do not show any error if user canceled the upload
+            if(error.code !== 'storage/canceled'){
+                const tryAgain = confirm(`Failed to upload ${fileArray[fileIndex].name}. Do you want to to try again ? \n if you click 'Cancel',this file will remove from the list and next file will upload`)
+
+                if(tryAgain){
+                    uploadData(fileArray, fileIndex).then(resolve).catch(reject)
+                }else{
+                    uploadTask.cancel()
+                    removeUploadElems(progressElem)
+                    uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
+                }
+            }
         },
-        () => {
+        () => { // on successful upload
             progressElem.className = 'progress done'
-            console.log(`${fileArray[fileIndex].name} uploaded successfully`);
+
+            if(fileArray === subtitles){
+                uploadedSubtitlesCounter++
+            }else{
+                uploadedVideosCounter++
+            }
             uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
+            console.log(`${fileArray[fileIndex].name} uploaded successfully`);
+            
         })
     
     
@@ -577,7 +607,7 @@ function uploadData (fileArray, fileIndex = 0){
             const shouldRemove = confirm('Are you sure you want to cancel this upload ?')
             if(shouldRemove){
                 uploadTask.cancel()
-                removeUploadElems(e)
+                removeUploadElems(e.target)
         
                 // if upload canceled, upload the next file
                 uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
@@ -643,15 +673,14 @@ function showUploadElems (arr) {
     containerElem.insertAdjacentHTML('beforeend', uploadingElements)
 }
 // this function only removes the ui elements... canceling the download is done by uploadData function
-function removeUploadElems(e) {
-    let progressElem = e.target
+function removeUploadElems(elemToRemove) {
 
-    // itirates trough all parent elements until it reaches the main element with 'progress' class
-    while(!progressElem.classList.contains('progress')){
-        progressElem = progressElem.parentElement
+    // loops trough all parent elements until it reaches the main element with 'progress' class
+    while(!elemToRemove.classList.contains('progress')){
+        elemToRemove = elemToRemove.parentElement
     }
 
-    progressElem.remove()
+    elemToRemove.remove()
 }
 
 // ---------- CODES FOR INPUT VALIDATION ---------- //
