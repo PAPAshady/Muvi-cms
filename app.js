@@ -393,7 +393,7 @@ function addNewFile (e, filesArray) {
         id : filesArray.length + 1
     }
 
-    const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName])
+    const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName] || item.name === newFile.name)
 
     if(isAlreadyAdded){
         alert("You've already added this item")
