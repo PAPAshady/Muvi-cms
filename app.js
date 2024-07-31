@@ -398,11 +398,18 @@ function addNewFile (e, filesArray) {
     }
 
     // const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName] || item.name === newFile.name)
-    const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName])
 
+    // set true if user already added this subtitle-language/quality-quality
+    let isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName])
+
+    // set true if user already added this file (same file name)
+    let isRepetitive = filesArray.some(file => file.name === newFile.name)
 
     if(isAlreadyAdded){
-        alert("You've already added this item")
+        alert("You've already added this quality/language")
+        return
+    }else if(isRepetitive){
+        alert("You've already added this file, please select another file")
         return
     }
     
@@ -540,7 +547,7 @@ async function addEpisodeOrSeason () {
         uploadedVideosCounter = 0
         uploadedSubtitlesCounter = 0
         $.body.className = ''
-        submitEpisodeFormBtn.classList.remove('loading')
+         submitEpisodeFormBtn.classList.remove('loading')
         submitEpisodeFormBtn.removeAttribute('disabled')
     }
 }
