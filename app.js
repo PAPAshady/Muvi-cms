@@ -525,11 +525,8 @@ async function addEpisodeOrSeason () {
                 const episodeRef = doc(db, 'series', currentSeries.seriesID)
                 await setDoc(episodeRef, {seasons : currentSeries.seasons}, {merge : true})
                 alert(`Episode added successfully :)`)
-                isNewSeason = false
                 showSeries(allSeries)
-                window.scrollTo({top : 0, behavior : 'smooth'})
                 clearInputs()
-                $.body.className = ''
             }catch (err) {
                 alert('An error occurred while adding the new episode')
                 console.log(err);
@@ -538,6 +535,11 @@ async function addEpisodeOrSeason () {
             alert(errorMsg)
         }
 
+        window.scrollTo({top : 0, behavior : 'smooth'})
+        isNewSeason = false
+        uploadedVideosCounter = 0
+        uploadedSubtitlesCounter = 0
+        $.body.className = ''
         submitEpisodeFormBtn.classList.remove('loading')
         submitEpisodeFormBtn.removeAttribute('disabled')
     }
