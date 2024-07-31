@@ -496,7 +496,6 @@ async function addEpisodeOrSeason () {
             currentSeries.seasons[seasonNumber - 1].episodes.push(newEpisode)
         }
 
-        const episodeRef = doc(db, 'series', currentSeries.seriesID)
 
         $.body.classList.add('uploading')
         const uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
@@ -504,25 +503,25 @@ async function addEpisodeOrSeason () {
         
         showUploadElems(videoQualities)
         showUploadElems(subtitles)
-        const videosAreUploaded = await uploadData(videoQualities)
 
-        //if we cancel all uploads an error occurres in console...fix it
-        if(videosAreUploaded){
+        try{
+            const msg = await uploadData(videoQualities)
             console.log(uploadedVideosCounter);
             console.log(videoQualities.length);
-            
-            alert(`${uploadedVideosCounter} videos uploaded out of ${videoQualities.length}`)
+            alert(msg)
 
             if(subtitles.length){
-                const subtitlesAreUploaded = await uploadData(subtitles)
-                if(subtitlesAreUploaded){
-                    alert(`${uploadedSubtitlesCounter} subtitles uploaded out of ${subtitles.length}`)
-                }else{
-                    alert(`${uploadedVideosCounter} videos have uploaded successfully but failed to upload your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)`)
+                let msg
+                try{
+                    msg = await uploadData(subtitles)
+                }catch(errorMsg){
+                    msg = errorMsg
                 }
+                alert(msg)
             }
 
             try{
+                const episodeRef = doc(db, 'series', currentSeries.seriesID)
                 await setDoc(episodeRef, {seasons : currentSeries.seasons}, {merge : true})
                 alert(`Episode added successfully :)`)
                 isNewSeason = false
@@ -534,8 +533,8 @@ async function addEpisodeOrSeason () {
                 alert('An error occurred while adding the new episode')
                 console.log(err);
             }
-        }else{
-            alert('In order to add a new episode, you need to upload at least 1 video. \n Failed to upload the episode because no videos were uploaded \n Please try again.')
+        }catch(errorMsg){
+            alert(errorMsg)
         }
 
         submitEpisodeFormBtn.classList.remove('loading')
@@ -550,10 +549,22 @@ function uploadData (fileArray, fileIndex = 0){
 
         // checks if any files left to upload
         if(fileIndex > fileArray.length - 1){
-            const uploadCounter = fileArray === subtitles ? uploadedSubtitlesCounter : uploadedVideosCounter
+            let uploadCounter
+            let errorMessage
+            let successMessage
+
+            if(fileArray === subtitles){
+                uploadCounter = uploadedSubtitlesCounter
+                errorMessage = `${uploadedVideosCounter} videos have uploaded successfully but failed to upload your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)`
+                successMessage = `${uploadedSubtitlesCounter} subtitles uploaded out of ${subtitles.length}`
+            }else{
+                uploadCounter = uploadedVideosCounter
+                errorMessage = 'In order to add a new episode, you need to upload at least 1 video. \n Please try again.'
+                successMessage = `${uploadedVideosCounter} videos uploaded out of ${videoQualities.length}`
+            }
 
             // resolve true if at least one file is uploaded
-            uploadCounter ? resolve(true) : reject(false)
+            uploadCounter ? resolve(successMessage) : reject(errorMessage)
             return
         }
     
