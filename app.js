@@ -576,15 +576,17 @@ function uploadData (fileArray, fileIndex = 0){
             return
         }
 
-        const cancelBtn = progressElem.querySelector('#cancelBtn')
-        const playOrPauseBtn = progressElem.querySelector('#playOrPauseBtn')
+        const file = fileArray[fileIndex].file
+        const fileName = fileArray[fileIndex].name
+        const fileType = fileArray[fileIndex].type
+        const fileProp = fileArray[fileIndex][fileProperty]
     
         // changing the file name to a correct format for storage
-        const fileName = `episode${currentEpisodeNumber} - ${fileArray[fileIndex][fileProperty]}.${fileArray[fileIndex].type}`
-        const fileRef = ref(storage, `${folderRef}/${fileName}`)
+        const fileRef = `episode${currentEpisodeNumber} - ${fileProp}.${fileType}`
+        const mainRef = ref(storage, `${folderRef}/${fileRef}`)
     
         // using firebase uploadBytesResumable method to upload the file 
-        const uploadTask = uploadBytesResumable(fileRef, fileArray[fileIndex].file)
+        const uploadTask = uploadBytesResumable(mainRef, file)
         progressElem.classList.replace('queued', 'uploading')
     
         let uploadState
@@ -598,7 +600,7 @@ function uploadData (fileArray, fileIndex = 0){
         error => {
             // do not show any error if user canceled the upload
             if(error.code !== 'storage/canceled'){
-                const tryAgain = confirm(`Failed to upload ${fileArray[fileIndex].name}. Do you want to to try again ? \n if you click 'Cancel',this file will remove from the list and next file will upload`)
+                const tryAgain = confirm(`Failed to upload ${fileName}. Do you want to to try again ? \n if you click 'Cancel',this file will remove from the list and next file will upload`)
 
                 if(tryAgain){
                     uploadData(fileArray, fileIndex).then(resolve).catch(reject)
@@ -618,24 +620,24 @@ function uploadData (fileArray, fileIndex = 0){
                 uploadedVideosCounter++
             }
             uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
-            console.log(`${fileArray[fileIndex].name} uploaded successfully`);
+            console.log(`${fileName} uploaded successfully`);
             
         })
     
     
-        cancelBtn.addEventListener('click', e => {
+        progressElem.querySelector('#cancelBtn').onclick = event => {
             const shouldRemove = confirm('Are you sure you want to cancel this upload ?')
             if(shouldRemove){
                 uploadTask.cancel()
-                removeUploadElems(e.target)
+                removeUploadElems(event.target)
         
                 // if upload canceled, upload the next file
                 uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
             }
-        })
+        }
     
         //change play or pause state
-        playOrPauseBtn.addEventListener('click', () => {
+        progressElem.querySelector('#playOrPauseBtn').onclick =  () => {
             switch (uploadState) {
                 case 'paused':
                     uploadTask.resume()
@@ -649,7 +651,7 @@ function uploadData (fileArray, fileIndex = 0){
                     playOrPauseBtn.classList.replace('running', 'paused')
                 break;
             }
-        })
+        }
 
     })
 
