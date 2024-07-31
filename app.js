@@ -59,6 +59,7 @@ let isNewSeason = false // specifies if user wants to add a new season or a new 
 let folderRef = null // refrence to the folder in firebase cloud storage where user wants to upload the file
 let uploadedVideosCounter = 0 // number of uploaded videos successfully
 let uploadedSubtitlesCounter = 0 // number of uploaded subtitles successfully 
+let currentEpisodeNumber = 1
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
 
@@ -392,7 +393,8 @@ function addNewFile (e, filesArray) {
         file : fileInput.files[0],
         name : fileInput.files[0].name,
         [propertyName] : selectBox.value,
-        id : filesArray.length + 1
+        id : filesArray.length + 1,
+        type : fileInput.files[0].name.split('.').slice(-1)[0],
     }
 
     // const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName] || item.name === newFile.name)
@@ -491,15 +493,14 @@ async function addEpisodeOrSeason () {
             currentSeries.seasons = seasons
 
         }else{
-            const uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
-            newEpisode.episodeID = `${currentSeries.seriesID}-S${seasonNumber}E${uploadedEpisodes + 1}`
+            currentEpisodeNumber = currentSeries.seasons[seasonNumber - 1].episodes.length
+            newEpisode.episodeID = `${currentSeries.seriesID}-S${seasonNumber}E${currentEpisodeNumber + 1}`
             currentSeries.seasons[seasonNumber - 1].episodes.push(newEpisode)
         }
 
 
         $.body.classList.add('uploading')
-        const uploadedEpisodes = currentSeries.seasons[seasonNumber - 1].episodes.length
-        folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${uploadedEpisodes}`
+        folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${currentEpisodeNumber}`
         
         showUploadElems(videoQualities)
         showUploadElems(subtitles)
@@ -547,32 +548,40 @@ function uploadData (fileArray, fileIndex = 0){
 
     return new Promise((resolve, reject) => {
 
+        let progressElem
+        let fileProperty
+        let uploadCounter
+        let errorMessage
+        let successMessage
+
+        if(fileArray === subtitles){
+            progressElem = $.getElementById(`subtitleFile${fileIndex}`)
+            fileProperty = 'language'
+            uploadCounter = uploadedSubtitlesCounter
+            errorMessage = `${uploadedVideosCounter} videos have uploaded successfully but failed to upload your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)`
+            successMessage = `${uploadedSubtitlesCounter} subtitles uploaded out of ${subtitles.length}`
+        }else{
+            progressElem = $.getElementById(`videoFile${fileIndex}`)
+            fileProperty = 'quality'
+            uploadCounter = uploadedVideosCounter
+            errorMessage = 'In order to add a new episode, you need to upload at least 1 video. \n Please try again.'
+            successMessage = `${uploadedVideosCounter} videos uploaded out of ${videoQualities.length}`
+        }
+
+
         // checks if any files left to upload
         if(fileIndex > fileArray.length - 1){
-            let uploadCounter
-            let errorMessage
-            let successMessage
-
-            if(fileArray === subtitles){
-                uploadCounter = uploadedSubtitlesCounter
-                errorMessage = `${uploadedVideosCounter} videos have uploaded successfully but failed to upload your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)`
-                successMessage = `${uploadedSubtitlesCounter} subtitles uploaded out of ${subtitles.length}`
-            }else{
-                uploadCounter = uploadedVideosCounter
-                errorMessage = 'In order to add a new episode, you need to upload at least 1 video. \n Please try again.'
-                successMessage = `${uploadedVideosCounter} videos uploaded out of ${videoQualities.length}`
-            }
-
             // resolve true if at least one file is uploaded
             uploadCounter ? resolve(successMessage) : reject(errorMessage)
             return
         }
-    
-        const progressElem = $.getElementById(`${fileArray === subtitles ? 'subtitle' : 'video'}File${fileIndex}`)
+
         const cancelBtn = progressElem.querySelector('#cancelBtn')
         const playOrPauseBtn = progressElem.querySelector('#playOrPauseBtn')
     
-        const fileRef = ref(storage, `${folderRef}/${fileArray[fileIndex].name}`)
+        // changing the file name to a correct format for storage
+        const fileName = `episode${currentEpisodeNumber} - ${fileArray[fileIndex][fileProperty]}.${fileArray[fileIndex].type}`
+        const fileRef = ref(storage, `${folderRef}/${fileName}`)
     
         // using firebase uploadBytesResumable method to upload the file 
         const uploadTask = uploadBytesResumable(fileRef, fileArray[fileIndex].file)
