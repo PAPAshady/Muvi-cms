@@ -1,5 +1,5 @@
 import { initializeApp  } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js'
-import { getStorage, ref, uploadBytesResumable } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js'
+import { getStorage, ref, uploadBytesResumable, deleteObject } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js'
 import {
     getFirestore,
     collection,
@@ -45,3 +45,4 @@ window.arrayUnion = arrayUnion
 window.arrayRemove = arrayRemove
 window.deleteDoc = deleteDoc
 window.onSnapshot  = onSnapshot 
+window.deleteObject = deleteObject

@@ -812,7 +812,7 @@ function renderSeasons (seasonArray){
                         <span class="btn-text">Edit</span>
                         <div class="btn-loader"></div>
                     </button>
-                    <button class="btn">
+                    <button onclick="removeSeason(event, ${season.seasonNumber})" class="btn">
                         <span class="btn-text">Remove</span>
                         <div class="btn-loader"></div>
                     </button>
@@ -859,6 +859,30 @@ function showEpisodesModal() {
     modalTitle.textContent = `Editing '${currentSeries.title}'`
     episodesModal.classList.add('show')
     askModal.classList.add('hide')
+}
+
+
+async function removeSeason(e, seasonNumber) {
+    const currentSeries = allSeries.find(series => series.seriesID === seriesID)
+    const shouldDelete = confirm(`Are you sure you want to delete season ${seasonNumber} of ${currentSeries.title} ?\nThis action is permanent.`)
+
+    if(shouldDelete){
+        const btn = e.target.className === 'btn' ? e.target : e.target.parentElement
+        btn.classList.add('loading')
+        const seriesRef = doc(db, `series/${seriesID}`)
+        const seasons = currentSeries.seasons.filter(season => season.seasonNumber != seasonNumber)
+
+        try {
+            // await setDoc(seriesRef, {seasons}, {merge : true})
+            // add codes so this function delete the files in cloud storage
+            alert(`Season ${seasonNumber} of ${currentSeries.title} removed successfully`)
+            btn.classList.remove('loading')
+            episodesContainer.parentElement.classList.remove("show")
+        } catch (error) {
+            alert(`Oops, an error occurred while removing this season, please try again`)
+            console.log(error);
+        }
+    }
 }
 
 
