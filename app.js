@@ -861,9 +861,8 @@ function showEpisodesModal() {
     askModal.classList.add('hide')
 }
 
-
 async function removeSeason(e, seasonNumber) {
-    const currentSeries = allSeries.find(series => series.seriesID === seriesID)
+    let currentSeries = allSeries.find(series => series.seriesID === seriesID)
     const shouldDelete = confirm(`Are you sure you want to delete season ${seasonNumber} of ${currentSeries.title} ?\nThis action is permanent.`)
 
     if(shouldDelete){
@@ -871,18 +870,34 @@ async function removeSeason(e, seasonNumber) {
         btn.classList.add('loading')
         const seriesRef = doc(db, `series/${seriesID}`)
         const seasons = currentSeries.seasons.filter(season => season.seasonNumber != seasonNumber)
+        const seasonRef = ref(storage, `series/${seriesID}/season${seasonNumber}`)
 
         try {
-            // await setDoc(seriesRef, {seasons}, {merge : true})
-            // add codes so this function delete the files in cloud storage
+            await deleteFilesAndFolders(seasonRef)
+            await setDoc(seriesRef, {seasons}, {merge : true})
             alert(`Season ${seasonNumber} of ${currentSeries.title} removed successfully`)
-            btn.classList.remove('loading')
+            currentSeries = allSeries.find(series => series.seriesID === seriesID)
+            renderSeasons(currentSeries.seasons)
             episodesContainer.parentElement.classList.remove("show")
         } catch (error) {
             alert(`Oops, an error occurred while removing this season, please try again`)
             console.log(error);
         }
+        btn.classList.remove('loading')
     }
+}
+
+async function deleteFilesAndFolders(folderRef) {
+    const folderList = await listAll(folderRef)
+
+    // Recursively delete all files
+    const filesPromises = folderList.items.map(itemRef => deleteObject(itemRef))
+
+    // Recursively delete all subfolders
+    const subfolderPromises = folderList.prefixes.map(subfolderRef => deleteFilesAndFolders(subfolderRef))
+
+    await Promise.all(filesPromises)
+    await Promise.all(subfolderPromises)
 }
 
 
