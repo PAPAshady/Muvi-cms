@@ -1511,6 +1511,11 @@ body.show-modal .modal{
 
 .all-episodes{
     margin-top: 15px;
+    display: none;
+}
+
+.all-episodes.show{
+    display: block;
 }
 
 .all-episodes p{
