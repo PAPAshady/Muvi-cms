@@ -54,6 +54,10 @@ body.show-modal main{
     opacity: 1;
 }
 
+.btn:disabled{
+    filter: grayscale(.9);
+}
+
 .btn-loader,
 .img-loader {
     margin: 0 auto;

@@ -482,7 +482,10 @@ async function addEpisodeOrSeason () {
 
     if(validateInputs('episode')){
         submitEpisodeFormBtn.classList.add('loading')
-        submitEpisodeFormBtn.setAttribute('disabled', true)
+        submitEpisodeFormBtn.disabled = true
+        addSubtitleBtn.disabled = true
+        addVideoBtn.disabled = true
+        episodeCheckbox.disabled = true
     
         if(episodeSeasonNumberInput.value === episodeSeasonNumberInput.lastElementChild.value){
             isNewSeason = true
@@ -561,8 +564,11 @@ async function addEpisodeOrSeason () {
         uploadedVideosCounter = 0
         uploadedSubtitlesCounter = 0
         $.body.className = ''
-         submitEpisodeFormBtn.classList.remove('loading')
-        submitEpisodeFormBtn.removeAttribute('disabled')
+        submitEpisodeFormBtn.classList.remove('loading')
+        submitEpisodeFormBtn.disabled = false
+        addSubtitleBtn.disabled = false
+        addVideoBtn.disabled = false
+        episodeCheckbox.disabled = false
     }
 }
 
@@ -780,8 +786,10 @@ function validateInputs (formNameToValidate) {
 
 function clearInputs () {
     $.querySelectorAll('input').forEach(input => input.value = '')
+    $.querySelector('textarea').value = ''
     $.querySelectorAll('.input span').forEach(span => span.remove())
     $.querySelectorAll('.form-input').forEach(elem => elem.classList.remove('invalid'))
+    $.querySelectorAll('input[type="file"]').forEach(input => input.value = null)
     portraitImg.parentElement.classList.remove('loading')
     landscapeImg.parentElement.classList.remove('loading')
     genres = []
