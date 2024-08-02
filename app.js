@@ -530,6 +530,7 @@ async function addEpisodeOrSeason () {
         
         showUploadElems(videoQualities)
         showUploadElems(subtitles)
+        videoUploadsWrapper.scrollIntoView({behavior : 'smooth'})
 
         try{
             const msg = await uploadData(videoQualities)
