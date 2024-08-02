@@ -360,14 +360,23 @@ function addNewFile (e, filesArray) {
     const selectBox = e.target.parentElement.querySelector('select')
     const errorMsg = e.target.previousElementSibling
 
+    const hideError = () => {
+        setTimeout(() => {
+            fileInputWrapper.classList.remove('invalid')
+            errorMsg.classList.remove('show')
+            selectBox.classList.remove('invalid')
+        },3000)
+    }
+
     // check if user selected any file
     if(fileInput.files.length){
-        fileInput.classList.remove('invalid')
+        fileInputWrapper.classList.remove('invalid')
         errorMsg.classList.remove('show')
     }else{
         fileInputWrapper.classList.add('invalid')
         errorMsg.textContent = 'Please select a file'
         errorMsg.classList.add("show")
+        hideError()
         return
     }
 
@@ -376,6 +385,7 @@ function addNewFile (e, filesArray) {
         errorMsg.textContent = 'Invalid file format'
         errorMsg.classList.add('show')
         fileInputWrapper.classList.add('invalid')
+        hideError()
         return
     }else{
         errorMsg.classList.remove('show')
@@ -386,6 +396,7 @@ function addNewFile (e, filesArray) {
         selectBox.classList.add('invalid')
         errorMsg.textContent = 'Please chose a value from select-box'
         errorMsg.classList.add('show')
+        hideError()
         return
     }
 
