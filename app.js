@@ -268,7 +268,7 @@ function addOrEditSeries (){
     }
 }
 
-function deleteSeries(seriesTitle, seriesID){
+async function deleteSeries(seriesTitle, seriesID){
     const isSure = confirm(`Are you sure you want to delete ${seriesTitle} completely ? this action is permanent and it will delete all this series seasons and episodes`)
 
     if(isSure){
@@ -276,14 +276,15 @@ function deleteSeries(seriesTitle, seriesID){
 
         if(shouldDelete.toUpperCase().trim() === seriesTitle.toUpperCase()){
 
-            deleteDoc(doc(db, 'series', seriesID))
-                .then(()=>{
-                    alert(`${seriesTitle} deleted successfully !`)
-                })
-                .catch(err => {
-                    alert(`An error occurred while deleting ${seriesTitle} series`)
-                    console.log(err);
-                })
+            const seriesRef  = ref(storage, `series/${seriesID}`)
+            try{
+                await deleteFilesAndFolders(seriesRef)
+                await deleteDoc(doc(db, 'series', seriesID))
+                alert(`${seriesTitle} deleted successfully !`)
+            } catch(err){
+                alert(`An error occurred while deleting ${seriesTitle} series`)
+                console.log(err);
+            }
         }else{
             alert("You've entered the wrong name. Series will not be deleted haha !!!")
         }
