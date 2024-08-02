@@ -58,6 +58,14 @@ body.show-modal main{
     filter: grayscale(.9);
 }
 
+.btn.hide{
+    display: none;
+}
+
+.btn.show{
+    display: block;
+}
+
 .btn-loader,
 .img-loader {
     margin: 0 auto;

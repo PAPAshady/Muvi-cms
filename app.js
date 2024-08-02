@@ -40,7 +40,8 @@ const subtitleLangInput = $.getElementById('subtitleLangInput')
 const addSubtitleBtn = $.getElementById('addSubtitleUrlBtn')
 const subtitlesContainer = $.getElementById('subtitleUrlsContainer')
 const episodeCheckbox = $.getElementById('episodeCheckbox')
-const submitEpisodeFormBtn = $.getElementById('addEpisodeBtn')
+const addEpisodeBtn = $.getElementById('addEpisodeBtn')
+const editEpisodeBtn = $.getElementById('editEpisodeBtn')
 const videoUploadsWrapper = $.querySelector('.uploads .videos')
 const subtitleUploadsWrapper = $.querySelector('.uploads .subtitles')
 
@@ -64,6 +65,7 @@ let folderRef = null // refrence to the folder in firebase cloud storage where u
 let uploadedVideosCounter = 0 // number of uploaded videos successfully
 let uploadedSubtitlesCounter = 0 // number of uploaded subtitles successfully 
 let currentEpisodeNumber = 1
+let currentSeasonNumber = null
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
 
@@ -337,14 +339,20 @@ function showEpisodesForm (seriesTitle, id, editMode, episodeNumber, seasonNumbe
     if(editMode){
         const currentEpisode = selectedSeries.seasons[seasonNumber - 1].episodes[episodeNumber - 1]
         episodeSeasonNumberInput.disabled = true
-        episodeNameInput.value = selectedSeries.title
+        episodeNameInput.value = currentEpisode.episodeName
         videoQualities = [...currentEpisode.videoQualities]
         subtitles = [...currentEpisode.subtitles]
         showFiles(videoQualities)
         showFiles(subtitles)
         episodeCheckbox.checked = selectedSeries.isVisible
+        editEpisodeBtn.classList.replace('hide', 'show')
+        addEpisodeBtn.classList.replace('show', 'hide')
+        currentEpisodeNumber = episodeNumber
+        currentSeasonNumber = seasonNumber
     }else{
 
+        editEpisodeBtn.classList.replace('show', 'hide')
+        addEpisodeBtn.classList.replace('hide', 'show')
         episodeSeasonNumberInput.innerHTML = ''
     
         // render seasons of this series in the select box
@@ -491,8 +499,8 @@ function removeFile(array, fileId) {
 async function addEpisodeOrSeason () {
 
     if(validateInputs('episode')){
-        submitEpisodeFormBtn.classList.add('loading')
-        submitEpisodeFormBtn.disabled = true
+        addEpisodeBtn.classList.add('loading')
+        addEpisodeBtn.disabled = true
         addSubtitleBtn.disabled = true
         addVideoBtn.disabled = true
         episodeCheckbox.disabled = true
@@ -505,8 +513,8 @@ async function addEpisodeOrSeason () {
         const newEpisode = {
             episodeID : `${currentSeries.seriesID}-S${seasonNumber}E1`,
             episodeName : episodeNameInput.value.trim(),
-            videoQualities : videoQualities.map(video => ({name : video.name, quality : video.quality})),
-            subtitles : subtitles.map(subtitle => ({name : subtitle.name, language : subtitle.language})),
+            videoQualities : videoQualities.map(video => ({name : video.name, quality : video.quality, id: video.id})),
+            subtitles : subtitles.map(subtitle => ({name : subtitle.name, language : subtitle.language, id : subtitle.id})),
             isVisible : episodeCheckbox.checked,
             comments : []
         }
@@ -575,8 +583,8 @@ async function addEpisodeOrSeason () {
         uploadedVideosCounter = 0
         uploadedSubtitlesCounter = 0
         $.body.className = ''
-        submitEpisodeFormBtn.classList.remove('loading')
-        submitEpisodeFormBtn.disabled = false
+        addEpisodeBtn.classList.remove('loading')
+        addEpisodeBtn.disabled = false
         addSubtitleBtn.disabled = false
         addVideoBtn.disabled = false
         episodeCheckbox.disabled = false
@@ -891,13 +899,37 @@ function showEpisodesModal() {
     askModal.classList.add('hide')
 }
 
+async function editEpisode(){
+    const episodeRef = ref(storage, `series/${seriesID}/season${currentSeasonNumber}/episode${currentEpisodeNumber}`)
+    const qualities = videoQualities.map(video => video.quality)
+    const languages = subtitles.map(subtitle => subtitle.language)
+
+    try{
+        const res = await listAll(episodeRef)
+        const filesRefs = res.items.map(ref => ref._location.path_)
+
+        // return an array of file info, it can be a video quality number or a subtitle language
+        const filesInfos = filesRefs.map(ref => ref.split('-').slice(-1)[0].split('.')[0].trim())
+        const shouldUploadVideos = videoQualities.filter(video => !filesInfos.includes(video.quality)) 
+        const shouldUploadSubtitles = subtitles.filter(subtitle => !filesInfos.includes(subtitle.language))
+        const shouldDeleteVideos = filesInfos.filter(file => !qualities.includes(file))
+        const shouldDeleteSubtitles = filesInfos.filter(file => !languages.includes(file))
+
+        // everything is all set up... you just gotta write a bunch of code to upload the new added vids/subs or delete them
+
+    }catch(err){
+        console.log(err);
+    }
+}
+
 async function removeSeason(e, seasonNumber) {
     let currentSeries = allSeries.find(series => series.seriesID === seriesID)
     const shouldDelete = confirm(`Are you sure you want to delete season ${seasonNumber} of ${currentSeries.title} ?\nThis action is permanent.`)
 
     if(shouldDelete){
+        let btn
         if(e){
-            const btn = e.target.className === 'btn' ? e.target : e.target.parentElement
+            btn = e.target.className === 'btn' ? e.target : e.target.parentElement
             btn.classList.add('loading')
         }
         const seriesRef = doc(db, `series/${seriesID}`)
@@ -923,7 +955,9 @@ async function removeSeason(e, seasonNumber) {
             console.log(error);
         }
 
-        if(e) btn.classList.remove('loading')
+        if(btn){
+            btn.classList.remove('loading')
+        }
     }
 }
 
@@ -987,7 +1021,8 @@ videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, lands
 editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
 editSeriesEpisodesBtn.addEventListener('click', showEpisodesModal)
 
-submitEpisodeFormBtn.addEventListener('click', addEpisodeOrSeason)
+addEpisodeBtn.addEventListener('click', addEpisodeOrSeason)
+editEpisodeBtn.addEventListener('click', editEpisode)
 
 addVideoBtn.addEventListener('click', e => addNewFile(e, videoQualities))
 addSubtitleBtn.addEventListener('click', e => addNewFile(e, subtitles))
