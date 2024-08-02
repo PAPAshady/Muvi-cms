@@ -895,7 +895,7 @@ async function removeSeason(e, seasonNumber) {
     }
 }
 
-async function deleteFilesAndFolders(folderRef) {
+async function deleteFilesAndFolders(ref) {
     const folderList = await listAll(folderRef)
 
     // Recursively delete all files
