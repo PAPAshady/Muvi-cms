@@ -91,7 +91,7 @@ function showSeries (seriesArray) {
                                     <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg>
                             </button>
-                            <button onclick="showEpisodesForm('${series.title}', '${series.seriesID}', 'add-episode')" class="btn-fill">
+                            <button onclick="showEpisodesForm('${series.title}', '${series.seriesID}', false)" class="btn-fill">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                                 </svg>
@@ -324,34 +324,45 @@ function editSeriesInfos () {
 // ---------- CODES FOR ADDING OR EDITING AN EPISODE ---------- //
 
 //makes the episodes form visible to the user
-function showEpisodesForm (seriesTitle, id){
+function showEpisodesForm (seriesTitle, id, editMode, episodeNumber, seasonNumber){
+    closeModal()
     $.body.className = ''
     $.body.classList.add('add-episode')
-    formTitle.textContent = `Add ${seriesTitle} episode`
+    formTitle.textContent = `${editMode ? 'Edit' : 'Add'} ${seriesTitle} episode`
     seriesID = id
     $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
 
     const selectedSeries = allSeries.find(series => series.seriesID === id)
 
-    episodeSeasonNumberInput.innerHTML = ''
+    if(editMode){
+        const currentEpisode = selectedSeries.seasons[seasonNumber - 1].episodes[episodeNumber - 1]
+        episodeSeasonNumberInput.disabled = true
+        episodeNameInput.value = selectedSeries.title
+        videoQualities = [...currentEpisode.videoQualities]
+        subtitles = [...currentEpisode.subtitles]
+        showFiles(videoQualities)
+        showFiles(subtitles)
+        episodeCheckbox.checked = selectedSeries.isVisible
+    }else{
 
-    // render seasons of this series in the select box
-    if(selectedSeries.seasons){
-        const seasons = selectedSeries.seasons.map((season, index) => {;
-            return `<option value="${index + 1}">Season ${index + 1}</option>`
-        }).join('')
-
-        episodeSeasonNumberInput.insertAdjacentHTML('afterbegin' ,seasons)
-
-        // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
-        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
-        `<option value="${selectedSeries.seasons.length + 1}">Season ${selectedSeries.seasons.length + 1} (New Season)</option>`
-        )
-    }else {
-        episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
+        episodeSeasonNumberInput.innerHTML = ''
+    
+        // render seasons of this series in the select box
+        if(selectedSeries.seasons){
+            const seasons = selectedSeries.seasons.map((season, index) => {;
+                return `<option value="${index + 1}">Season ${index + 1}</option>`
+            }).join('')
+    
+            episodeSeasonNumberInput.insertAdjacentHTML('afterbegin' ,seasons)
+    
+            // after rendering all the seasons in the select box, add a new option element in select box so user be able to add a new season
+            episodeSeasonNumberInput.insertAdjacentHTML('beforeend', 
+            `<option value="${selectedSeries.seasons.length + 1}">Season ${selectedSeries.seasons.length + 1} (New Season)</option>`
+            )
+        }else {
+            episodeSeasonNumberInput.insertAdjacentHTML('beforeend', '<option value="1">Season 1 (New Season)</option>')
+        }
     }
-
-
 }
 
 function addNewFile (e, filesArray) {
@@ -476,7 +487,6 @@ function removeFile(array, fileId) {
         showFiles(subtitles)
     }
 }
-
 
 async function addEpisodeOrSeason () {
 
@@ -842,16 +852,17 @@ function renderSeasons (seasonArray){
 }
 
 function renderEpisodes (seasonNumber){
-    const currentSeriesEpisodes = allSeries.find(series => series.seriesID === seriesID).seasons[seasonNumber - 1].episodes
+    const currentSeries = allSeries.find(series => series.seriesID === seriesID)
+    const episodes = currentSeries.seasons[seasonNumber - 1].episodes
     episodesContainer.previousElementSibling.textContent = `Season ${seasonNumber} episodes :`
     episodesContainer.innerHTML = ''
 
-    const episodes = currentSeriesEpisodes.map((episode, index) => {
+    const episodeElements = episodes.map((episode, index) => {
         return `
             <div class="episode">
                 Episode ${index + 1} : ${episode.episodeName}
                 <div class="icons">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                    <svg onclick="showEpisodesForm('${currentSeries.title}', '${seriesID}', true, ${index + 1}, ${seasonNumber})" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                         <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                     </svg>
                     <svg onclick="removeEpisode(${index + 1}, ${seasonNumber})" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
@@ -861,7 +872,7 @@ function renderEpisodes (seasonNumber){
             </div>`
     }).join('')
 
-    episodesContainer.insertAdjacentHTML('beforeend', episodes)
+    episodesContainer.insertAdjacentHTML('beforeend', episodeElements)
     episodesContainer.parentElement.classList.add("show")
 }
 

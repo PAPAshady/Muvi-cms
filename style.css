@@ -985,6 +985,10 @@ select.invalid{
         font-size: 1rem;
     }
 
+    select:disabled{
+        opacity: .4;
+    }
+
     .urls-wrapper{
         width: 620px;
     }
