@@ -1,0 +1,55 @@
+const $ = document
+// form elements
+export const allForms = $.querySelectorAll('form')
+export const formTitle = $.getElementById('formTitle')
+
+// series container elements
+export const searchInput = $.getElementById('searchInput')
+export const allSeriesContainer = $.querySelector('.media-content-wrapper')
+
+// add-series form elements
+export const addSeriesBtn = $.getElementById('addSeriesBtn')
+export const titleInput = $.getElementById('titleInput')
+export const descriptionInput = $.getElementById('descriptionInput')
+export const tagsInput = $.getElementById('tagsInput')
+export const yearInput = $.getElementById('yearInput')
+export const monthInput = $.getElementById('monthInput')
+export const dayInput = $.getElementById('dayInput')
+export const submitSeriesBtn = $.getElementById('submitSeriesBtn')
+export const videoPosterInput = $.getElementById('videoPosterInput')
+export const imageUrlInput = $.getElementById('imageUrlInput')
+export const portraitImg = $.getElementById('portraitImg')
+export const landscapeImg = $.getElementById('landscapeImg')
+export const countryInput = $.getElementById('countryInput')
+export const producerNameInput = $.getElementById('producerName')
+export const ratingInput = $.getElementById('ratingInput')
+export const castsInput = $.getElementById('castsInput')
+export const seriesCheckbox = $.getElementById('seriesCheckbox')
+
+// add-episode form elements
+export const episodeSeasonNumberInput = $.getElementById('episodeSeasonNumberInput')
+export const episodeNameInput = $.getElementById('episodeNameInput')
+export const videoUrlInput = $.getElementById('videoUrlInput')
+export const videoQualityInput = $.getElementById('episodeInput')
+export const addVideoBtn = $.getElementById('addVideoUrlBtn')
+export const videoQualitiesContainer = $.getElementById('videoUrlsContainer')
+export const subtitleInput = $.getElementById('subtitleInput')
+export const subtitleLangInput = $.getElementById('subtitleLangInput')
+export const addSubtitleBtn = $.getElementById('addSubtitleUrlBtn')
+export const subtitlesContainer = $.getElementById('subtitleUrlsContainer')
+export const episodeCheckbox = $.getElementById('episodeCheckbox')
+export const addEpisodeBtn = $.getElementById('addEpisodeBtn')
+export const editEpisodeBtn = $.getElementById('editEpisodeBtn')
+export const videoUploadsWrapper = $.querySelector('.uploads .videos')
+export const subtitleUploadsWrapper = $.querySelector('.uploads .subtitles')
+
+// modal elements
+export const modalWrapper = $.querySelector('.modal-wrapper')
+export const modalTitle = $.getElementById('modalTitle')
+export const closeModalBtn = $.getElementById('closeModalBtn')
+export const editSeriesInfosBtn = $.getElementById('editSeriesInfosBtn')
+export const editSeriesEpisodesBtn = $.getElementById('editSeriesEpisodesBtn')
+export const episodesModal = $.querySelector('.episodes-modal')
+export const askModal = $.querySelector('.ask-modal')
+export const seasonsContainer = $.querySelector('.seasons-container')
+export const episodesContainer = $.querySelector('.episodes-wrapper')

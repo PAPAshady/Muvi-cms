@@ -9,8 +9,6 @@ import {
     addDoc,
     doc,
     updateDoc,
-    arrayUnion,
-    arrayRemove,
     deleteDoc,
     onSnapshot,
 } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js'
@@ -30,20 +28,36 @@ const app = initializeApp(firebaseConfig)
 const storage = getStorage()
 const db = getFirestore(app)
 
-window.ref = ref
-window.uploadBytesResumable = uploadBytesResumable
-window.storage = storage
-window.db = db
-window.collection = collection
-window.getDoc = getDoc
-window.getDocs = getDocs
-window.setDoc = setDoc
-window.addDoc = addDoc
-window.doc = doc
-window.updateDoc = updateDoc
-window.arrayUnion = arrayUnion
-window.arrayRemove = arrayRemove
-window.deleteDoc = deleteDoc
-window.onSnapshot  = onSnapshot 
-window.deleteObject = deleteObject
-window.listAll = listAll
+export {
+    storage,
+    db,
+    ref,
+    uploadBytesResumable,
+    deleteObject,
+    listAll,
+    collection,
+    getDoc,
+    getDocs,
+    setDoc,
+    addDoc,
+    doc,
+    updateDoc,
+    deleteDoc,
+    onSnapshot,
+}
+
+// window.ref = ref
+// window.uploadBytesResumable = uploadBytesResumable
+// window.storage = storage
+// window.db = db
+// window.collection = collection
+// window.getDoc = getDoc
+// window.getDocs = getDocs
+// window.setDoc = setDoc
+// window.addDoc = addDoc
+// window.doc = doc
+// window.updateDoc = updateDoc
+// window.deleteDoc = deleteDoc
+// window.onSnapshot  = onSnapshot 
+// window.deleteObject = deleteObject
+// window.listAll = listAll
