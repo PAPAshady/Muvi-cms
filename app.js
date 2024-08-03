@@ -432,8 +432,6 @@ function addNewFile (e, filesArray) {
         type : fileInput.files[0].name.split('.').slice(-1)[0],
     }
 
-    // const isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName] || item.name === newFile.name)
-
     // set true if user already added this subtitle-language/quality-quality
     let isAlreadyAdded = filesArray.some(item => item[propertyName] === newFile[propertyName])
 
@@ -476,7 +474,7 @@ function showFiles (filesArray){
             <div class="url">
                 <p>${item.name}</p>
                 <span>${item.quality ? item.quality + 'p' : item.language.toUpperCase()}</span>
-                <svg onclick="removeFile(${arrayName}, ${item.id})" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                <svg onclick="removeFile(${arrayName}, '${item.quality ? item.quality : item.language}')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                     <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                 </svg>
             </div>
@@ -486,12 +484,12 @@ function showFiles (filesArray){
     containerElement.insertAdjacentHTML('beforeend', fileElements)
 }
 
-function removeFile(array, fileId) {
+function removeFile(array, fileInfo) {
     if(array === videoQualities){
-        videoQualities = videoQualities.filter(quality => quality.id !== fileId)
+        videoQualities = videoQualities.filter(video => video.quality != fileInfo)
         showFiles(videoQualities)
     }else{
-        subtitles = subtitles.filter(subtitle => subtitle.id !== fileId)
+        subtitles = subtitles.filter(subtitle => subtitle.language != fileInfo)
         showFiles(subtitles)
     }
 }
@@ -543,21 +541,17 @@ async function addEpisodeOrSeason () {
             folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${currentEpisodeNumber + 1}`
         }
 
-
-        $.body.classList.add('uploading')
-        
-        showUploadElems(videoQualities)
-        showUploadElems(subtitles)
-        videoUploadsWrapper.scrollIntoView({behavior : 'smooth'})
+        showUploadElems(videoQualities, true)
+        showUploadElems(subtitles, false)
 
         try{
-            const msg = await uploadData(videoQualities)
+            const msg = await uploadData(videoQualities, true)
             alert(msg)
 
             if(subtitles.length){
                 let msg
                 try{
-                    msg = await uploadData(subtitles)
+                    msg = await uploadData(subtitles, false)
                 }catch(errorMsg){
                     msg = errorMsg
                 }
@@ -580,8 +574,6 @@ async function addEpisodeOrSeason () {
 
         window.scrollTo({top : 0, behavior : 'smooth'})
         isNewSeason = false
-        uploadedVideosCounter = 0
-        uploadedSubtitlesCounter = 0
         $.body.className = ''
         addEpisodeBtn.classList.remove('loading')
         addEpisodeBtn.disabled = false
@@ -592,7 +584,7 @@ async function addEpisodeOrSeason () {
 }
 
 // upload the files using firebase 
-function uploadData (fileArray, fileIndex = 0){
+function uploadData (fileArray, isVideoFile, fileIndex = 0){
 
     return new Promise((resolve, reject) => {
 
@@ -602,18 +594,19 @@ function uploadData (fileArray, fileIndex = 0){
         let errorMessage
         let successMessage
 
-        if(fileArray === subtitles){
-            progressElem = $.getElementById(`subtitleFile${fileIndex}`)
-            fileProperty = 'language'
-            uploadCounter = uploadedSubtitlesCounter
-            errorMessage = `${uploadedVideosCounter} videos have uploaded successfully but failed to upload your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)`
-            successMessage = `${uploadedSubtitlesCounter} subtitles uploaded out of ${subtitles.length}`
-        }else{
+        // check if the fileArray is an array of videos or subtitles
+        if(isVideoFile){
             progressElem = $.getElementById(`videoFile${fileIndex}`)
             fileProperty = 'quality'
             uploadCounter = uploadedVideosCounter
             errorMessage = 'In order to add a new episode, you need to upload at least 1 video. \n Please try again.'
-            successMessage = `${uploadedVideosCounter} videos uploaded out of ${videoQualities.length}`
+            successMessage = `${uploadedVideosCounter} videos uploaded out of ${fileArray.length}`
+        }else{
+            progressElem = $.getElementById(`subtitleFile${fileIndex}`)
+            fileProperty = 'language'
+            uploadCounter = uploadedSubtitlesCounter
+            errorMessage = `${uploadedVideosCounter} videos have uploaded successfully but failed to upload your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)`
+            successMessage = `${uploadedSubtitlesCounter} subtitles uploaded out of ${fileArray.length}`
         }
 
 
@@ -621,6 +614,8 @@ function uploadData (fileArray, fileIndex = 0){
         if(fileIndex > fileArray.length - 1){
             // resolve true if at least one file is uploaded
             uploadCounter ? resolve(successMessage) : reject(errorMessage)
+            uploadedVideosCounter = 0
+            uploadedSubtitlesCounter = 0
             return
         }
 
@@ -651,25 +646,19 @@ function uploadData (fileArray, fileIndex = 0){
                 const tryAgain = confirm(`Failed to upload ${fileName}. Do you want to to try again ? \n if you click 'Cancel',this file will remove from the list and next file will upload`)
 
                 if(tryAgain){
-                    uploadData(fileArray, fileIndex).then(resolve).catch(reject)
+                    uploadData(fileArray, isVideoFile, fileIndex).then(resolve).catch(reject)
                 }else{
                     uploadTask.cancel()
                     removeUploadElems(progressElem)
-                    uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
+                    uploadData(fileArray, isVideoFile, fileIndex + 1).then(resolve).catch(reject)
                 }
             }
         },
         () => { // on successful upload
             progressElem.className = 'progress done'
-
-            if(fileArray === subtitles){
-                uploadedSubtitlesCounter++
-            }else{
-                uploadedVideosCounter++
-            }
-            uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
+            isVideoFile ? uploadedVideosCounter++ : uploadedSubtitlesCounter++ 
+            uploadData(fileArray, isVideoFile, fileIndex + 1).then(resolve).catch(reject)
             console.log(`${fileName} uploaded successfully`);
-            
         })
     
     
@@ -680,7 +669,7 @@ function uploadData (fileArray, fileIndex = 0){
                 removeUploadElems(event.target)
         
                 // if upload canceled, upload the next file
-                uploadData(fileArray, fileIndex + 1).then(resolve).catch(reject)
+                uploadData(fileArray, isVideoFile, fileIndex + 1).then(resolve).catch(reject)
             }
         }
     
@@ -705,14 +694,15 @@ function uploadData (fileArray, fileIndex = 0){
 
 }
 
-function showUploadElems (arr) {
-
-    const containerElem = arr === videoQualities ? videoUploadsWrapper : subtitleUploadsWrapper
+function showUploadElems (arr, isVideoElem) {
+    $.body.classList.add('uploading')
+    videoUploadsWrapper.scrollIntoView({behavior : 'smooth'})
+    const containerElem = isVideoElem ? videoUploadsWrapper : subtitleUploadsWrapper
 
     containerElem.innerHTML = ''
     const uploadingElements = arr.map((item, index) => {
         return `
-            <div class="progress ${index || arr === subtitles ? 'queued' : 'uploading'}" id="${arr === subtitles ? 'subtitle' : 'video'}File${index}">
+            <div class="progress ${index || !isVideoElem ? 'queued' : 'uploading'}" id="${isVideoElem ? 'video' : 'subtitle'}File${index}">
                 <p>${item.name}</p>
                 <div class="bar-wrapper">
                     <div class="bar">
@@ -752,6 +742,8 @@ function removeUploadElems(elemToRemove) {
 
     elemToRemove.remove()
 }
+
+
 
 // ---------- CODES FOR INPUT VALIDATION ---------- //
 
@@ -823,6 +815,8 @@ function clearInputs () {
 }
 
 
+
+
 // ---------- CODES FOR MODALS ---------- //
 
 function openModal (id) {
@@ -886,7 +880,7 @@ function renderEpisodes (seasonNumber){
 
 function showEpisodesModal() {
     const currentSeries = allSeries.find(series => series.seriesID === seriesID)
-    
+
     if(!currentSeries.seasons.length){
         alert(`${currentSeries.title} has no seasons/episodes. You need to add an episode first`)
         closeModal()
@@ -900,22 +894,37 @@ function showEpisodesModal() {
 }
 
 async function editEpisode(){
-    addEpisodeBtn.classList.add('loading')
-    addEpisodeBtn.disabled = true
-    const currentSeries = JSON.parse(JSON.stringify(allSeries.find(series => series.seriesID === seriesID)))
-    const episodeRef = ref(storage, `series/${seriesID}/season${currentSeasonNumber}/episode${currentEpisodeNumber}`)
-    const addedQualities = videoQualities.map(video => video.quality)
-    const addedLanguages = subtitles.map(subtitle => subtitle.language)
-    folderRef = episodeRef
 
-    try{
-        const res = await listAll(episodeRef)
+    if(validateInputs('episodes')){
+        editEpisodeBtn.classList.add('loading')
+        editEpisodeBtn.disabled = true
+
+        // using JSON methods to avoid over-writing the main array (allSeries array)
+        const currentSeries = JSON.parse(JSON.stringify(allSeries.find(series => series.seriesID === seriesID)))
+        const currentEpisode = currentSeries.seasons[currentSeasonNumber - 1].episodes[currentEpisodeNumber - 1]
+        const episodeRef = ref(storage, `series/${seriesID}/season${currentSeasonNumber}/episode${currentEpisodeNumber}`)
+        const addedQualities = videoQualities.map(video => video.quality)
+        const addedLanguages = subtitles.map(subtitle => subtitle.language)
+        folderRef = episodeRef
+        let res
+    
+        try{
+            res = await listAll(episodeRef)
+        }catch(err){
+            alert('An error occurred while getting episode data from server, please try again.')
+            window.scrollTo({top : 0, behavior : 'smooth'})
+            editEpisodeBtn.classList.remove('loading')
+            editEpisodeBtn.disabled = false
+            $.body.className = ''
+            return
+        }
+    
         const filesRefs = res.items.map(ref => ref._location.path_)
-
+    
         // qualities and subtitles languages that is currently in the cloud-storage
         const qualities = []
         const languages = []
-
+    
         filesRefs.forEach(ref => {
             ref = ref.split('-').slice(-1)[0]
             if(ref.endsWith('.srt') || ref.endsWith('.vvt')){
@@ -924,15 +933,14 @@ async function editEpisode(){
                 qualities.push(ref.split('.')[0].trim())
             }
         })
-
-        videosToUpload = videoQualities.filter(video => !qualities.includes(video.quality)) 
-        subtitlesToUpload = subtitles.filter(subtitle => !languages.includes(subtitle.language))
-
+    
+        const videosToUpload = videoQualities.filter(video => !qualities.includes(video.quality)) 
+        const subtitlesToUpload = subtitles.filter(subtitle => !languages.includes(subtitle.language))
+    
         const videosToRemove = qualities.filter(file => !addedQualities.includes(file))
         const subtitlesToRemove = languages.filter(file => !addedLanguages.includes(file))
-
         const fileRefsToDelete = []
-
+    
         res.items.forEach(ref => {
             const shouldDeleteVideo = videosToRemove.some(quality => ref._location.path_.includes(quality))
             const shouldDeleteSubtitle = subtitlesToRemove.some(language => ref._location.path_.includes(language))
@@ -940,50 +948,76 @@ async function editEpisode(){
                 fileRefsToDelete.push(ref)
             }
         })
-
-        if(videosToUpload.length || subtitlesToUpload.length){
-            $.body.classList.add('uploading')
-            showUploadElems(videosToUpload)
-            showUploadElems(subtitlesToUpload)
-        }
-
-        // upload new files
-        const msg = await uploadData(videosToUpload)
-        alert(msg)
-
-        if(subtitles.length){
-            let msg
-            try{
-                msg = await uploadData(subtitles)
-            }catch(errorMsg){
-                msg = errorMsg
-            }
-            alert(msg)
+    
+        // if all of these conditions are false that means user didn't change anything yet
+        const userUploadedFiles = videosToUpload.length && subtitlesToUpload.length
+        const userRemovedFiles = fileRefsToDelete.length
+        const userChangedEpisodeName = episodeNameInput.value.trim() !== currentEpisode.episodeName
+        const userChangedVisibility = episodeCheckbox.checked !== currentEpisode.isVisible
+    
+        if(!userUploadedFiles && !userRemovedFiles && !userChangedEpisodeName && !userChangedVisibility){
+            alert("You haven't made any changes yet")
+            editEpisodeBtn.classList.remove('loading')
+            editEpisodeBtn.disabled = false
+            return
         }
         
+        if(videosToUpload.length || subtitlesToUpload.length){
+            showUploadElems(videosToUpload, true)
+            showUploadElems(subtitlesToUpload, false)
+    
+            try{
+                // upload new files
+                const msg = await uploadData(videosToUpload, true)
+                alert(msg)
+        
+                if(subtitlesToUpload.length){
+                    let msg
+                    try{
+                        msg = await uploadData(subtitlesToUpload, false)
+                    }catch(errorMsg){
+                        msg = errorMsg
+                    }
+                    alert(msg)
+                }
+    
+            }catch(err) {
+                alert('Failed to upload Your videos, please try again later')
+            }
+        }
+    
         // delete the files user wants to delete
-        const deletePromises = fileRefsToDelete.map(ref => deleteObject(ref))
-        await Promise.all(deletePromises)
-
-        const currentEpisode = currentSeries.seasons[currentSeasonNumber - 1].episodes[currentEpisodeNumber - 1]
-
+        if(fileRefsToDelete.length){
+            try{
+                const deletePromises = fileRefsToDelete.map(ref => deleteObject(ref))
+                await Promise.all(deletePromises)
+            }catch (err){
+                alert('An error occurred while deleting the files from server')
+                console.log(err);
+            }
+        }
+    
         currentEpisode.episodeName = episodeNameInput.value.trim()
         currentEpisode.isVisible = episodeCheckbox.checked
         currentEpisode.videoQualities = videoQualities.map(video => ({id : video.id, name : video.name, quality : video.quality}))
         currentEpisode.subtitles = subtitles.map(subtitle => ({id: subtitle.id, name : subtitle.name, language: subtitle.language}))
-
+    
         const seriesRef = doc(db, `series/${seriesID}`)
-        await updateDoc(seriesRef, {
-            seasons : currentSeries.seasons
-        })
-
-        /// TEST THE CODE...IT HAS A PROBLEM THAT WHEN USER WANTS TO REMOVE A FILE...ALL FILES WILL REMOVE
-
-        alert('done')
-        addEpisodeBtn.classList.remove('loading')
-        addEpisodeBtn.disabled = false
-    }catch(err){
-        console.log(err);
+    
+        try{
+            await updateDoc(seriesRef, {
+                seasons : currentSeries.seasons
+            })
+        }catch (err){
+            alert('An error occurred while updating the changes on database')
+            console.log(err);
+        }
+    
+        alert('Episode edited successfully !')
+        window.scrollTo({top : 0, behavior : 'smooth'})
+        editEpisodeBtn.classList.remove('loading')
+        editEpisodeBtn.disabled = false
+        $.body.className = ''
     }
 }
 
