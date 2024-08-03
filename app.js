@@ -900,23 +900,88 @@ function showEpisodesModal() {
 }
 
 async function editEpisode(){
+    addEpisodeBtn.classList.add('loading')
+    addEpisodeBtn.disabled = true
+    const currentSeries = JSON.parse(JSON.stringify(allSeries.find(series => series.seriesID === seriesID)))
     const episodeRef = ref(storage, `series/${seriesID}/season${currentSeasonNumber}/episode${currentEpisodeNumber}`)
-    const qualities = videoQualities.map(video => video.quality)
-    const languages = subtitles.map(subtitle => subtitle.language)
+    const addedQualities = videoQualities.map(video => video.quality)
+    const addedLanguages = subtitles.map(subtitle => subtitle.language)
+    folderRef = episodeRef
 
     try{
         const res = await listAll(episodeRef)
         const filesRefs = res.items.map(ref => ref._location.path_)
 
-        // return an array of file info, it can be a video quality number or a subtitle language
-        const filesInfos = filesRefs.map(ref => ref.split('-').slice(-1)[0].split('.')[0].trim())
-        const shouldUploadVideos = videoQualities.filter(video => !filesInfos.includes(video.quality)) 
-        const shouldUploadSubtitles = subtitles.filter(subtitle => !filesInfos.includes(subtitle.language))
-        const shouldDeleteVideos = filesInfos.filter(file => !qualities.includes(file))
-        const shouldDeleteSubtitles = filesInfos.filter(file => !languages.includes(file))
+        // qualities and subtitles languages that is currently in the cloud-storage
+        const qualities = []
+        const languages = []
 
-        // everything is all set up... you just gotta write a bunch of code to upload the new added vids/subs or delete them
+        filesRefs.forEach(ref => {
+            ref = ref.split('-').slice(-1)[0]
+            if(ref.endsWith('.srt') || ref.endsWith('.vvt')){
+                languages.push(ref.split('.')[0].trim())
+            }else{
+                qualities.push(ref.split('.')[0].trim())
+            }
+        })
 
+        videosToUpload = videoQualities.filter(video => !qualities.includes(video.quality)) 
+        subtitlesToUpload = subtitles.filter(subtitle => !languages.includes(subtitle.language))
+
+        const videosToRemove = qualities.filter(file => !addedQualities.includes(file))
+        const subtitlesToRemove = languages.filter(file => !addedLanguages.includes(file))
+
+        const fileRefsToDelete = []
+
+        res.items.forEach(ref => {
+            const shouldDeleteVideo = videosToRemove.some(quality => ref._location.path_.includes(quality))
+            const shouldDeleteSubtitle = subtitlesToRemove.some(language => ref._location.path_.includes(language))
+            if(shouldDeleteVideo || shouldDeleteSubtitle){
+                fileRefsToDelete.push(ref)
+            }
+        })
+
+        if(videosToUpload.length || subtitlesToUpload.length){
+            $.body.classList.add('uploading')
+            showUploadElems(videosToUpload)
+            showUploadElems(subtitlesToUpload)
+        }
+
+        // upload new files
+        const msg = await uploadData(videosToUpload)
+        alert(msg)
+
+        if(subtitles.length){
+            let msg
+            try{
+                msg = await uploadData(subtitles)
+            }catch(errorMsg){
+                msg = errorMsg
+            }
+            alert(msg)
+        }
+        
+        // delete the files user wants to delete
+        const deletePromises = fileRefsToDelete.map(ref => deleteObject(ref))
+        await Promise.all(deletePromises)
+
+        const currentEpisode = currentSeries.seasons[currentSeasonNumber - 1].episodes[currentEpisodeNumber - 1]
+
+        currentEpisode.episodeName = episodeNameInput.value.trim()
+        currentEpisode.isVisible = episodeCheckbox.checked
+        currentEpisode.videoQualities = videoQualities.map(video => ({id : video.id, name : video.name, quality : video.quality}))
+        currentEpisode.subtitles = subtitles.map(subtitle => ({id: subtitle.id, name : subtitle.name, language: subtitle.language}))
+
+        const seriesRef = doc(db, `series/${seriesID}`)
+        await updateDoc(seriesRef, {
+            seasons : currentSeries.seasons
+        })
+
+        /// TEST THE CODE...IT HAS A PROBLEM THAT WHEN USER WANTS TO REMOVE A FILE...ALL FILES WILL REMOVE
+
+        alert('done')
+        addEpisodeBtn.classList.remove('loading')
+        addEpisodeBtn.disabled = false
     }catch(err){
         console.log(err);
     }
