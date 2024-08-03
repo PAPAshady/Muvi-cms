@@ -1,73 +1,26 @@
-// const $ = document
-// const v = validator
-
-// // form elements
-// const allForms = $.querySelectorAll('form')
-// const formTitle = $.getElementById('formTitle')
-
-// // series container elements
-// const searchInput = $.getElementById('searchInput')
-// const allSeriesContainer = $.querySelector('.media-content-wrapper')
-
-// // add-series form elements
-// const addSeriesBtn = $.getElementById('addSeriesBtn')
-// const titleInput = $.getElementById('titleInput')
-// const descriptionInput = $.getElementById('descriptionInput')
-// const tagsInput = $.getElementById('tagsInput')
-// const yearInput = $.getElementById('yearInput')
-// const monthInput = $.getElementById('monthInput')
-// const dayInput = $.getElementById('dayInput')
-// const submitSeriesBtn = $.getElementById('submitSeriesBtn')
-// const videoPosterInput = $.getElementById('videoPosterInput')
-// const imageUrlInput = $.getElementById('imageUrlInput')
-// const portraitImg = $.getElementById('portraitImg')
-// const landscapeImg = $.getElementById('landscapeImg')
-// const countryInput = $.getElementById('countryInput')
-// const producerNameInput = $.getElementById('producerName')
-// const ratingInput = $.getElementById('ratingInput')
-// const castsInput = $.getElementById('castsInput')
-// const seriesCheckbox = $.getElementById('seriesCheckbox')
-
-// // add-episode form elements
-// const episodeSeasonNumberInput = $.getElementById('episodeSeasonNumberInput')
-// const episodeNameInput = $.getElementById('episodeNameInput')
-// const videoUrlInput = $.getElementById('videoUrlInput')
-// const videoQualityInput = $.getElementById('episodeInput')
-// const addVideoBtn = $.getElementById('addVideoUrlBtn')
-// const videoQualitiesContainer = $.getElementById('videoUrlsContainer')
-// const subtitleInput = $.getElementById('subtitleInput')
-// const subtitleLangInput = $.getElementById('subtitleLangInput')
-// const addSubtitleBtn = $.getElementById('addSubtitleUrlBtn')
-// const subtitlesContainer = $.getElementById('subtitleUrlsContainer')
-// const episodeCheckbox = $.getElementById('episodeCheckbox')
-// const addEpisodeBtn = $.getElementById('addEpisodeBtn')
-// const editEpisodeBtn = $.getElementById('editEpisodeBtn')
-// const videoUploadsWrapper = $.querySelector('.uploads .videos')
-// const subtitleUploadsWrapper = $.querySelector('.uploads .subtitles')
-
-// // modal elements
-// const modalWrapper = $.querySelector('.modal-wrapper')
-// const modalTitle = $.getElementById('modalTitle')
-// const closeModalBtn = $.getElementById('closeModalBtn')
-// const editSeriesInfosBtn = $.getElementById('editSeriesInfosBtn')
-// const editSeriesEpisodesBtn = $.getElementById('editSeriesEpisodesBtn')
-// const episodesModal = $.querySelector('.episodes-modal')
-// const askModal = $.querySelector('.ask-modal')
-// const seasonsContainer = $.querySelector('.seasons-container')
-// const episodesContainer = $.querySelector('.episodes-wrapper')
-
-let [genres, casts, videoQualities, subtitles] = [[], [], [], []]
-let seriesID = null
-let allSeries = []
-let seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
-let isNewSeason = false // specifies if user wants to add a new season or a new episode
-let folderRef = null // refrence to the folder in firebase cloud storage where user wants to upload the file
-let uploadedVideosCounter = 0 // number of uploaded videos successfully
-let uploadedSubtitlesCounter = 0 // number of uploaded subtitles successfully 
-let currentEpisodeNumber = 1
-let currentSeasonNumber = null
+var v = validator
+var [genres, casts, videoQualities, subtitles] = [[], [], [], []]
+var seriesID = null
+var allSeries = []
+var seriesInfosEditMode = false // specifies if user wants to add a new series or edit a series. if set to true, it means user wants to edit a series
+var isNewSeason = false // specifies if user wants to add a new season or a new episode
+var folderRef = null // refrence to the folder in firebase cloud storage where user wants to upload the file
+var uploadedVideosCounter = 0 // number of uploaded videos successfully
+var uploadedSubtitlesCounter = 0 // number of uploaded subtitles successfully 
+var currentEpisodeNumber = 1
+var currentSeasonNumber = null
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
+
+function searchHandler (e) {
+    const value = e.target.value.trim()
+    if(value){
+        const filteredSeries = allSeries.filter(series => series[1].title.toUpperCase().includes(value.toUpperCase()))
+        showSeries(filteredSeries)
+    }else{
+        showSeries(allSeries)
+    }
+}
 
 
 function showSeries (seriesArray) {
@@ -109,15 +62,6 @@ function showSeries (seriesArray) {
     }
 }
 
-function searchHandler (e) {
-    const value = e.target.value.trim()
-    if(value){
-        const filteredSeries = allSeries.filter(series => series[1].title.toUpperCase().includes(value.toUpperCase()))
-        showSeries(filteredSeries)
-    }else{
-        showSeries(allSeries)
-    }
-}
 
 //makes the add-series form visible to the user
 function showAddSeriesForm (seriesTitle){
@@ -583,255 +527,6 @@ async function addEpisodeOrSeason () {
     }
 }
 
-// // upload the files using firebase 
-// function uploadData (fileArray, isVideoFile, fileIndex = 0){
-
-//     return new Promise((resolve, reject) => {
-
-//         let progressElem
-//         let fileProperty
-//         let uploadCounter
-//         let errorMessage
-//         let successMessage
-
-//         // check if the fileArray is an array of videos or subtitles
-//         if(isVideoFile){
-//             progressElem = $.getElementById(`videoFile${fileIndex}`)
-//             fileProperty = 'quality'
-//             uploadCounter = uploadedVideosCounter
-//             errorMessage = 'In order to add a new episode, you need to upload at least 1 video. \n Please try again.'
-//             successMessage = `${uploadedVideosCounter} videos uploaded out of ${fileArray.length}`
-//         }else{
-//             progressElem = $.getElementById(`subtitleFile${fileIndex}`)
-//             fileProperty = 'language'
-//             uploadCounter = uploadedSubtitlesCounter
-//             errorMessage = `${uploadedVideosCounter} videos have uploaded successfully but failed to upload your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)`
-//             successMessage = `${uploadedSubtitlesCounter} subtitles uploaded out of ${fileArray.length}`
-//         }
-
-
-//         // checks if any files left to upload
-//         if(fileIndex > fileArray.length - 1){
-//             // resolve true if at least one file is uploaded
-//             uploadCounter ? resolve(successMessage) : reject(errorMessage)
-//             uploadedVideosCounter = 0
-//             uploadedSubtitlesCounter = 0
-//             return
-//         }
-
-//         const file = fileArray[fileIndex].file
-//         const fileName = fileArray[fileIndex].name
-//         const fileType = fileArray[fileIndex].type
-//         const fileProp = fileArray[fileIndex][fileProperty]
-    
-//         // changing the file name to a correct format for storage
-//         const fileRef = `episode${currentEpisodeNumber} - ${fileProp}.${fileType}`
-//         const mainRef = ref(storage, `${folderRef}/${fileRef}`)
-    
-//         // using firebase uploadBytesResumable method to upload the file 
-//         const uploadTask = uploadBytesResumable(mainRef, file)
-//         progressElem.classList.replace('queued', 'uploading')
-    
-//         let uploadState
-    
-//         uploadTask.on('state_changed', snapshot => {
-//             uploadState = snapshot.state
-//             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-//             progressElem.querySelector('.progress-bar').style.width = progress + '%'
-//             progressElem.querySelector('.percentage').textContent = Math.floor(progress) + '%'
-//         },
-//         error => {
-//             // do not show any error if user canceled the upload
-//             if(error.code !== 'storage/canceled'){
-//                 const tryAgain = confirm(`Failed to upload ${fileName}. Do you want to to try again ? \n if you click 'Cancel',this file will remove from the list and next file will upload`)
-
-//                 if(tryAgain){
-//                     uploadData(fileArray, isVideoFile, fileIndex).then(resolve).catch(reject)
-//                 }else{
-//                     uploadTask.cancel()
-//                     removeUploadElems(progressElem)
-//                     uploadData(fileArray, isVideoFile, fileIndex + 1).then(resolve).catch(reject)
-//                 }
-//             }
-//         },
-//         () => { // on successful upload
-//             progressElem.className = 'progress done'
-//             isVideoFile ? uploadedVideosCounter++ : uploadedSubtitlesCounter++ 
-//             uploadData(fileArray, isVideoFile, fileIndex + 1).then(resolve).catch(reject)
-//             console.log(`${fileName} uploaded successfully`);
-//         })
-    
-    
-//         progressElem.querySelector('#cancelBtn').onclick = event => {
-//             const shouldRemove = confirm('Are you sure you want to cancel this upload ?')
-//             if(shouldRemove){
-//                 uploadTask.cancel()
-//                 removeUploadElems(event.target)
-        
-//                 // if upload canceled, upload the next file
-//                 uploadData(fileArray, isVideoFile, fileIndex + 1).then(resolve).catch(reject)
-//             }
-//         }
-    
-//         //change play or pause state
-//         progressElem.querySelector('#playOrPauseBtn').onclick =  () => {
-//             switch (uploadState) {
-//                 case 'paused':
-//                     uploadTask.resume()
-//                     progressElem.className = 'progress uploading'
-//                     playOrPauseBtn.classList.replace('paused', 'running')
-//                     break;
-                    
-//                 case 'running':
-//                     uploadTask.pause()
-//                     progressElem.className = 'progress paused'
-//                     playOrPauseBtn.classList.replace('running', 'paused')
-//                 break;
-//             }
-//         }
-
-//     })
-
-// }
-
-// function showUploadElems (arr, isVideoElem) {
-//     $.body.classList.add('uploading')
-//     videoUploadsWrapper.scrollIntoView({behavior : 'smooth'})
-//     const containerElem = isVideoElem ? videoUploadsWrapper : subtitleUploadsWrapper
-
-//     containerElem.innerHTML = ''
-//     const uploadingElements = arr.map((item, index) => {
-//         return `
-//             <div class="progress ${index || !isVideoElem ? 'queued' : 'uploading'}" id="${isVideoElem ? 'video' : 'subtitle'}File${index}">
-//                 <p>${item.name}</p>
-//                 <div class="bar-wrapper">
-//                     <div class="bar">
-//                         <span class="percentage">0%</span>
-//                         <div class="progress-bar"></div>
-//                     </div>
-//                 </div>
-//                 <div class="btn-wrapper">
-//                     <button id="cancelBtn">
-//                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-//                             <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-//                         </svg>
-//                     </button>
-//                     <button id="playOrPauseBtn" class="running">
-//                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-circle" viewBox="0 0 16 16">
-//                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-//                             <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/>
-//                         </svg>
-//                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
-//                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-//                             <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/>
-//                         </svg>
-//                     </button>
-//                 </div>
-//             </div>`
-//     }).join('')
-
-//     containerElem.insertAdjacentHTML('beforeend', uploadingElements)
-// }
-// // this function only removes the ui elements... canceling the download is done by uploadData function
-// function removeUploadElems(elemToRemove) {
-
-//     // loops trough all parent elements until it reaches the main element with 'progress' class
-//     while(!elemToRemove.classList.contains('progress')){
-//         elemToRemove = elemToRemove.parentElement
-//     }
-
-//     elemToRemove.remove()
-// }
-
-
-
-// ---------- CODES FOR INPUT VALIDATION ---------- //
-
-// validate inputs before fetching the data
-function validateInputs (formNameToValidate) {
-
-    // show the user which input has invalid value
-    const showInvalidInput = (elemsArray) => {
-        elemsArray.forEach(elem => elem.classList.add('invalid'))
-        elemsArray[0].scrollIntoView({behavior: 'smooth', block: 'center'})
-
-        setTimeout(() => {
-            elemsArray.forEach(elem => elem.classList.remove('invalid'))
-        },3000)
-
-        return false
-    }
-
-    if(formNameToValidate === 'series'){
-        const title = titleInput.value.trim()
-        const description = v.isLength(descriptionInput.value.trim(), {min: 50, max: 250})
-        const dateRelease = v.isDate(`${yearInput.value}/${monthInput.value}/${dayInput.value}`)
-        const videoPosterURL = v.isURL(videoPosterInput.value.trim())
-        const imageURL = v.isURL(imageUrlInput.value.trim())
-        const country = v.isAlpha(countryInput.value.trim(), ['en-US'], {ignore : '\s'})
-        const producer = producerNameInput.value.trim()
-        const rating = v.isDecimal(ratingInput.value.trim())
-        
-        if(!title) return showInvalidInput([titleInput.parentElement.parentElement])
-        if(!description) return showInvalidInput([descriptionInput.parentElement.parentElement]) 
-        if(!genres.length) return showInvalidInput([tagsInput.parentElement.parentElement])    
-        if(!dateRelease) return showInvalidInput([yearInput, monthInput, dayInput])    
-        if(!videoPosterURL) return showInvalidInput([videoPosterInput])  
-        if(!imageURL) return showInvalidInput([imageUrlInput])   
-        if(!country) return showInvalidInput([countryInput])  
-        if(!producer) return showInvalidInput([producerNameInput]) 
-        if(!rating) return showInvalidInput([ratingInput]) 
-        if(!casts.length) return showInvalidInput([castsInput.parentElement])
-        
-    }else{
-        if(!episodeNameInput.value.trim()) return showInvalidInput([episodeNameInput])
-        if(!videoQualities.length) return showInvalidInput([videoUrlInput, videoQualityInput, videoUrlInput.parentElement])
-    }
-    
-    return true
-}
-
-
-
-// ---------- CLEAR INPUTS ---------- //
-
-function clearInputs () {
-    $.querySelectorAll('input').forEach(input => input.value = '')
-    $.querySelector('textarea').value = ''
-    $.querySelectorAll('.input span').forEach(span => span.remove())
-    $.querySelectorAll('.form-input').forEach(elem => elem.classList.remove('invalid'))
-    $.querySelectorAll('input[type="file"]').forEach(input => input.value = null)
-    portraitImg.parentElement.classList.remove('loading')
-    landscapeImg.parentElement.classList.remove('loading')
-    genres = []
-    casts = []
-    videoQualities = []
-    subtitles = []
-    videoQualitiesContainer.innerHTML = ''
-    subtitlesContainer.innerHTML = ''
-    landscapeImg.src = 'images/no-image.jpg'
-    portraitImg.src = 'images/no-image.jpg'
-    $.querySelectorAll('select').forEach(elem => elem.value = 'false')
-}
-
-
-
-
-// ---------- CODES FOR MODALS ---------- //
-
-// function openModal (id) {
-//     seriesID = id
-//     $.body.classList.add('show-modal')
-// }
-
-// function closeModal(){
-//     $.body.classList.remove('show-modal')
-//     askModal.classList.remove('hide')
-//     episodesModal.classList.remove('show')
-//     modalWrapper.querySelectorAll('button').forEach(btn => btn.classList.remove('loading'))
-//     episodesContainer.parentElement.classList.remove("show")
-// }
-
 function renderSeasons (seasonArray){
     seasonsContainer.innerHTML = ''
     const seasons = seasonArray.map(season => {
@@ -878,20 +573,44 @@ function renderEpisodes (seasonNumber){
     episodesContainer.parentElement.classList.add("show")
 }
 
-// function showEpisodesModal() {
-//     const currentSeries = allSeries.find(series => series.seriesID === seriesID)
+async function removeSeason(e, seasonNumber) {
+    let currentSeries = allSeries.find(series => series.seriesID === seriesID)
+    const shouldDelete = confirm(`Are you sure you want to delete season ${seasonNumber} of ${currentSeries.title} ?\nThis action is permanent.`)
 
-//     if(!currentSeries.seasons.length){
-//         alert(`${currentSeries.title} has no seasons/episodes. You need to add an episode first`)
-//         closeModal()
-//         return
-//     }
+    if(shouldDelete){
+        let btn
+        if(e){
+            btn = e.target.className === 'btn' ? e.target : e.target.parentElement
+            btn.classList.add('loading')
+        }
+        const seriesRef = doc(db, `series/${seriesID}`)
+        const seasons = currentSeries.seasons.filter(season => season.seasonNumber != seasonNumber)
+        const seasonRef = ref(storage, `series/${seriesID}/season${seasonNumber}`)
 
-//     renderSeasons(currentSeries.seasons)
-//     modalTitle.textContent = `Editing '${currentSeries.title}'`
-//     episodesModal.classList.add('show')
-//     askModal.classList.add('hide')
-// }
+        try {
+            await deleteFilesAndFolders(seasonRef)
+            await setDoc(seriesRef, {seasons}, {merge : true})
+            alert(`Season ${seasonNumber} of ${currentSeries.title} removed successfully`)
+            currentSeries = allSeries.find(series => series.seriesID === seriesID)
+
+            // check if any season left for this series
+            if(currentSeries.seasons.length){
+                renderSeasons(currentSeries.seasons)
+                episodesContainer.parentElement.classList.remove("show")
+            }else{
+                closeModal()
+            }
+
+        } catch (error) {
+            alert(`Oops, an error occurred while removing this season, please try again`)
+            console.log(error);
+        }
+
+        if(btn){
+            btn.classList.remove('loading')
+        }
+    }
+}
 
 async function editEpisode(){
 
@@ -1021,58 +740,6 @@ async function editEpisode(){
     }
 }
 
-async function removeSeason(e, seasonNumber) {
-    let currentSeries = allSeries.find(series => series.seriesID === seriesID)
-    const shouldDelete = confirm(`Are you sure you want to delete season ${seasonNumber} of ${currentSeries.title} ?\nThis action is permanent.`)
-
-    if(shouldDelete){
-        let btn
-        if(e){
-            btn = e.target.className === 'btn' ? e.target : e.target.parentElement
-            btn.classList.add('loading')
-        }
-        const seriesRef = doc(db, `series/${seriesID}`)
-        const seasons = currentSeries.seasons.filter(season => season.seasonNumber != seasonNumber)
-        const seasonRef = ref(storage, `series/${seriesID}/season${seasonNumber}`)
-
-        try {
-            await deleteFilesAndFolders(seasonRef)
-            await setDoc(seriesRef, {seasons}, {merge : true})
-            alert(`Season ${seasonNumber} of ${currentSeries.title} removed successfully`)
-            currentSeries = allSeries.find(series => series.seriesID === seriesID)
-
-            // check if any season left for this series
-            if(currentSeries.seasons.length){
-                renderSeasons(currentSeries.seasons)
-                episodesContainer.parentElement.classList.remove("show")
-            }else{
-                closeModal()
-            }
-
-        } catch (error) {
-            alert(`Oops, an error occurred while removing this season, please try again`)
-            console.log(error);
-        }
-
-        if(btn){
-            btn.classList.remove('loading')
-        }
-    }
-}
-
-async function deleteFilesAndFolders(ref) {
-    const folderList = await listAll(ref)
-
-    // Recursively delete all files
-    const filesPromises = folderList.items.map(itemRef => deleteObject(itemRef))
-
-    // Recursively delete all subfolders
-    const subfolderPromises = folderList.prefixes.map(subfolderRef => deleteFilesAndFolders(subfolderRef))
-
-    await Promise.all(filesPromises)
-    await Promise.all(subfolderPromises)
-}
-
 async function removeEpisode (episodeNumber, seasonNumber) {
 
     // if this is the last episode of this season, remove the whole season
@@ -1110,66 +777,4 @@ async function removeEpisode (episodeNumber, seasonNumber) {
         }
     }
 }
-
-// ---------- EVENT LISTENERS ---------- //
-
-// addSeriesBtn.addEventListener('click', showAddSeriesForm)
-// submitSeriesBtn.addEventListener('click', addOrEditSeries)
-// imageUrlInput.addEventListener('input', e => showImagePreviewHandler(e, portraitImg))
-// videoPosterInput.addEventListener('input', e => showImagePreviewHandler(e, landscapeImg))
-// editSeriesInfosBtn.addEventListener('click', editSeriesInfos)
-// editSeriesEpisodesBtn.addEventListener('click', showEpisodesModal)
-
-// addEpisodeBtn.addEventListener('click', addEpisodeOrSeason)
-// editEpisodeBtn.addEventListener('click', editEpisode)
-
-// addVideoBtn.addEventListener('click', e => addNewFile(e, videoQualities))
-// addSubtitleBtn.addEventListener('click', e => addNewFile(e, subtitles))
-
-// searchInput.addEventListener('input', searchHandler)
-
-// // preventDefault all forms
-// allForms.forEach(form => form.addEventListener('submit', e => e.preventDefault()))
-// $.querySelectorAll('input').forEach(input => input.addEventListener('keydown', e => {
-//     if(e.key === 'Enter'){
-//         e.preventDefault()
-//     }
-// }))
-
-// // show the name of selected file by file input
-// $.querySelectorAll('.file-input').forEach(input => input.addEventListener('change', e => {
-//     e.target.parentElement.nextElementSibling.textContent = e.target.files[0].name
-// }))
-
-// tagsInput.addEventListener('keydown', e => {
-//     if(e.key === 'Enter'){
-//         addInputTag(tagsInput, genres, 'genres')
-//     }
-// })
-
-// castsInput.addEventListener('keydown', e => {
-//     if(e.key === 'Enter'){
-//         addInputTag(castsInput, casts, 'casts')
-//     }
-// })
-
-// modalWrapper.addEventListener('click', e => {
-//     if(e.target.className === 'modal-wrapper' || closeModalBtn.contains(e.target)){
-//         closeModal()
-//     }
-// })
-
-// window.addEventListener('load', ()=>{
-
-//     // listens for any changes in database and gets the fresh data from database and shows them to user
-//     const seriesRef = collection(db, 'series')
-//     onSnapshot(seriesRef, snapshot => {
-//         allSeries = snapshot.docs.map(doc => doc.data())
-//         showSeries(allSeries)
-//     },
-//     err => {
-//         alert('Failed to get data from server, please check you connection and turn on your VPN')
-//         console.log(err);
-//     })
-// })
 
