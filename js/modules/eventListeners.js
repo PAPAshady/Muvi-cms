@@ -125,8 +125,8 @@ export function initEpisodesEventListeners () {
         removeEpisode(btn.dataset.episodeNumber, btn.dataset.seasonNumber)
     })
 
-    $.querySelectorAll('#editEpisodeBtn').forEach(btn => btn.onclick = () => {
-        const {title, id, editMode, episodeNumber, seasonNumber} = btn.dataset
-        showEpisodesForm(title, id, editMode, episodeNumber, seasonNumber)
+    $.querySelectorAll('#episodeEditor').forEach(btn => btn.onclick = () => {
+        const {title, id, episodeNumber, seasonNumber} = btn.dataset
+        showEpisodesForm(title, id, true, episodeNumber, seasonNumber)
     })
 }

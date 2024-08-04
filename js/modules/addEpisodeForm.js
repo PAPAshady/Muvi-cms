@@ -25,10 +25,9 @@ export function showEpisodesForm (seriesTitle, id, editMode, episodeNumber, seas
     formTitle.textContent = `${editMode ? 'Edit' : 'Add'} ${seriesTitle} episode`
     seriesID = id
     document.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
+    const selectedSeries = allSeries.find(series => series.seriesID === seriesID)
 
-    const selectedSeries = allSeries.find(series => series.seriesID === id)
-
-    if(editMode){
+    if(editMode){        
         const currentEpisode = selectedSeries.seasons[seasonNumber - 1].episodes[episodeNumber - 1]
         episodeSeasonNumberInput.disabled = true
         episodeNameInput.value = currentEpisode.episodeName
@@ -48,7 +47,7 @@ export function showEpisodesForm (seriesTitle, id, editMode, episodeNumber, seas
         episodeSeasonNumberInput.innerHTML = ''
     
         // render seasons of this series in the select box
-        if(selectedSeries.seasons){
+        if(selectedSeries.seasons.length){
             const seasons = selectedSeries.seasons.map((season, index) => {;
                 return `<option value="${index + 1}">Season ${index + 1}</option>`
             }).join('')
@@ -187,7 +186,7 @@ export function renderEpisodes (seasonNumber){
             <div class="episode">
                 Episode ${index + 1} : ${episode.episodeName}
                 <div class="icons">
-                    <svg id="editEpisodeBtn" data-title="${currentSeries.title}" data-id="${currentSeries.seriesID}" data-edit-mode="true" data-episode-number="${index + 1}" data-season-number="${seasonNumber}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                    <svg id="episodeEditor" data-title="${currentSeries.title}" data-id="${seriesID}" data-episode-number="${index + 1}" data-season-number="${seasonNumber}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                         <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                     </svg>
                     <svg id="removeEpisodeBtn" data-episode-number="${index + 1}" data-season-number="${seasonNumber}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
@@ -284,7 +283,12 @@ export async function editEpisode(){
     
         const videosToUpload = videoQualities.filter(video => !qualities.includes(video.quality)) 
         const subtitlesToUpload = subtitles.filter(subtitle => !languages.includes(subtitle.language))
-    
+        
+        console.log(subtitles);
+        
+        console.log(subtitlesToUpload);
+        
+
         const videosToRemove = qualities.filter(file => !addedQualities.includes(file))
         const subtitlesToRemove = languages.filter(file => !addedLanguages.includes(file))
         const fileRefsToDelete = []
@@ -298,7 +302,7 @@ export async function editEpisode(){
         })
     
         // if all of these conditions are false that means user didn't change anything yet
-        const userUploadedFiles = videosToUpload.length && subtitlesToUpload.length
+        const userUploadedFiles = videosToUpload.length || subtitlesToUpload.length
         const userRemovedFiles = fileRefsToDelete.length
         const userChangedEpisodeName = episodeNameInput.value.trim() !== currentEpisode.episodeName
         const userChangedVisibility = episodeCheckbox.checked !== currentEpisode.isVisible
@@ -310,28 +314,26 @@ export async function editEpisode(){
             return
         }
         
-        if(videosToUpload.length || subtitlesToUpload.length){
-            showUploadElems(videosToUpload, true)
-            showUploadElems(subtitlesToUpload, false)
-    
+        showUploadElems(videosToUpload, true)
+        showUploadElems(subtitlesToUpload, false)
+
+        if(videosToUpload.length){
             try{
-                // upload new files
                 const msg = await uploadData(videosToUpload, true)
                 alert(msg)
-        
-                if(subtitlesToUpload.length){
-                    let msg
-                    try{
-                        msg = await uploadData(subtitlesToUpload, false)
-                    }catch(errorMsg){
-                        msg = errorMsg
-                    }
-                    alert(msg)
-                }
-    
             }catch(err) {
                 alert('Failed to upload Your videos, please try again later')
             }
+        }
+
+        if(subtitlesToUpload.length){
+            let msg
+            try{
+                msg = await uploadData(subtitlesToUpload, false)
+            }catch(errorMsg){
+                msg = errorMsg
+            }
+            alert(msg)
         }
     
         // delete the files user wants to delete
@@ -353,9 +355,7 @@ export async function editEpisode(){
         const seriesRef = doc(db, `series/${seriesID}`)
     
         try{
-            await updateDoc(seriesRef, {
-                seasons : currentSeries.seasons
-            })
+            await updateDoc(seriesRef, {seasons : currentSeries.seasons})
         }catch (err){
             alert('An error occurred while updating the changes on database')
             console.log(err);
