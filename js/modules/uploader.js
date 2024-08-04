@@ -1,6 +1,7 @@
 import { ref, storage, uploadBytesResumable} from './Firebase.js'
 import { videoUploadsWrapper, subtitleUploadsWrapper } from './domElements.js'
 
+const $ = document
 
 // upload the files using firebase 
 export function uploadData (fileArray, isVideoFile, fileIndex = 0){

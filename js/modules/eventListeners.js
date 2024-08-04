@@ -1,5 +1,5 @@
 import {db, collection, onSnapshot} from './Firebase.js'
-import { addEpisodeOrSeason, editEpisode, showEpisodesForm } from './addEpisodeForm.js'
+import { addEpisodeOrSeason, editEpisode, showEpisodesForm, removeSeason, renderEpisodes, removeEpisode } from './addEpisodeForm.js'
 import { showEpisodesModal, closeModal, openModal } from './modal.js'
 import { addNewFile } from './fileHandler.js'
 import { searchHandler, showSeries } from './utilities.js'
@@ -83,12 +83,11 @@ export function initEventListeners () {
     })
 
     function initSeriesEventListeners () {
-        let data
         $.querySelectorAll('.media-card').forEach(series => {
-            data = series.dataset
-            series.querySelector('#deleteSeriesBtn').onclick = () => deleteSeries(data.title, data.id)
-            series.querySelector('#editSeriesBtn').onclick = () => openModal(data.id)
-            series.querySelector('#addEpisodeBtn').onclick = () => showEpisodesForm(data.title, data.id, false)
+            const {id, title} = series.dataset
+            series.querySelector('#deleteSeriesBtn').onclick = () => deleteSeries(title, id)
+            series.querySelector('#editSeriesBtn').onclick = () => openModal(id)
+            series.querySelector('#addEpisodeBtn').onclick = () => showEpisodesForm(title, id, false)
         })
     }
     
@@ -116,4 +115,18 @@ export function initRemoveTagEventListener () {
     })
 }
 
+export function initSeasonsEventListeners () {
+    $.querySelectorAll('#removeSeasonBtn').forEach(btn => btn.onclick = e => removeSeason(e, btn.dataset.seasonNumber))
+    $.querySelectorAll('#editSeasonBtn').forEach(btn => btn.onclick = () => renderEpisodes(btn.dataset.seasonNumber))
+}
 
+export function initEpisodesEventListeners () {
+    $.querySelectorAll('#removeEpisodeBtn').forEach(btn => btn.onclick = () => {
+        removeEpisode(btn.dataset.episodeNumber, btn.dataset.seasonNumber)
+    })
+
+    $.querySelectorAll('#editEpisodeBtn').forEach(btn => btn.onclick = () => {
+        const {title, id, editMode, episodeNumber, seasonNumber} = btn.dataset
+        showEpisodesForm(title, id, editMode, episodeNumber, seasonNumber)
+    })
+}

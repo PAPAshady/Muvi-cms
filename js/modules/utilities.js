@@ -13,7 +13,7 @@ import {
     tagsInput,
     castsInput,
     episodeNameInput,
-    videoUrlInput,
+    videoFileInput,
     videoQualityInput,
     portraitImg,
     landscapeImg,
@@ -60,9 +60,9 @@ export function validateInputs (formNameToValidate) {
         if(!rating) return showInvalidInput([ratingInput]) 
         if(!casts.length) return showInvalidInput([castsInput.parentElement])
         
-    }else{
+    }else{        
         if(!episodeNameInput.value.trim()) return showInvalidInput([episodeNameInput])
-        if(!videoQualities.length) return showInvalidInput([videoUrlInput, videoQualityInput, videoUrlInput.parentElement])
+        if(!videoQualities.length) return showInvalidInput([videoFileInput.parentElement, videoQualityInput])
     }
     
     return true
