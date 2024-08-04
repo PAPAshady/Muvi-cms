@@ -1,17 +1,14 @@
 import { validateInputs, clearInputs, deleteFilesAndFolders } from './utilities.js'
-import { uploadData, showUploadElems, deleteObject, updateDoc } from './uploader.js'
-import { db, doc, setDoc, listAll } from './Firebase.js'
+import { uploadData, showUploadElems } from './uploader.js'
+import { db, doc, setDoc, listAll, updateDoc, deleteObject } from './Firebase.js'
 import { closeModal } from './modal.js'
 import {
     formTitle,
     episodeSeasonNumberInput,
     episodeNameInput,
-    videoQualities,
     episodeCheckbox,
     editEpisodeBtn,
     addEpisodeBtn,
-    currentEpisodeNumber,
-    currentSeasonNumber,
     addSubtitleBtn,
     addVideoBtn,
     seasonsContainer,
@@ -21,7 +18,7 @@ import {
 const $ = document
 
 //makes the episodes form visible to the user
-function showEpisodesForm (seriesTitle, id, editMode, episodeNumber, seasonNumber){
+export function showEpisodesForm (seriesTitle, id, editMode, episodeNumber, seasonNumber){
     closeModal()
     $.body.className = ''
     $.body.classList.add('add-episode')
@@ -68,7 +65,7 @@ function showEpisodesForm (seriesTitle, id, editMode, episodeNumber, seasonNumbe
     }
 }
 
-async function addEpisodeOrSeason () {
+export async function addEpisodeOrSeason () {
 
     if(validateInputs('episode')){
         addEpisodeBtn.classList.add('loading')
@@ -242,7 +239,7 @@ async function removeSeason(e, seasonNumber) {
     }
 }
 
-async function editEpisode(){
+export async function editEpisode(){
 
     if(validateInputs('episodes')){
         editEpisodeBtn.classList.add('loading')

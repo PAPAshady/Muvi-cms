@@ -1,5 +1,5 @@
-import { doc, db, setDoc } from './Firebase.js'
-import { clearInputs, deleteFilesAndFolders, deleteDoc } from './utilities.js'
+import { doc, db, setDoc, deleteDoc } from './Firebase.js'
+import { clearInputs, deleteFilesAndFolders } from './utilities.js'
 import { closeModal } from './modal.js'
 import {
     submitSeriesBtn,
@@ -25,7 +25,7 @@ const $ = document
 
 
 //makes the add-series form visible to the user
-function showAddSeriesForm (seriesTitle){
+export function showAddSeriesForm (seriesTitle){
     $.body.className = ''
     $.body.classList.add('add-series')
     $.querySelector('.input-wrapper').scrollIntoView({behavior: 'smooth'})
@@ -91,7 +91,7 @@ function removeInputTag (e, value, arrayName){
     }
 }
 
-function showImagePreviewHandler (e, imageElem) {
+export function showImagePreviewHandler (e, imageElem) {
     const value = e.target.value.trim()
     const errorMsg = e.target.nextElementSibling
 
@@ -121,7 +121,7 @@ function showImagePreviewHandler (e, imageElem) {
     })
 }
 
-function addOrEditSeries (){               
+export function addOrEditSeries (){               
     if(validateInputs('series')){
 
         const isAlreadyAdded = allSeries.some(series => series.title.toUpperCase() === titleInput.value.trim().toUpperCase())
@@ -199,7 +199,7 @@ async function deleteSeries(seriesTitle, seriesID){
 }
 
 // fills the input with the infos of the series that user wants to edit
-function editSeriesInfos () {
+export function editSeriesInfos () {
     closeModal()
     const seriesInfos = allSeries.find(series => series.seriesID === seriesID)
 

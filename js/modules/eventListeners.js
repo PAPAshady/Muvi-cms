@@ -1,4 +1,9 @@
 import {db, collection, onSnapshot} from './Firebase.js'
+import { showAddSeriesForm, addOrEditSeries, showImagePreviewHandler, editSeriesInfos} from './addSeriesForm.js'
+import { addEpisodeOrSeason, editEpisode } from './addEpisodeForm.js'
+import { showEpisodesModal, closeModal } from './modal.js'
+import { addNewFile } from './fileHandler.js'
+import { searchHandler, showSeries } from './utilities.js'
 import {
     addSeriesBtn,
     submitSeriesBtn,
@@ -20,8 +25,9 @@ import {
     landscapeImg,
 } from './domElements.js'
 
+const $ = document
+
 export function initEventListeners () {
-    
     addSeriesBtn.addEventListener('click', showAddSeriesForm)
     submitSeriesBtn.addEventListener('click', addOrEditSeries)
     imageUrlInput.addEventListener('input', e => showImagePreviewHandler(e, portraitImg))
