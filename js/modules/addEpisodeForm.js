@@ -15,16 +15,14 @@ import {
     episodesContainer,
 } from './domElements.js'
 
-const $ = document
-
 //makes the episodes form visible to the user
 export function showEpisodesForm (seriesTitle, id, editMode, episodeNumber, seasonNumber){
     closeModal()
-    $.body.className = ''
-    $.body.classList.add('add-episode')
+    document.body.className = ''
+    document.body.classList.add('add-episode')
     formTitle.textContent = `${editMode ? 'Edit' : 'Add'} ${seriesTitle} episode`
     seriesID = id
-    $.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
+    document.querySelector('.series-infos-form').scrollIntoView({behavior: 'smooth'})
 
     const selectedSeries = allSeries.find(series => series.seriesID === id)
 
@@ -145,7 +143,7 @@ export async function addEpisodeOrSeason () {
 
         window.scrollTo({top : 0, behavior : 'smooth'})
         isNewSeason = false
-        $.body.className = ''
+        document.body.className = ''
         addEpisodeBtn.classList.remove('loading')
         addEpisodeBtn.disabled = false
         addSubtitleBtn.disabled = false
@@ -261,7 +259,7 @@ export async function editEpisode(){
             window.scrollTo({top : 0, behavior : 'smooth'})
             editEpisodeBtn.classList.remove('loading')
             editEpisodeBtn.disabled = false
-            $.body.className = ''
+            document.body.className = ''
             return
         }
     
@@ -363,7 +361,7 @@ export async function editEpisode(){
         window.scrollTo({top : 0, behavior : 'smooth'})
         editEpisodeBtn.classList.remove('loading')
         editEpisodeBtn.disabled = false
-        $.body.className = ''
+        document.body.className = ''
     }
 }
 

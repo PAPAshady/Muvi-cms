@@ -1,9 +1,17 @@
 import {db, collection, onSnapshot} from './Firebase.js'
-import { showAddSeriesForm, addOrEditSeries, showImagePreviewHandler, editSeriesInfos} from './addSeriesForm.js'
-import { addEpisodeOrSeason, editEpisode } from './addEpisodeForm.js'
-import { showEpisodesModal, closeModal } from './modal.js'
+import { addEpisodeOrSeason, editEpisode, showEpisodesForm } from './addEpisodeForm.js'
+import { showEpisodesModal, closeModal, openModal } from './modal.js'
 import { addNewFile } from './fileHandler.js'
 import { searchHandler, showSeries } from './utilities.js'
+import {
+    showAddSeriesForm,
+    addOrEditSeries,
+    showImagePreviewHandler,
+    editSeriesInfos,
+    deleteSeries,
+    addInputTag,
+    removeInputTag
+} from './addSeriesForm.js'
 import {
     addSeriesBtn,
     submitSeriesBtn,
@@ -73,6 +81,16 @@ export function initEventListeners () {
             closeModal()
         }
     })
+
+    function initSeriesEventListeners () {
+        let data
+        $.querySelectorAll('.media-card').forEach(series => {
+            data = series.dataset
+            series.querySelector('#deleteSeriesBtn').onclick = () => deleteSeries(data.title, data.id)
+            series.querySelector('#editSeriesBtn').onclick = () => openModal(data.id)
+            series.querySelector('#addEpisodeBtn').onclick = () => showEpisodesForm(data.title, data.id, false)
+        })
+    }
     
     window.addEventListener('load', ()=>{
     
@@ -81,11 +99,20 @@ export function initEventListeners () {
         onSnapshot(seriesRef, snapshot => {
             allSeries = snapshot.docs.map(doc => doc.data())
             showSeries(allSeries)
+            
+            //attach event listener to all series Elements after fetched them from database
+            initSeriesEventListeners()
         },
         err => {
             alert('Failed to get data from server, please check you connection and turn on your VPN')
             console.log(err);
         })
+    })
+}
+
+export function initRemoveTagEventListener () {
+    $.querySelectorAll('#removeTagBtn').forEach(btn => btn.onclick = e => {
+        removeInputTag(e, btn.dataset.text, btn.dataset.array)
     })
 }
 

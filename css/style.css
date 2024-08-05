@@ -1310,7 +1310,7 @@ body.uploading .uploads{
     align-items: center;
     color: #fff;
     font-size: 1.7rem;
-    background: url(images/film.jpg) 0 0/cover no-repeat;
+    background: url(../images/film.jpg) 0 0/cover no-repeat;
     cursor: pointer;
 }
 
