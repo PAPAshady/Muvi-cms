@@ -1,4 +1,4 @@
-import { initEventListeners } from "./modules/eventListeners.js"
+import { initMainEventListeners } from "./modules/eventListeners.js"
 window.v = validator
 window.genres = []
 window.casts = []
@@ -16,5 +16,5 @@ window.currentSeasonNumber = null
 
 // ---------- CODES FOR ADDING OR EDITING A SERIES ---------- //
 
-initEventListeners()
+initMainEventListeners()
 

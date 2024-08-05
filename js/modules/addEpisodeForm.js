@@ -1,4 +1,4 @@
-import { validateInputs, clearInputs, deleteFilesAndFolders } from './utilities.js'
+import { validateInputs, clearInputs, deleteFilesAndFolders, scrollToTop } from './utilities.js'
 import { uploadData, showUploadElems } from './uploader.js'
 import { db, doc, setDoc, listAll, updateDoc, deleteObject, ref, storage } from './Firebase.js'
 import { initSeasonsEventListeners, initEpisodesEventListeners } from './eventListeners.js'
@@ -49,7 +49,7 @@ export function showEpisodesForm (seriesTitle, id, editMode, episodeNumber, seas
         // render seasons of this series in the select box
         if(selectedSeries.seasons.length){
             const seasons = selectedSeries.seasons.map((season, index) => {;
-                return `<option value="${index + 1}">Season ${index + 1}</option>`
+                return `<option ${index >= selectedSeries.seasons.length - 1 ? 'selected' : ''} value="${index + 1}">Season ${index + 1}</option>`
             }).join('')
     
             episodeSeasonNumberInput.insertAdjacentHTML('afterbegin' ,seasons)
@@ -132,7 +132,6 @@ export async function addEpisodeOrSeason () {
                 const episodeRef = doc(db, 'series', currentSeries.seriesID)
                 await setDoc(episodeRef, {seasons : currentSeries.seasons}, {merge : true})
                 alert(`Episode added successfully :)`)
-                // showSeries(allSeries)
                 clearInputs()
             }catch (err) {
                 alert('An error occurred while adding the new episode')
@@ -142,14 +141,8 @@ export async function addEpisodeOrSeason () {
             alert(errorMsg)
         }
 
-        window.scrollTo({top : 0, behavior : 'smooth'})
         isNewSeason = false
-        document.body.className = ''
-        addEpisodeBtn.classList.remove('loading')
-        addEpisodeBtn.disabled = false
-        addSubtitleBtn.disabled = false
-        addVideoBtn.disabled = false
-        episodeCheckbox.disabled = false
+        scrollToTop()
     }
 }
 
@@ -259,10 +252,7 @@ export async function editEpisode(){
             res = await listAll(episodeRef)
         }catch(err){
             alert('An error occurred while getting episode data from server, please try again.')
-            window.scrollTo({top : 0, behavior : 'smooth'})
-            editEpisodeBtn.classList.remove('loading')
-            editEpisodeBtn.disabled = false
-            document.body.className = ''
+            scrollToTop()
             return
         }
     
@@ -362,10 +352,7 @@ export async function editEpisode(){
         }
     
         alert('Episode edited successfully !')
-        window.scrollTo({top : 0, behavior : 'smooth'})
-        editEpisodeBtn.classList.remove('loading')
-        editEpisodeBtn.disabled = false
-        document.body.className = ''
+        scrollToTop()
     }
 }
 
@@ -373,7 +360,7 @@ export async function removeEpisode (episodeNumber, seasonNumber) {
 
     // if this is the last episode of this season, remove the whole season
     if(episodeNumber == 1){
-        removeSeason(undefined, seasonNumber)
+        removeSeason(false, seasonNumber)
     }else{
         const shouldDelete = confirm(`Are you sure you want to remove this episode ?`)
     

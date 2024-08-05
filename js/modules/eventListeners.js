@@ -35,7 +35,7 @@ import {
 
 const $ = document
 
-export function initEventListeners () {
+export function initMainEventListeners () {
     addSeriesBtn.addEventListener('click', showAddSeriesForm)
     submitSeriesBtn.addEventListener('click', addOrEditSeries)
     imageUrlInput.addEventListener('input', e => showImagePreviewHandler(e, portraitImg))

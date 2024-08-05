@@ -148,3 +148,16 @@ export function showSeries (seriesArray) {
         allSeriesContainer.insertAdjacentHTML('beforeend', seriesElems)
     }
 }
+
+
+export function scrollToTop(){
+    window.scrollTo({top : 0, behavior: 'smooth'})
+
+    $.querySelectorAll('.btn').forEach(btn => {
+        btn.disabled = false
+        btn.classList.remove('loading')
+    })
+
+    $.querySelectorAll('checkbox').forEach(checkbox => checkbox.disabled = false)
+    document.body.className = ''
+}

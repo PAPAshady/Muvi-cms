@@ -1,5 +1,5 @@
 import { doc, db, setDoc, deleteDoc, ref, storage } from './Firebase.js'
-import { clearInputs, deleteFilesAndFolders, validateInputs } from './utilities.js'
+import { clearInputs, deleteFilesAndFolders, validateInputs, scrollToTop } from './utilities.js'
 import { closeModal } from './modal.js'
 import {initRemoveTagEventListener} from './eventListeners.js'
 import {
@@ -132,7 +132,7 @@ export function addOrEditSeries (){
         }
 
         submitSeriesBtn.classList.add('loading')
-        submitSeriesBtn.setAttribute('disabled', true)
+        submitSeriesBtn.disabled = true
 
         const series = {
             title : titleInput.value.trim(),
@@ -159,18 +159,15 @@ export function addOrEditSeries (){
         setDoc(seriesRef, series, {merge : true})
             .then(() => {
                 alert(`Series ${seriesInfosEditMode ? 'edited' : 'added'} successfully :)`)
-                clearInputs()
-                window.scrollTo({top : 0, behavior : 'smooth'})
                 seriesInfosEditMode = false
-                document.body.classList.remove('add-series')
+                clearInputs()
+                scrollToTop()
             })
             .catch(err => {
                 alert('Error, something went wrong. Please turn on your VPN and try again :)')
                 console.log(err)
-            })
-            .finally(() => {
                 submitSeriesBtn.classList.remove('loading')
-                submitSeriesBtn.removeAttribute('disabled')
+                submitSeriesBtn.disabled = false
             })
     }
 }
