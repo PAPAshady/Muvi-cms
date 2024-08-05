@@ -45,19 +45,3 @@ export {
     deleteDoc,
     onSnapshot,
 }
-
-// window.ref = ref
-// window.uploadBytesResumable = uploadBytesResumable
-// window.storage = storage
-// window.db = db
-// window.collection = collection
-// window.getDoc = getDoc
-// window.getDocs = getDocs
-// window.setDoc = setDoc
-// window.addDoc = addDoc
-// window.doc = doc
-// window.updateDoc = updateDoc
-// window.deleteDoc = deleteDoc
-// window.onSnapshot  = onSnapshot 
-// window.deleteObject = deleteObject
-// window.listAll = listAll
