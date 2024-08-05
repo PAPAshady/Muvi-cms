@@ -1,0 +1,249 @@
+/* date input start */
+.date-input input{
+    width: 70px;
+    border: none;
+    background: var(--section-color);
+    padding: 5px;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    transition: border .3s;
+}
+
+.date-input span{
+    font-size: .6rem;
+    color: var(--dark-gray);
+}
+
+.date-input input:focus{
+    outline: none;
+}
+
+@media screen and (min-width : 768px) {
+
+    .date-input .form-input{
+        width: 100px;
+        padding: 7px;
+    }
+
+}
+
+/* date input end */
+
+/* image-url start */
+
+.url-and-preview-wrapper .error-msg{
+    margin-bottom: 25px;
+}
+
+.image-wrapper{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;
+    width: 240px;
+}
+
+.image-wrapper span{
+    font-size: .7rem;
+    font-weight: 600;
+}
+
+.landscape-preview,
+.portrait-preview{
+    position: relative;
+}
+
+.image-wrapper .loader-wrapper{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.landscape-preview.loading .loader-wrapper,
+.portrait-preview.loading .loader-wrapper{
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.landscape-preview.loading .img-loader,
+.portrait-preview.loading .img-loader{
+    display: block;
+}
+
+.landscape-preview img,
+.portrait-preview img{
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px var(--dark-gray);
+    width: 100%;
+    height: 100%;
+}
+
+.landscape-preview{
+    width: 100%;
+    height: 110px;
+}
+
+.portrait-preview{
+    width: 50%;
+    height: 180px;
+}
+
+@media screen and (min-width : 480px) {
+    .image-wrapper span {
+        font-size: 1rem;
+    }
+    
+    .image-wrapper{
+        width: 270px;
+    }
+
+    .landscape-preview{
+        height: 125px;
+    }
+
+    .portrait-preview{
+        height: 220px;
+    }
+}
+
+@media screen and (min-width : 768px) {
+    .image-wrapper{
+        width: 360px;
+        gap: 20px;
+    }
+
+    .landscape-preview{
+        height: 180px;
+    }
+
+    .portrait-preview{
+        height: 310px;
+    }
+}
+
+@media screen and (min-width : 992px) {
+    .image-wrapper{
+        width: 450px;
+    }
+
+    .landscape-preview{
+        height: 240px;
+    }
+
+    .portrait-preview{
+        height: 400px;
+        width: 60%;
+    }
+    
+}
+
+        
+/* image-url end */
+
+/* rating-country-production start */
+
+.rating-country-production div:last-child{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rating-country-production .input-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    font-size: .8rem;
+    gap: 5px;
+    width: 45%;
+    text-align: left;
+}
+
+.rating-country-production ,.input-container span{
+    width: 100%;
+}
+
+.rating-country-production .form-input{
+    width: 100%;
+    font-size: .75rem;
+}
+
+@media screen and (min-width : 480px){
+    .rating-country-production span{
+        font-size: .9rem;
+    }
+}
+
+@media screen and (min-width : 768px){
+    .rating-country-production .form-input,
+    .rating-country-production span{
+        font-size: 1rem;
+    }
+}
+
+/* rating-country-production end */
+
+/* casts start */
+
+.casts .input{
+    background: var(--section-color);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* casts end */
+
+/* check-box start */
+
+.check-box-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    font-size: .8rem;
+}
+
+.check-box-wrapper label{
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    cursor: pointer;
+    height: 20px;
+}
+
+@media screen and (min-width : 480px) {
+    .check-box-wrapper{
+        font-size: 1rem;
+    }
+}
+
+/* check-box end */
+
+/* seasons number and number of episodes start */
+
+.season-number-and-episode-counts{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: .9rem;
+}
+
+.season-number,
+.number-of-episodes{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+@media screen and (min-width : 768px) {
+    .season-number-and-episode-counts{
+        flex-direction: row;
+        gap: 20px;
+        font-size: 1rem;
+        align-items: center;
+    }
+}

@@ -1,0 +1,28 @@
+@import url(cssReset.css);
+@import url(components/buttons.css);
+@import url(components/loaders.css);
+@import url(components/header.css);
+@import url(components/inputWrapper.css);
+@import url(components/formsMainStyles.css);
+@import url(components/addSeriesForm.css);
+@import url(components/addEpisodeForm.css);
+@import url(components/allSeriesSection.css);
+@import url(components/modal.css);
+
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+body{
+    font-family: "Poppins", sans-serif;
+    position: relative;
+    --section-color : #F2F2F7;
+    --green : #46D2D0;
+    --black : #1c1d3a;
+    --light-gray : #B3B4C8;
+    --dark-gray : #6B6C87;
+    --red : #f54949;
+}

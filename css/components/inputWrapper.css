@@ -1,0 +1,205 @@
+.main-content{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.input-wrapper,
+.form-wrapper{
+    background: var(--section-color);
+    padding: 10px 10px 0;
+    border-radius: 5px;
+}
+
+.input-wrapper{
+    display: none;
+    border: 2px solid transparent;
+    transition: border-color .2s;
+}
+
+.input-wrapper.invalid{
+    border-color: var(--red);
+}
+
+body.add-series .input-wrapper{
+    display: block;
+}
+
+.form-wrapper{
+    background: #fff;
+    border: 1px solid var(--green);
+    margin-bottom: 20px;
+}
+
+.input-infos .left,
+.input-infos,
+.form-infos .left,
+.form-infos{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}   
+
+.input-infos,
+.form-infos{
+    justify-content: space-between;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.form-infos h3{
+    font-size: .8rem;
+}
+
+.input-infos h3{
+    font-size: .9rem;
+}
+
+.input-tags,
+.form-tags{
+    font-size: .6rem;
+    color: var(--green);
+    font-weight: 600;
+}
+
+.input-tags span {
+    padding: 0 5px;
+    border-left: 1px solid var(--light-gray);
+    text-transform: uppercase;
+    display: none;
+}
+
+.input-tags span:first-child{
+    display: inline;
+}
+
+.input-settings-icon{
+    color: var(--dark-gray);
+    cursor: pointer;
+    padding: 5px 0;
+}
+
+.input{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    transition: border-color .2s;
+    border: 2px solid transparent;
+}
+
+.input.invalid{
+    border-color: var(--red);
+}
+
+.input span{
+    background-color: #fff;
+    border: 1px solid var(--light-gray);
+    color: var(--green);
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: capitalize;
+    font-size: .8rem;
+    margin: 5px 5px 5px 0;
+    font-weight: 600;
+}
+
+.input svg{
+    color: var(--red);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.input input,
+.input textarea {
+    height: 40px;
+    width: 100%;
+    border: none;
+    background: none;
+    font-family: "Poppins", sans-serif;
+    font-size: .8rem;
+}
+
+.input textarea{
+    padding-top: 5px;
+    height: 100px;
+}
+
+.input input:focus,
+.input textarea:focus{
+    outline: none;
+}
+
+@media screen and (min-width : 420px){
+    .input-tags span{
+        display: inline;
+    }
+    
+    .form-infos h3{
+        font-size: 1rem;
+    }
+        
+}
+
+@media screen and (min-width : 768px){
+
+    .form-infos h3{
+        font-size: 1.2rem;
+    }
+
+    .input-wrapper{
+        padding: 10px 15px 0;
+    }
+
+    .input-wrapper h3{
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+
+    .input-tags{
+        font-size: .8rem;
+    }
+
+    .input-settings-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .input span{
+        margin-top: 10px;
+    }
+
+    .input input,
+    .input textarea{
+        font-size: 1rem;
+    }
+
+    .input textarea {
+        height: 120px;
+    }
+}
+
+@media screen and (min-width : 992px) {
+
+    .form-infos h3{
+        font-size: 1.3rem;
+    }
+
+    .input-wrapper{
+        padding: 10px 25px 5px;
+    }
+
+    .input-infos h3{
+        font-size: 1.35rem;
+    }
+
+    .input-infos{
+        padding: 5px 0;
+    }
+
+    .input span{
+        font-size: 1rem;
+    }
+}

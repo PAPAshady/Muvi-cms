@@ -1,0 +1,187 @@
+.all-series .search-box p{
+    margin-bottom: 10px;
+}
+
+.btn-fill{
+    border-radius: 5px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    padding: 5px 3px;
+    color: #fff;
+    border: 1px solid #FF0000;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+}
+
+.btn-fill{
+    background: #FF0000;
+    opacity: .8;
+    transition: opacity .2s;
+}
+
+.btn-fill:hover{
+    opacity: 1;
+}
+
+.media-content-wrapper{
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 40px;
+    column-gap: 30px;
+    padding-top: 30px;
+}
+
+.media-content-wrapper.show-btn{
+    margin: 0 auto !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.media-content-wrapper .btn{
+    gap: 10px;
+    align-items: center;
+    display: none;
+}
+
+.media-content-wrapper.show-btn .btn{
+    display: flex;
+}
+
+.add-new-series-btn{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.7rem;
+    background: url(../../images/film.jpg) 0 0/cover no-repeat;
+    cursor: pointer;
+}
+
+.add-new-series-btn:hover .texts{
+    transform: scale(1.05);
+}
+
+.add-new-series-btn img{
+    position: absolute;
+    top: 0;
+}
+
+.add-new-series-btn .texts{
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: all .3s;
+}
+
+.add-new-series-btn svg {
+    width: 45px;
+    height: 45px;
+}
+
+.media-card{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+    height: auto !important;
+}
+
+.media-card img,
+.add-new-series-btn{
+    width: 100%;
+    height: 380px;
+    border-radius: 10px;
+}
+
+.media-card > a {
+    height: 100%;
+}
+
+
+.media-card .media-info{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.media-card .media-info a {
+    font-size: 1rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 5px 0;
+}
+
+.media-card .btn-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.media-card button{
+    font-size: .9rem;
+    cursor: pointer !important;
+}
+
+.media-card svg{
+    width: 20px;
+    height: 20px;
+}
+
+.media-card  .btn-wrapper button:not(:first-child){
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+@media screen and (min-width: 420px) {
+
+    .media-content-wrapper{
+        width: 75%;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (min-width : 520px) {
+    .media-content-wrapper{
+        grid-template-columns: repeat(2,1fr);
+        column-gap: 15px;
+        width: 100%;
+        margin: 0;
+    }
+
+    .add-new-series-btn{
+        font-size: 1.5rem;
+    }
+
+}
+
+@media screen and (min-width : 768px) {
+    .media-content-wrapper{
+        grid-template-columns: repeat(3,1fr);
+    }
+}
+
+@media screen and (min-width : 992px) {
+    .media-content-wrapper{
+        grid-template-columns: repeat(4,1fr);
+        column-gap: 20px;
+        row-gap: 30px;
+    }
+
+    .media-card img,
+    .add-new-series-btn{
+        height: 350px;
+    }
+}
+
+@media screen and (min-width : 1250px) {
+    .add-new-series-btn{
+        font-size: 1.8rem;
+    }
+}

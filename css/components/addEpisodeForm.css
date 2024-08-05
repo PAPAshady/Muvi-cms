@@ -1,0 +1,206 @@
+@import url(uploader.css);
+
+/* episode section start */
+
+.url-input-and-select-box{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
+    margin-top: 20px;
+}
+
+.url-input-and-select-box.invalid ~ .error-msg{
+    color: var(--red);
+}
+
+.file-input{
+    position: relative;
+    padding: 10px;
+    background-color: #fff;
+    color: var(--green);
+    border-radius: 5px;
+    opacity: .8;
+    transition: all .2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: .8rem;
+    border: 2px solid var(--green);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.file-input-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
+    width: 100%;
+}
+
+.file-input-state{
+    color: var(--green);
+    padding: 5px;
+    text-decoration: underline;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+.file-input,
+.file-input * {
+    cursor: pointer;
+}
+
+.file-input:hover{
+    opacity: 1;
+}
+
+.file-input.invalid{
+    border-color: var(--red);
+}
+
+.file-input svg {
+    width: 20px;
+    height: 20px;
+}
+
+input[type="file"]{
+    opacity: 0;
+    position: absolute;
+}
+
+select{
+    border: none;
+    background-color: var(--section-color);
+    padding: 10px;
+    border-radius: 5px;
+    font-family: "Poppins", sans-serif;
+    width: 200px;
+    border: 2px solid transparent;
+    transition: border-color .3s;
+}
+
+select.invalid{
+    border-color: var(--red);
+}
+
+.urls-wrapper{
+    display: inline-flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.url {
+    font-size: .8rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: var(--section-color);
+    color: var(--dark-gray);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    word-break: break-all;
+}
+
+.url span{
+    background-color: var(--green);
+    padding: 5px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: .7rem;
+    word-break:keep-all;
+}
+
+.url p {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.url svg{
+    color: var(--red);
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+@media screen and (min-width : 480px){
+    .url svg{
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media screen and (min-width : 768px) {
+
+    .file-input-container{
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .file-input{
+        padding: 15px;
+        font-size: .9rem;
+    }
+
+    .file-input svg {
+        width: 25px;
+        height: 25px;
+    }
+    
+
+    select {
+        height: 49px;
+        width: 230px;
+        font-size: 1rem;
+    }
+
+    select:disabled{
+        opacity: .4;
+    }
+
+    .urls-wrapper{
+        width: 620px;
+    }
+
+    .url{
+        font-size: .9rem;
+    }
+
+    .url svg{
+        width: 25px;
+        height: 25px;
+        margin-left: 5px;
+    }
+    
+
+    .url span{
+        font-size: .8rem;
+    }
+}
+
+@media screen and (min-width : 992px) {
+
+    .file-input{
+        width: 200px;
+        font-size: 1rem;
+    }
+
+    .urls-wrapper{
+        width: 720px;
+    }
+
+    .url{
+        font-size: 1rem;
+    }
+
+    .url span{
+        font-size: .9rem;
+    }
+}
+/* episode section end */
