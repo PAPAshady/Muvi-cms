@@ -1,7 +1,7 @@
 import {db, collection, onSnapshot} from './Firebase.js'
 import { addEpisodeOrSeason, editEpisode, showEpisodesForm, removeSeason, renderEpisodes, removeEpisode } from './addEpisodeForm.js'
 import { showEpisodesModal, closeModal, openModal } from './modal.js'
-import { addNewFile } from './fileHandler.js'
+import { addNewFile, removeFile } from './fileHandler.js'
 import { searchHandler, showSeries } from './utilities.js'
 import {
     showAddSeriesForm,
@@ -128,5 +128,11 @@ export function initEpisodesEventListeners () {
     $.querySelectorAll('#episodeEditor').forEach(btn => btn.onclick = () => {
         const {title, id, episodeNumber, seasonNumber} = btn.dataset
         showEpisodesForm(title, id, true, episodeNumber, seasonNumber)
+    })
+}
+
+export function initRemoveFileEventListeners(){
+    $.querySelectorAll('#removeFileBtn').forEach(btn => btn.onclick = ()=> {
+        removeFile(btn.dataset.array, btn.dataset.info)
     })
 }

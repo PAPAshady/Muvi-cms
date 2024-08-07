@@ -273,12 +273,6 @@ export async function editEpisode(){
     
         const videosToUpload = videoQualities.filter(video => !qualities.includes(video.quality)) 
         const subtitlesToUpload = subtitles.filter(subtitle => !languages.includes(subtitle.language))
-        
-        console.log(subtitles);
-        
-        console.log(subtitlesToUpload);
-        
-
         const videosToRemove = qualities.filter(file => !addedQualities.includes(file))
         const subtitlesToRemove = languages.filter(file => !addedLanguages.includes(file))
         const fileRefsToDelete = []
@@ -304,9 +298,11 @@ export async function editEpisode(){
             return
         }
         
-        showUploadElems(videosToUpload, true)
-        showUploadElems(subtitlesToUpload, false)
-
+        if(videosToUpload.length || subtitlesToUpload.length){            
+            showUploadElems(videosToUpload, true)
+            showUploadElems(subtitlesToUpload, false)
+        }
+        
         if(videosToUpload.length){
             try{
                 const msg = await uploadData(videosToUpload, true)
