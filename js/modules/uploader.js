@@ -23,7 +23,7 @@ export function uploadData (fileArray, isVideoFile, fileIndex = 0){
             successMessage = `${uploadedVideosCounter} videos uploaded out of ${fileArray.length}`
         }else{
             progressElem = $.getElementById(`subtitleFile${fileIndex}`)
-            fileProperty = 'language'
+            fileProperty = 'label'
             uploadCounter = uploadedSubtitlesCounter
             errorMessage = `${uploadedVideosCounter} videos have uploaded successfully but failed to upload your subtitles. the operation will continue. you can upload your subtitles later from 'Edit episode' section :)`
             successMessage = `${uploadedSubtitlesCounter} subtitles uploaded out of ${fileArray.length}`
