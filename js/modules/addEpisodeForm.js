@@ -1,4 +1,4 @@
-import { validateInputs, clearInputs, deleteFilesAndFolders, scrollToTop } from './utilities.js'
+import { validateInputs, clearInputs, deleteFilesAndFolders, scrollToTop, srtParser } from './utilities.js'
 import { uploadData, showUploadElems } from './uploader.js'
 import { db, doc, setDoc, listAll, updateDoc, deleteObject, ref, storage } from './Firebase.js'
 import { initSeasonsEventListeners, initEpisodesEventListeners } from './eventListeners.js'
@@ -109,6 +109,22 @@ export async function addEpisodeOrSeason () {
             newEpisode.episodeID = `${currentSeries.seriesID}-S${seasonNumber}E${currentEpisodeNumber + 1}`
             currentSeries.seasons[seasonNumber - 1].episodes.push(newEpisode)
             folderRef = `series/${currentSeries.seriesID}/season${seasonNumber}/episode${currentEpisodeNumber + 1}`
+        }
+
+
+        // converte srt subtitles to vtt
+        const subtitlesToConvert = []
+
+        subtitles.forEach(subtitle => {
+            if(subtitle.type === 'srt'){
+                subtitlesToConvert.push(subtitle)
+            }
+        })
+
+        if(subtitles.length){
+            const vttSubtitles = await srtParser(subtitlesToConvert)
+            subtitles = subtitles.filter(subtitle => subtitle.type !== 'srt').concat(vttSubtitles)
+            console.log(subtitles);            
         }
 
         showUploadElems(videoQualities, true)
@@ -272,7 +288,7 @@ export async function editEpisode(){
         })
     
         const videosToUpload = videoQualities.filter(video => !qualities.includes(video.quality)) 
-        const subtitlesToUpload = subtitles.filter(subtitle => !languages.includes(subtitle.language))
+        let subtitlesToUpload = subtitles.filter(subtitle => !languages.includes(subtitle.language))
         const videosToRemove = qualities.filter(file => !addedQualities.includes(file))
         const subtitlesToRemove = languages.filter(file => !addedLanguages.includes(file))
         const fileRefsToDelete = []
@@ -313,6 +329,20 @@ export async function editEpisode(){
         }
 
         if(subtitlesToUpload.length){
+
+            const subtitlesToConvert = []
+
+            subtitlesToUpload.forEach(subtitle => {
+                if(subtitle.type === 'srt'){
+                    subtitlesToConvert.push(subtitle)
+                }
+            })
+
+            if(subtitlesToConvert.length){
+                const vttSubtitles = await srtParser(subtitlesToUpload)
+                subtitlesToUpload = subtitlesToUpload.filter(subtitle => subtitle.type !== 'srt').concat(vttSubtitles)
+            }
+
             let msg
             try{
                 msg = await uploadData(subtitlesToUpload, false)

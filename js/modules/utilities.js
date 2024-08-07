@@ -1,4 +1,5 @@
 import { listAll, deleteObject } from './Firebase.js'
+import Parser from '../../packages/srt-parser.js'
 import {
     titleInput,
     descriptionInput,
@@ -160,4 +161,56 @@ export function scrollToTop(){
 
     $.querySelectorAll('checkbox').forEach(checkbox => checkbox.disabled = false)
     document.body.className = ''
+}
+
+
+// this function convertes subtitles with .srt format to standard .vtt format for browsers
+export async function srtParser(subtitleArr) {
+    const parser = new Parser();
+
+    // Function to read and process a file
+    const processFile = (subtitle) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsText(subtitle.file);
+
+            reader.onload = function(e) {
+                const srt = e.target.result;
+                const srtArray = parser.fromSrt(srt);
+
+                let vttString = 'WEBVTT\n\n'; // WebVTT header
+                srtArray.forEach((cue, index) => {
+                    // WebVTT requires time in '00:00:00.000' format
+                    const startTime = cue.startTime.replace(',', '.');
+                    const endTime = cue.endTime.replace(',', '.');
+
+                    // Add cue index (starting from 1) to the WebVTT format
+                    vttString += (index + 1) + '\n';
+                    vttString += startTime + ' --> ' + endTime + '\n';
+                    vttString += cue.text + '\n\n';
+                });
+
+                const vtt = vttString.trim();
+                const blob = new Blob([vtt], { type: 'text/vtt' });
+                const modifiedFile = new File([blob], subtitle.name.replace('.srt', '.vtt'), { type: 'text/vtt' });
+
+                // Resolve the promise with the modified file
+                resolve({
+                    id: subtitle.id,
+                    language: subtitle.language,
+                    file: modifiedFile,
+                    name: modifiedFile.name,
+                    type: 'vtt'
+                });
+            };
+        });
+    };
+
+    // Map each subtitle file to a Promise
+    const modifiedSubtitlesPromises = subtitleArr.map(processFile);
+
+    // Wait for all files to be processed
+    const modifiedSubtitles = await Promise.all(modifiedSubtitlesPromises);
+
+    return modifiedSubtitles
 }
