@@ -82,7 +82,7 @@ export async function addEpisodeOrSeason () {
             episodeID : `${currentSeries.seriesID}-S${seasonNumber}E1`,
             episodeName : episodeNameInput.value.trim(),
             videoQualities : videoQualities.map(video => ({name : video.name, quality : video.quality, id: video.id})),
-            subtitles : subtitles.map(subtitle => ({name : subtitle.name, language : subtitle.language, id : subtitle.id})),
+            subtitles : subtitles.map(subtitle => ({name : subtitle.name, language : subtitle.language, id : subtitle.id, label: subtitle.label})),
             isVisible : episodeCheckbox.checked,
             comments : []
         }
@@ -366,8 +366,8 @@ export async function editEpisode(){
         currentEpisode.episodeName = episodeNameInput.value.trim()
         currentEpisode.isVisible = episodeCheckbox.checked
         currentEpisode.videoQualities = videoQualities.map(video => ({id : video.id, name : video.name, quality : video.quality}))
-        currentEpisode.subtitles = subtitles.map(subtitle => ({id: subtitle.id, name : subtitle.name, language: subtitle.language}))
-    
+        currentEpisode.subtitles = subtitles.map(subtitle => ({id: subtitle.id, name : subtitle.name, language: subtitle.language, label: subtitle.label}))
+        
         const seriesRef = doc(db, `series/${seriesID}`)
     
         try{

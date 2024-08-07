@@ -57,7 +57,12 @@ export function addNewFile (e, filesArray) {
         name : fileInput.files[0].name,
         [propertyName] : selectBox.value,
         id : filesArray.length + 1,
-        type : fileInput.files[0].name.split('.').slice(-1)[0],
+        type : fileInput.files[0].name.split('.').slice(-1)[0]
+    }
+
+    // if the file is a subtitle, add the label to it from its dataset
+    if(propertyName === 'language'){
+        newFile.label = selectBox.children[selectBox.selectedIndex].dataset.lang
     }
 
     // set true if user already added this subtitle-language/quality-quality

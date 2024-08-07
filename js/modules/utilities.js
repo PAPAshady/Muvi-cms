@@ -200,7 +200,8 @@ export async function srtParser(subtitleArr) {
                     language: subtitle.language,
                     file: modifiedFile,
                     name: modifiedFile.name,
-                    type: 'vtt'
+                    type: 'vtt',
+                    label : subtitle.label
                 });
             };
         });
