@@ -280,7 +280,7 @@ export async function editEpisode(){
     
         filesRefs.forEach(ref => {
             ref = ref.split('-').slice(-1)[0]
-            if(ref.endsWith('.srt') || ref.endsWith('.vvt')){
+            if(ref.endsWith('.srt') || ref.endsWith('.vtt')){
                 languages.push(ref.split('.')[0].trim())
             }else{
                 qualities.push(ref.split('.')[0].trim())
@@ -288,7 +288,7 @@ export async function editEpisode(){
         })
     
         const videosToUpload = videoQualities.filter(video => !qualities.includes(video.quality)) 
-        let subtitlesToUpload = subtitles.filter(subtitle => !languages.includes(subtitle.language))
+        let subtitlesToUpload = subtitles.filter(subtitle => !languages.includes(subtitle.label))
         const videosToRemove = qualities.filter(file => !addedQualities.includes(file))
         const subtitlesToRemove = languages.filter(file => !addedLanguages.includes(file))
         const fileRefsToDelete = []
@@ -366,6 +366,8 @@ export async function editEpisode(){
         currentEpisode.episodeName = episodeNameInput.value.trim()
         currentEpisode.isVisible = episodeCheckbox.checked
         currentEpisode.videoQualities = videoQualities.map(video => ({id : video.id, name : video.name, quality : video.quality}))
+
+        // the problem is...it still upload the subtitles with srt format to database even after converting to vtt
         currentEpisode.subtitles = subtitles.map(subtitle => ({id: subtitle.id, name : subtitle.name, language: subtitle.language, label: subtitle.label}))
         
         const seriesRef = doc(db, `series/${seriesID}`)
